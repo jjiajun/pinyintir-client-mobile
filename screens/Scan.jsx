@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Colors from '../constants/colors.js';
+import ResultsOutput from '../components/ResultsOutput.jsx';
 // import Input from '../components/Input.jsx';
 // import Card from '../components/Card.jsx';
 // import CustomButton from '../components/CustomButton.jsx';
@@ -29,11 +30,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     flexDirection: 'row',
     margin: 20,
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'flex-end',
   },
   button: {
     padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 20,
   },
   text: {
     fontSize: 18,
@@ -44,6 +47,9 @@ const styles = StyleSheet.create({
 const Scan = (props) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const [chinese, setChinese] = useState([]);
+  const [isImage, setIsImage] = useState(false);
+  const [isResults, setIsResults] = useState(false);
 
   const [file, setFile] = useState();
   const [description, setDescription] = useState('');
@@ -91,9 +97,10 @@ const Scan = (props) => {
   const scanPicture = async () => {
     try {
       if (camera) {
-        const picture = await camera.current.takePictureAsync({ quality: 0.5, base64: true });
+        const picture = await camera.current.takePictureAsync({ quality: 0.3, base64: true });
+        camera.current.pausePreview();
         const { base64 } = picture;
-        const resp = await axios.post('http://localhost:3004/vision', {
+        const resp = await axios.post('http://192.168.86.182:3004/vision', {
           requests: [
             {
               image: {
@@ -108,11 +115,21 @@ const Scan = (props) => {
             },
           ],
         });
-        console.log(resp.data.chinese);
+        setChinese(resp.data.chinese);
+        setIsImage(true);
+        setIsResults(true);
       }
     } catch (err) {
       console.log(err);
+      camera.current.resumePreview();
     }
+  };
+
+  const continueVideo = () => {
+    camera.current.resumePreview();
+    setChinese([]);
+    setIsImage(false);
+    setIsResults(false);
   };
 
   if (hasPermission === null) {
@@ -126,14 +143,33 @@ const Scan = (props) => {
     <View style={styles.container}>
       <Camera style={styles.camera} type={type} ref={camera}>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={switchCamera}>
-            <Text style={styles.text}>Flip</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={scanPicture}>
-            <Text style={styles.text}>Scan</Text>
-          </TouchableOpacity>
+
+          {isImage ? (
+            <>
+              <TouchableOpacity style={styles.button} onPress={continueVideo}>
+                <Text style={styles.text}>Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={() => setIsResults(true)}>
+                <Text style={styles.text}>Show Results</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <TouchableOpacity style={styles.button} onPress={switchCamera}>
+                <Text style={styles.text}>Flip</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={scanPicture}>
+                <Text style={styles.text}>Scan</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </Camera>
+      <ResultsOutput
+        isResults={isResults}
+        setIsResults={setIsResults}
+        chinese={chinese}
+      />
     </View>
   );
 };
