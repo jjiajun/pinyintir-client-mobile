@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
@@ -7,16 +7,14 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
-} from "react-native";
-
-const Message = (props) => {
-  return <View style={styles.message}>{props.message}</View>;
-};
+} from 'react-native';
 
 const styles = StyleSheet.create({
   message: {
-    color: "red",
+    color: 'red',
   },
 });
+
+const Message = (props) => <View style={styles.message}>{props.message}</View>;
 
 export default Message;
