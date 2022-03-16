@@ -2,20 +2,25 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import OverlayTextButton from './OverlayTextButton';
 
-const Overlay = (props) =>(
+const Overlay = (props) => (
   <View style={styles.overlay}>
-    {props.returnData.map((text)=>(
-      <OverlayTextButton pinyin={} chinese={} translation={} styles={{top:0 , left:0}}/>
+    {props.returnData.map((text) => (
+      <OverlayTextButton
+        pinyin={text.pinyin}
+        chinese={text.characters}
+        translation={text.translation}
+        styles={{ top: text.vertices[0].y, left: text.vertices[0].x }}
+      />
     ))}
   </View>
-)
+);
 
 const styles = StyleSheet.create({
   overlay: {
-    height:'100%',
-    width:'100%',
+    height: '100%',
+    width: '100%',
     justifyContent: 'center',
-    position:'absolute',
+    position: 'absolute',
   },
 });
 

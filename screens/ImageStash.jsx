@@ -1,23 +1,23 @@
-import React, { useState, useContext, useEffect } from "react";
-import { StatusBar } from "expo-status-bar";
-import axios from "axios";
-import { REACT_APP_BACKEND } from "react-native-dotenv";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Context } from "../Context.js";
+import React, { useState, useContext, useEffect } from 'react';
+import { StatusBar } from 'expo-status-bar';
+import axios from 'axios';
+import { REACT_APP_BACKEND } from 'react-native-dotenv';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View,
   Text,
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
-} from "react-native";
+} from 'react-native';
+import { Context } from '../Context.js';
 
 const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     marginVertical: 10,
-    color: "black",
-    textAlign: "center",
+    color: 'black',
+    textAlign: 'center',
   },
   img: {
     width: 100,
@@ -35,10 +35,10 @@ const ImageStash = ({ navigation }) => {
   useEffect(() => {
     const getData = async () => {
       try {
-        userId = await AsyncStorage.getItem("@userId");
-        token = await AsyncStorage.getItem("@sessionToken");
-        console.log("USERID: ", userId);
-        console.log("TOKEN: ", token);
+        userId = await AsyncStorage.getItem('@userId');
+        token = await AsyncStorage.getItem('@sessionToken');
+        console.log('USERID: ', userId);
+        console.log('TOKEN: ', token);
       } catch (err) {
         console.log(err);
       }
@@ -86,7 +86,7 @@ const ImageStash = ({ navigation }) => {
     >
       <View style={styles.screen}>
         <Text style={styles.title}>Your screenshots</Text>
-        <View>{displayImages ? displayImages : <Text>No images</Text>}</View>
+        <View>{displayImages || <Text>No images</Text>}</View>
         <StatusBar style="auto" />
       </View>
     </TouchableWithoutFeedback>

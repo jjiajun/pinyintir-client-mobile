@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import Colors from '../constants/colors.js';
 import ResultsOutput from '../components/ResultsOutput.jsx';
+import Overlay from '../components/Overlay.jsx';
 // import Input from '../components/Input.jsx';
 // import Card from '../components/Card.jsx';
 // import CustomButton from '../components/CustomButton.jsx';
@@ -170,6 +171,7 @@ const Scan = (props) => {
           )}
         </View>
       </Camera>
+      {isResults && <Overlay returnData={chinese} />}
       <ResultsOutput
         isResults={isResults}
         setIsResults={setIsResults}
