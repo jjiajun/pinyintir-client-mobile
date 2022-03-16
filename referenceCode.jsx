@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 /** To get userId and token for axios calls at every render */
 useEffect(() => {
   const getData = async () => {
@@ -39,6 +41,7 @@ const submit = async (event) => {
   setAllImages([
     ...allImages,
     {
+      id: uuidv4(),
       imagePath: result.data.imagePath,
       description,
     },
