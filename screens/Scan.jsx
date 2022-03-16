@@ -1,49 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Camera } from 'expo-camera';
+import { Camera, takePictureAsync } from 'expo-camera';
 import {
   View,
   Text,
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
+  TouchableOpacity,
 } from 'react-native';
 import Colors from '../constants/colors.js';
-import Input from '../components/Input.jsx';
-import Card from '../components/Card.jsx';
-import CustomButton from '../components/CustomButton.jsx';
+import ResultsOutput from '../components/ResultsOutput.jsx';
+// import Input from '../components/Input.jsx';
+// import Card from '../components/Card.jsx';
+// import CustomButton from '../components/CustomButton.jsx';
 
 const styles = StyleSheet.create({
-  screen: {
-    // flex: 1,
-    padding: 10,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 20,
-    marginVertical: 10,
-    color: 'black',
-  },
   container: {
-    width: 300,
-    maxWidth: '80%',
-    height: 300,
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'center',
+    flex: 1,
+  },
+  camera: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    margin: 20,
+    justifyContent: 'space-around',
+    alignItems: 'flex-end',
   },
   button: {
-    backgroundColor: Colors.primary,
+    padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 20,
   },
-  input: {
-    width: 150,
+  text: {
+    fontSize: 18,
+    color: 'white',
   },
 });
 
 const Scan = (props) => {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [chinese, setChinese] = useState([]);
+  const [isImage, setIsImage] = useState(false);
+  const [isResults, setIsResults] = useState(false);
+
   const [file, setFile] = useState();
   const [description, setDescription] = useState('');
   const [allImages, setAllImages] = useState([]);
@@ -52,6 +59,15 @@ const Scan = (props) => {
   let auth;
   let userId;
   let token;
+
+  const camera = useRef(null);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
 
   /** To get userId and token for axios calls at every render */
   useEffect(() => {
@@ -70,52 +86,96 @@ const Scan = (props) => {
     auth = { headers: { Authorization: `Bearer ${token}` } };
   });
 
-  /** Get all the images by userId. Only triggered when page first loads */
-  useEffect(() => {
-    axios
-      .post(`${REACT_APP_BACKEND}/getuserdatabyid`, { userId }, auth)
-      .then((response) => {
-        console.log(response);
-        setAllImages([...response.data.userProfile.images]);
-        // setState is async. The only way to check the allImages value after setState has completed is to use useEffect (runs after the page has re-rendered)!
-      });
-  }, []);
-
-  /** Submit function to upload image to db + aws */
-  const submit = async (event) => {
-    event.preventDefault();
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('description', description);
-    formData.append('userId', userId); // need to append userId to formData in order to send userId to the backend. This method seems to be the only way - I tried putting formData and userId in an object to send it through but it didn't work.
-    const result = await axios.post(
-      `${REACT_APP_BACKEND}/api/images`,
-      formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      },
+  const switchCamera = () => {
+    setType(
+      type === Camera.Constants.Type.back
+        ? Camera.Constants.Type.front
+        : Camera.Constants.Type.back,
     );
-    setAllImages([
-      ...allImages,
-      {
-        imagePath: result.data.imagePath,
-        description,
-      },
-    ]); // adds newly image data to allImages state. I am updating the allImages state directly on the FE instead of getting the updated list from BE so that the update is instantaneous. The BE is still updated, therefore if the page is reloaded, the image list will still be the latest. The useEffect function below ensures it.
   };
 
-  return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss;
-      }}
-    >
-      <View style={styles.screen}>
-        <Text>This is the Scan page</Text>
+  const scanPicture = async () => {
+    try {
+      if (camera) {
+        const picture = await camera.current.takePictureAsync({
+          quality: 0.3,
+          base64: true,
+        });
+        camera.current.pausePreview();
+        const { base64 } = picture;
+        const resp = await axios.post(`${REACT_APP_BACKEND}/vision`, {
+          requests: [
+            {
+              image: {
+                content: base64,
+              },
+              features: [
+                {
+                  type: 'TEXT_DETECTION',
+                  maxResults: 50,
+                },
+              ],
+            },
+          ],
+        });
+        setChinese(resp.data.chinese);
+        setIsImage(true);
+        setIsResults(true);
+      }
+    } catch (err) {
+      console.log(err);
+      camera.current.resumePreview();
+    }
+  };
 
-        <StatusBar style="auto" />
-      </View>
-    </TouchableWithoutFeedback>
+  const continueVideo = () => {
+    camera.current.resumePreview();
+    setChinese([]);
+    setIsImage(false);
+    setIsResults(false);
+  };
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
+  return (
+    <View style={styles.container}>
+      <Camera style={styles.camera} type={type} ref={camera}>
+        <View style={styles.buttonContainer}>
+          {isImage ? (
+            <>
+              <TouchableOpacity style={styles.button} onPress={continueVideo}>
+                <Text style={styles.text}>Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => setIsResults(true)}
+              >
+                <Text style={styles.text}>Show Results</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <TouchableOpacity style={styles.button} onPress={switchCamera}>
+                <Text style={styles.text}>Flip</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={scanPicture}>
+                <Text style={styles.text}>Scan</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
+      </Camera>
+      <ResultsOutput
+        isResults={isResults}
+        setIsResults={setIsResults}
+        chinese={chinese}
+      />
+    </View>
   );
 };
 
