@@ -37,7 +37,7 @@ const ResultsOutput = ({ isResults, setIsResults, chinese }) => {
             <Text style={styles.text}>X</Text>
           </TouchableOpacity>
         </View>
-
+        <Text>Hello</Text>
         {chinese.length > 0 ? (
           <FlatList
             data={chinese}

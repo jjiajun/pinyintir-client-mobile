@@ -9,6 +9,7 @@ import {
 import { CameraIcon, ArrowLeftIcon, DocumentTextIcon } from 'react-native-heroicons/outline';
 import Colors from '../constants/colors.js';
 import ResultsOutput from '../components/ResultsOutput.jsx';
+import Overlay from '../components/Overlay.jsx';
 
 const styles = StyleSheet.create({
   container: {
@@ -50,6 +51,7 @@ const Scan = (props) => {
   const [isImage, setIsImage] = useState(false);
   const [isResults, setIsResults] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [imageDimension, setImageDimension] = useState({});
 
   let auth;
   let userId;
@@ -90,7 +92,7 @@ const Scan = (props) => {
           base64: true,
         });
         camera.current.pausePreview();
-        const { base64 } = picture;
+        const { base64, height, width } = picture;
         const resp = await axios.post(`${REACT_APP_BACKEND}/vision`, {
           requests: [
             {
@@ -110,6 +112,7 @@ const Scan = (props) => {
         setIsImage(true);
         setIsResults(true);
         setLoading(false);
+        setImageDimension({ height, width });
       }
     } catch (err) {
       console.log(err);
@@ -160,6 +163,7 @@ const Scan = (props) => {
           )}
         </View>
       </Camera>
+      {isImage && <Overlay returnData={chinese} dimension={imageDimension} />}
       <ResultsOutput
         isResults={isResults}
         setIsResults={setIsResults}
