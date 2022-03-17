@@ -10,6 +10,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo/ngrok": "^4.1.0",
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
@@ -26,8 +27,8 @@
     "react-native-camera": "^4.2.1",
     "react-native-dotenv": "^3.3.1",
     "react-native-popup-menu": "^0.15.12",
-    "react-native-safe-area-context": "^4.1.4",
-    "react-native-screens": "^3.13.1",
+    "react-native-safe-area-context": "3.3.2",
+    "react-native-screens": "~3.10.1",
     "react-native-web": "0.17.1",
     "uuid": "^3.4.0"
   },

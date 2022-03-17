@@ -51,6 +51,7 @@ const Scan = (props) => {
   const [chinese, setChinese] = useState([]);
   const [isImage, setIsImage] = useState(false);
   const [isResults, setIsResults] = useState(false);
+  const [imageDimension, setImageDimension] = useState({});
 
   const [file, setFile] = useState();
   const [description, setDescription] = useState('');
@@ -103,7 +104,8 @@ const Scan = (props) => {
           base64: true,
         });
         camera.current.pausePreview();
-        const { base64 } = picture;
+        const { base64, height, width } = picture;
+        console.log('front height', height, width);
         const resp = await axios.post(`${REACT_APP_BACKEND}/vision`, {
           requests: [
             {
@@ -122,6 +124,7 @@ const Scan = (props) => {
         setChinese(resp.data.chinese);
         setIsImage(true);
         setIsResults(true);
+        setImageDimension({ height, width });
       }
     } catch (err) {
       console.log(err);
@@ -171,7 +174,7 @@ const Scan = (props) => {
           )}
         </View>
       </Camera>
-      {isResults && <Overlay returnData={chinese} />}
+      {isImage && <Overlay returnData={chinese} dimension={imageDimension} />}
       <ResultsOutput
         isResults={isResults}
         setIsResults={setIsResults}
