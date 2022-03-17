@@ -1,13 +1,13 @@
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 
 /** To get userId and token for axios calls at every render */
 useEffect(() => {
   const getData = async () => {
     try {
-      userId = await AsyncStorage.getItem("@userId");
-      token = await AsyncStorage.getItem("@sessionToken");
-      console.log("USERID: ", userId);
-      console.log("TOKEN: ", token);
+      userId = await AsyncStorage.getItem('@userId');
+      token = await AsyncStorage.getItem('@sessionToken');
+      console.log('USERID: ', userId);
+      console.log('TOKEN: ', token);
     } catch (err) {
       console.log(err);
     }
@@ -32,11 +32,11 @@ useEffect(() => {
 const submit = async (event) => {
   event.preventDefault();
   const formData = new FormData();
-  formData.append("image", file);
-  formData.append("description", description);
-  formData.append("userId", userId); // need to append userId to formData in order to send userId to the backend. This method seems to be the only way - I tried putting formData and userId in an object to send it through but it didn't work.
+  formData.append('image', file);
+  formData.append('description', description);
+  formData.append('userId', userId); // need to append userId to formData in order to send userId to the backend. This method seems to be the only way - I tried putting formData and userId in an object to send it through but it didn't work.
   const result = await axios.post(`${REACT_APP_BACKEND}/api/images`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
+    headers: { 'Content-Type': 'multipart/form-data' },
   });
   setAllImages([
     ...allImages,
