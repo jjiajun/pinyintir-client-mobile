@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
 
 const Scan = (props) => {
   const [hasPermission, setHasPermission] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
   const [chinese, setChinese] = useState([]);
   const [isImage, setIsImage] = useState(false);
   const [isResults, setIsResults] = useState(false);
@@ -85,14 +84,6 @@ const Scan = (props) => {
     // create authorization header
     auth = { headers: { Authorization: `Bearer ${token}` } };
   });
-
-  const switchCamera = () => {
-    setType(
-      type === Camera.Constants.Type.back
-        ? Camera.Constants.Type.front
-        : Camera.Constants.Type.back,
-    );
-  };
 
   const scanPicture = async () => {
     try {
@@ -144,7 +135,7 @@ const Scan = (props) => {
 
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} type={type} ref={camera}>
+      <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={camera}>
         <View style={styles.buttonContainer}>
           {isImage ? (
             <>
@@ -159,14 +150,9 @@ const Scan = (props) => {
               </TouchableOpacity>
             </>
           ) : (
-            <>
-              <TouchableOpacity style={styles.button} onPress={switchCamera}>
-                <Text style={styles.text}>Flip</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.button} onPress={scanPicture}>
-                <Text style={styles.text}>Scan</Text>
-              </TouchableOpacity>
-            </>
+            <TouchableOpacity style={styles.button} onPress={scanPicture}>
+              <Text style={styles.text}>Scan</Text>
+            </TouchableOpacity>
           )}
         </View>
       </Camera>
