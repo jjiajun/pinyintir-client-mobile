@@ -1,22 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StatusBar } from 'expo-status-bar';
 import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Camera, takePictureAsync } from 'expo-camera';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Keyboard,
-  TouchableOpacity,
+  View, Text, StyleSheet, TouchableOpacity,
 } from 'react-native';
+import { CameraIcon, ArrowLeftIcon, DocumentTextIcon } from 'react-native-heroicons/outline';
 import Colors from '../constants/colors.js';
 import ResultsOutput from '../components/ResultsOutput.jsx';
-// import Input from '../components/Input.jsx';
-// import Card from '../components/Card.jsx';
-// import CustomButton from '../components/CustomButton.jsx';
 
 const styles = StyleSheet.create({
   container: {
@@ -36,7 +28,9 @@ const styles = StyleSheet.create({
   button: {
     padding: 20,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    borderRadius: 20,
+    borderRadius: 50,
+    borderColor: 'white',
+    borderWidth: 1,
   },
   text: {
     fontSize: 18,
@@ -50,11 +44,6 @@ const Scan = (props) => {
   const [isImage, setIsImage] = useState(false);
   const [isResults, setIsResults] = useState(false);
 
-  const [file, setFile] = useState();
-  const [description, setDescription] = useState('');
-  const [allImages, setAllImages] = useState([]);
-  const [id, setId] = useState();
-  let displayImages;
   let auth;
   let userId;
   let token;
@@ -140,18 +129,18 @@ const Scan = (props) => {
           {isImage ? (
             <>
               <TouchableOpacity style={styles.button} onPress={continueVideo}>
-                <Text style={styles.text}>Back</Text>
+                <ArrowLeftIcon color="white" />
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => setIsResults(true)}
               >
-                <Text style={styles.text}>Show Results</Text>
+                <DocumentTextIcon color="white" />
               </TouchableOpacity>
             </>
           ) : (
             <TouchableOpacity style={styles.button} onPress={scanPicture}>
-              <Text style={styles.text}>Scan</Text>
+              <CameraIcon color="white" />
             </TouchableOpacity>
           )}
         </View>
