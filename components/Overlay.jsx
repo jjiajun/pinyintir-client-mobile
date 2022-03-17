@@ -1,9 +1,10 @@
 import React from 'react';
 import {
-  Dimensions, Text, View, StyleSheet,
+  Dimensions, View, StyleSheet, TouchableOpacity,
 } from 'react-native';
+import { ArrowLeftIcon, DocumentTextIcon } from 'react-native-heroicons/outline';
 import { MenuProvider } from 'react-native-popup-menu';
-import OverlayTextButton from './OverlayTextButton';
+import OverlayTextButton from './OverlayTextButton.jsx';
 
 const styles = StyleSheet.create({
   overlay: {
@@ -11,30 +12,50 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     position: 'absolute',
-    backgroundColor: 'blue',
+  },
+  buttonContainer: {
+    position: 'absolute',
+    top: 0,
+    padding: 5,
+    zIndex: 100,
+  },
+  button: {
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 50,
+    borderColor: 'white',
+    borderWidth: 1,
+    marginBottom: 5,
   },
 });
-const Overlay = (props) => {
+
+const Overlay = ({
+  returnData, dimension, continueVideo, toggleOverlay,
+}) => {
   let heightRatio = 1;
   let widthRatio = 1;
-  if (props.dimension.height) {
-    heightRatio = Number(Dimensions.get('window').height) / Number(props.dimension.height);
-    widthRatio = Number(Dimensions.get('window').width) / Number(props.dimension.width);
+  if (dimension.height) {
+    heightRatio = Number(Dimensions.get('window').height) / Number(dimension.height);
+    widthRatio = Number(Dimensions.get('window').width) / Number(dimension.width);
   }
-  console.log('pic', props.dimension.height, 'screen', Dimensions.get('window').height);
-  console.log('heightRatio', heightRatio, 'widthRatio', widthRatio);
-  return (
-    <View style={{
-      height: '100%',
-      width: '100%',
-      justifyContent: 'center',
-      position: 'absolute',
-    }}
-    >
 
+  return (
+    <View style={styles.overlay}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={continueVideo}>
+          <ArrowLeftIcon color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => toggleOverlay((prev) => !prev)}
+        >
+          <DocumentTextIcon color="white" />
+        </TouchableOpacity>
+      </View>
       <MenuProvider>
-        {props.returnData.map((text) => (
+        {returnData.map((text) => (
           <OverlayTextButton
+            key={text.id}
             pinyin={text.pinyin}
             chinese={text.characters}
             translation={text.translation}

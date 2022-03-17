@@ -7,8 +7,6 @@ import {
   View, Text, StyleSheet, TouchableOpacity, ActivityIndicator,
 } from 'react-native';
 import { CameraIcon, ArrowLeftIcon, DocumentTextIcon } from 'react-native-heroicons/outline';
-import Colors from '../constants/colors.js';
-import ResultsOutput from '../components/ResultsOutput.jsx';
 import Overlay from '../components/Overlay.jsx';
 
 const styles = StyleSheet.create({
@@ -18,7 +16,7 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
   },
-  buttonContainer: {
+  camButtonContainer: {
     flex: 1,
     backgroundColor: 'transparent',
     flexDirection: 'row',
@@ -26,12 +24,26 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'flex-end',
   },
-  button: {
+  camButton: {
     padding: 20,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     borderRadius: 50,
     borderColor: 'white',
     borderWidth: 1,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    top: 0,
+    padding: 5,
+    zIndex: 100,
+  },
+  button: {
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 50,
+    borderColor: 'white',
+    borderWidth: 1,
+    marginBottom: 5,
   },
   text: {
     fontSize: 18,
@@ -41,7 +53,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    alignItems: 'center',
   },
 });
 
@@ -141,34 +153,38 @@ const Scan = (props) => {
         <View style={styles.spinner}>
           <ActivityIndicator animating={loading} size="large" color="#00ff00" />
         </View>
-        <View style={styles.buttonContainer}>
-          {isImage ? (
-            <>
-              <TouchableOpacity style={styles.button} onPress={continueVideo}>
-                <ArrowLeftIcon color="white" />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => setIsResults(true)}
-              >
-                <DocumentTextIcon color="white" />
-              </TouchableOpacity>
-            </>
-          ) : (!loading
-            && (
-            <TouchableOpacity style={styles.button} onPress={scanPicture}>
-              <CameraIcon color="white" />
+
+        {isImage ? (
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={continueVideo}>
+              <ArrowLeftIcon color="white" />
             </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setIsResults((prev) => !prev)}
+            >
+              <DocumentTextIcon color="white" />
+            </TouchableOpacity>
+          </View>
+        ) : (!loading
+            && (
+              <View style={styles.camButtonContainer}>
+                <TouchableOpacity style={styles.camButton} onPress={scanPicture}>
+                  <CameraIcon color="white" />
+                </TouchableOpacity>
+              </View>
             )
-          )}
-        </View>
+        )}
+
       </Camera>
-      {isImage && <Overlay returnData={chinese} dimension={imageDimension} />}
-      <ResultsOutput
-        isResults={isResults}
-        setIsResults={setIsResults}
-        chinese={chinese}
+      {isResults && (
+      <Overlay
+        returnData={chinese}
+        dimension={imageDimension}
+        continueVideo={continueVideo}
+        toggleOverlay={setIsResults}
       />
+      )}
     </View>
   );
 };
