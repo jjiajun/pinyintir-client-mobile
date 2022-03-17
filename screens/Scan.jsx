@@ -4,7 +4,7 @@ import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Camera, takePictureAsync } from 'expo-camera';
 import {
-  View, Text, StyleSheet, TouchableOpacity,
+  View, Text, StyleSheet, TouchableOpacity, ActivityIndicator,
 } from 'react-native';
 import { CameraIcon, ArrowLeftIcon, DocumentTextIcon } from 'react-native-heroicons/outline';
 import Colors from '../constants/colors.js';
@@ -36,6 +36,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'white',
   },
+  spinner: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  },
 });
 
 const Scan = (props) => {
@@ -43,6 +49,7 @@ const Scan = (props) => {
   const [chinese, setChinese] = useState([]);
   const [isImage, setIsImage] = useState(false);
   const [isResults, setIsResults] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   let auth;
   let userId;
@@ -77,6 +84,7 @@ const Scan = (props) => {
   const scanPicture = async () => {
     try {
       if (camera) {
+        setLoading(true);
         const picture = await camera.current.takePictureAsync({
           quality: 0.3,
           base64: true,
@@ -101,10 +109,12 @@ const Scan = (props) => {
         setChinese(resp.data.chinese);
         setIsImage(true);
         setIsResults(true);
+        setLoading(false);
       }
     } catch (err) {
       console.log(err);
       camera.current.resumePreview();
+      setLoading(false);
     }
   };
 
@@ -125,6 +135,9 @@ const Scan = (props) => {
   return (
     <View style={styles.container}>
       <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={camera}>
+        <View style={styles.spinner}>
+          <ActivityIndicator animating={loading} size="large" color="#00ff00" />
+        </View>
         <View style={styles.buttonContainer}>
           {isImage ? (
             <>
@@ -138,10 +151,12 @@ const Scan = (props) => {
                 <DocumentTextIcon color="white" />
               </TouchableOpacity>
             </>
-          ) : (
+          ) : (!loading
+            && (
             <TouchableOpacity style={styles.button} onPress={scanPicture}>
               <CameraIcon color="white" />
             </TouchableOpacity>
+            )
           )}
         </View>
       </Camera>
