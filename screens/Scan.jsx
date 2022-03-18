@@ -11,6 +11,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
 import { Context } from '../Context.js';
@@ -19,6 +20,8 @@ import ResultsOutput from '../components/ResultsOutput.jsx';
 // import Input from '../components/Input.jsx';
 import Card from '../components/Card.jsx';
 import CustomButton from '../components/CustomButton.jsx';
+import { CameraIcon, ArrowLeftIcon, DocumentTextIcon } from 'react-native-heroicons/outline';
+import Overlay from '../components/Overlay.jsx';
 
 const styles = StyleSheet.create({
   container: {
@@ -27,7 +30,7 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
   },
-  buttonContainer: {
+  camButtonContainer: {
     flex: 1,
     backgroundColor: 'transparent',
     flexDirection: 'row',
@@ -35,20 +38,41 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'flex-end',
   },
-  button: {
-    padding: 12,
+  camButton: {
+    padding: 20,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    borderRadius: 20,
+    borderRadius: 50,
+    borderColor: 'white',
+    borderWidth: 1,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    top: 0,
+    padding: 5,
+    zIndex: 100,
+  },
+  button: {
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 50,
+    borderColor: 'white',
+    borderWidth: 1,
+    marginBottom: 5,
   },
   text: {
     fontSize: 18,
     color: 'white',
   },
+  spinner: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 const Scan = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
   const [chinese, setChinese] = useState([]);
   const [isImage, setIsImage] = useState(false);
   const [isResults, setIsResults] = useState(false);
@@ -56,9 +80,12 @@ const Scan = ({ navigation }) => {
   const {
     allImages, setAllImages, allPhrases, setAllPhrases,
   } = useContext(Context);
+  const [loading, setLoading] = useState(false);
+  const [imageDimension, setImageDimension] = useState({});
+
+  let auth;
   let userId;
   let token;
-  let auth;
 
   const camera = useRef(null);
 
@@ -85,13 +112,13 @@ const Scan = ({ navigation }) => {
     getData();
   });
 
-  const switchCamera = () => {
-    setType(
-      type === Camera.Constants.Type.back
-        ? Camera.Constants.Type.front
-        : Camera.Constants.Type.back,
-    );
-  };
+  // const switchCamera = () => {
+  //   setType(
+  //     type === Camera.Constants.Type.back
+  //       ? Camera.Constants.Type.front
+  //       : Camera.Constants.Type.back,
+  //   );
+  // };
 
   /** Submit function to upload image to db + aws */
   const saveScreenshot = async () => {
@@ -141,6 +168,7 @@ const Scan = ({ navigation }) => {
   const scanPicture = async () => {
     try {
       if (camera) {
+        setLoading(true);
         const picture = await camera.current.takePictureAsync({
           quality: 0.3,
           base64: true,
@@ -148,7 +176,7 @@ const Scan = ({ navigation }) => {
         camera.current.pausePreview();
         console.log('PICTURE: ', picture);
         console.log('uri: ', picture.uri);
-        const { base64 } = picture;
+        const { base64, height, width } = picture;
         const localUri = picture.uri;
         const filename = localUri.split('/').pop();
         setFile({ uri: localUri, name: filename, type: 'image/jpeg' });
@@ -170,10 +198,13 @@ const Scan = ({ navigation }) => {
         setChinese(resp.data.chinese);
         setIsImage(true);
         setIsResults(true);
+        setLoading(false);
+        setImageDimension({ height, width });
       }
     } catch (err) {
       console.log(err);
       camera.current.resumePreview();
+      setLoading(false);
     }
   };
 
@@ -193,20 +224,17 @@ const Scan = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} type={type} ref={camera}>
-        <View style={styles.buttonContainer}>
-          {isImage ? (
-            <>
-              <TouchableOpacity style={styles.button} onPress={continueVideo}>
-                <Text style={styles.text}>Back</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => setIsResults(true)}
-              >
-                <Text style={styles.text}>Show Results</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+      <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={camera}>
+        <View style={styles.spinner}>
+          <ActivityIndicator animating={loading} size="large" color="#00ff00" />
+        </View>
+
+        {isImage ? (
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={continueVideo}>
+              <ArrowLeftIcon color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity
                 style={styles.button}
                 onPress={saveScreenshot}
               >
@@ -218,24 +246,33 @@ const Scan = ({ navigation }) => {
               >
                 <Text style={styles.text}>Save Phrase</Text>
               </TouchableOpacity>
-            </>
-          ) : (
-            <>
-              <TouchableOpacity style={styles.button} onPress={switchCamera}>
-                <Text style={styles.text}>Flip</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.button} onPress={scanPicture}>
-                <Text style={styles.text}>Scan</Text>
-              </TouchableOpacity>
-            </>
-          )}
-        </View>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setIsResults((prev) => !prev)}
+            >
+              <DocumentTextIcon color="white" />
+            </TouchableOpacity>
+          </View>
+        ) : (!loading
+            && (
+              <View style={styles.camButtonContainer}>
+                <TouchableOpacity style={styles.camButton} onPress={scanPicture}>
+                  <CameraIcon color="white" />
+                </TouchableOpacity>
+              </View>
+            )
+        )}
+
       </Camera>
-      <ResultsOutput
-        isResults={isResults}
-        setIsResults={setIsResults}
-        chinese={chinese}
+      {isResults && (
+      <Overlay
+        returnData={chinese}
+        dimension={imageDimension}
+        continueVideo={continueVideo}
+        toggleOverlay={setIsResults}
       />
+      )}
+
       <Card>
         <CustomButton
           style={styles.button}
@@ -256,7 +293,9 @@ const Scan = ({ navigation }) => {
           onPress={() => navigation.navigate('LogIn')}
         />
       </Card>
+      
     </View>
+    
   );
 };
 

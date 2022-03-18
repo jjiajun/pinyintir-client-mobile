@@ -1,5 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {
+  View, Text, StyleSheet, TouchableOpacity,
+} from 'react-native';
+import * as Speech from 'expo-speech';
+import { MicrophoneIcon } from 'react-native-heroicons/outline';
 
 const styles = StyleSheet.create({
   listItem: {
@@ -9,14 +13,35 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
   },
+  characters: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  chineseText: {
+    marginRight: 5,
+  },
 });
 
-const ChineseCard = ({ item }) => (
-  <View style={styles.listItem}>
-    <Text>{item.characters}</Text>
-    <Text>{item.pinyin}</Text>
-    <Text>{item.translation}</Text>
-  </View>
-);
+const ChineseCard = ({ item }) => {
+  const speakText = (text) => {
+    try {
+      Speech.speak(text, { language: 'zh-CN' });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
+    <View style={styles.listItem}>
+      <View style={styles.characters}>
+        <Text style={styles.chineseText}>{item.characters}</Text>
+        <TouchableOpacity onPress={() => speakText(item.characters)}>
+          <MicrophoneIcon color="black" size={16} fill="black" />
+        </TouchableOpacity>
+      </View>
+      <Text>{item.pinyin}</Text>
+      <Text>{item.translation}</Text>
+    </View>
+  ); };
 
 export default ChineseCard;
