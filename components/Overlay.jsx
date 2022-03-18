@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import {
@@ -42,11 +42,11 @@ const Overlay = ({
 }) => {
   let heightRatio = 1;
   let widthRatio = 1;
+  const heightScaling = 0.8;
   if (dimension.height) {
-    heightRatio = Number(Dimensions.get('window').height) / Number(dimension.height);
+    heightRatio = (Number(Dimensions.get('window').height) * heightScaling) / Number(dimension.height);
     widthRatio = Number(Dimensions.get('window').width) / Number(dimension.width);
   }
-
   const { allPhrases, setAllPhrases } = useContext(Context);
 
   /** Submit function to upload image to db + aws */

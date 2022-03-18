@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import { Camera } from 'expo-camera';
 import axios from 'axios';
-import { View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import {
+  Dimensions, View, TouchableOpacity, ActivityIndicator,
+} from 'react-native';
 import {
   CameraIcon, ArrowLeftIcon, DocumentTextIcon, BookmarkIcon,
 } from 'react-native-heroicons/outline';
@@ -13,7 +15,7 @@ const CameraView = ({
   setIsImage, isImage, setIsResults, setImageDimension, saveScreenshot,
 }) => {
   const [loading, setLoading] = useState(false);
-
+  console.log(`${REACT_APP_BACKEND}/login`);
   const scanPicture = async () => {
     if (!camera) return;
 
