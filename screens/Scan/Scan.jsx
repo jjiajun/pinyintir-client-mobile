@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
-import { useIsFocused } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { Context } from '../../Context.js';
 import Colors from '../../constants/colors.js';
 import NavBar from '../../components/NavBar.jsx';
@@ -54,6 +54,19 @@ const Scan = ({ navigation }) => {
       }
     })();
   });
+
+  // this will reinitialise this component's state whenever it comes into focus
+  // if not then we may run into scenario where user has overlay on from taking a picture
+  // switches to image gallery mode and back to scan ->
+  // will get a live camera view but prev overlays still active
+  useFocusEffect(
+    React.useCallback(() => {
+      setChinese([]);
+      setIsImage(false);
+      setIsResults(false);
+      setFile(null);
+    }, []),
+  );
 
   /** Submit function to upload image to db + aws */
   const saveScreenshot = async () => {
