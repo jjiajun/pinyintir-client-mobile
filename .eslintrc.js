@@ -31,5 +31,6 @@ module.exports = {
     'react/function-component-definition': 'off',
     'react/jsx-one-expression-per-line': 'off',
     'react/destructuring-assignment': 'off',
+    'no-underscore-dangle': 'off',
   },
 };

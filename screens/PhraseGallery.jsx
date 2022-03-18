@@ -83,7 +83,7 @@ const PhraseGallery = ({ navigation }) => {
           <ScrollView>
             <View style={styles.scrollView}>
               {allPhrases.map((onePhrase) => (
-                <Card key={onePhrase.id} style={styles.phraseCard}>
+                <Card key={onePhrase._id} style={styles.phraseCard}>
                   {console.log(onePhrase)}
                   <Text style={styles.text}>{onePhrase.chinesePhrase}</Text>
                   <Text style={styles.text}>{onePhrase.pinyin}</Text>

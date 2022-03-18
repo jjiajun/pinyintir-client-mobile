@@ -77,7 +77,7 @@ const ImageGallery = ({ navigation }) => {
         ? (
           <ScrollView>
             {allImages.map((oneImage) => (
-              <View key={oneImage.id} style={styles.gallery}>
+              <View key={oneImage._id} style={styles.gallery}>
                 <Image
                   style={styles.img}
                   source={{ uri: `${REACT_APP_BACKEND}${oneImage.imagePath}` }}
