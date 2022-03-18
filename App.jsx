@@ -20,7 +20,7 @@ export default function App() {
           allImages, setAllImages, allPhrases, setAllPhrases,
         }}
       >
-        <Stack.Navigator initialRouteName="LogIn">
+        <Stack.Navigator initialRouteName="LogIn" screenOptions={{ headerShown: false }}>
           <Stack.Screen
             name="LogIn"
             component={LogIn}
