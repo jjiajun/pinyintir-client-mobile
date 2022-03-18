@@ -9,6 +9,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
 } from 'react-native';
 import Message from '../components/Message.jsx';
 import Colors from '../constants/colors.js';
@@ -21,6 +22,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     fontSize: 20,
@@ -39,7 +41,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
   },
   input: {
-    width: 150,
+    width: '100%',
   },
 });
 
@@ -54,6 +56,7 @@ const LogIn = ({ navigation }) => {
     // immediately reject log in if there is a missing field\
     if (!email || !password) {
       setMessage('Please enter an email and password');
+      return;
     }
     // wrap email and data in an object for easier manipulation
     const data = {
@@ -90,8 +93,12 @@ const LogIn = ({ navigation }) => {
       }}
     >
       <View style={styles.screen}>
-        <Text style={styles.title}>Log In</Text>
         <Card style={styles.container}>
+          <Image
+            // eslint-disable-next-line global-require
+            source={require('../assets/pinyintir.png')}
+            style={{ width: '80%', height: 100 }}
+          />
           <Input
             style={styles.input}
             placeholder="Email"
@@ -102,6 +109,7 @@ const LogIn = ({ navigation }) => {
             value={email}
           />
           <Input
+            secureTextEntry
             style={styles.input}
             placeholder="Password"
             blurOnSubmit

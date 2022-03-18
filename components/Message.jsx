@@ -15,6 +15,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const Message = (props) => <View style={styles.message}>{props.message}</View>;
+const Message = (props) => (
+  <View style={styles.message}>
+    <Text>
+      {props.message}
+    </Text>
+  </View>
+);
 
 export default Message;
