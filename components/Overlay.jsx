@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Dimensions, View, StyleSheet, TouchableOpacity,
+  Dimensions, View, StyleSheet, TouchableOpacity, Text,
 } from 'react-native';
 import { ArrowLeftIcon, DocumentTextIcon } from 'react-native-heroicons/outline';
 import { MenuProvider } from 'react-native-popup-menu';
@@ -27,10 +27,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 5,
   },
+  text: {
+    fontSize: 18,
+    color: 'white',
+  },
 });
 
 const Overlay = ({
-  returnData, dimension, continueVideo, toggleOverlay,
+  returnData, dimension, continueVideo, toggleOverlay, saveScreenshot, savePhrase,
 }) => {
   let heightRatio = 1;
   let widthRatio = 1;
@@ -47,6 +51,12 @@ const Overlay = ({
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
+          onPress={saveScreenshot}
+        >
+          <Text style={styles.text}>Save Image</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
           onPress={() => toggleOverlay((prev) => !prev)}
         >
           <DocumentTextIcon color="white" />
@@ -60,6 +70,7 @@ const Overlay = ({
             chinese={text.characters}
             translation={text.translation}
             text={text}
+            savePhrase={savePhrase}
             styles={{
               top: text.vertices[0].y * heightRatio,
               left: text.vertices[0].x * widthRatio,

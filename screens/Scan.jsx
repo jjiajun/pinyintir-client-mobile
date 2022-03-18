@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import React, {
   useState, useEffect, useRef, useContext,
 } from 'react';
@@ -14,13 +15,14 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
+import { CameraIcon, ArrowLeftIcon, DocumentTextIcon } from 'react-native-heroicons/outline';
 import { Context } from '../Context.js';
 import Colors from '../constants/colors.js';
 import ResultsOutput from '../components/ResultsOutput.jsx';
 // import Input from '../components/Input.jsx';
 import Card from '../components/Card.jsx';
+import NavBar from '../components/Card.jsx';
 import CustomButton from '../components/CustomButton.jsx';
-import { CameraIcon, ArrowLeftIcon, DocumentTextIcon } from 'react-native-heroicons/outline';
 import Overlay from '../components/Overlay.jsx';
 
 const styles = StyleSheet.create({
@@ -112,14 +114,6 @@ const Scan = ({ navigation }) => {
     getData();
   });
 
-  // const switchCamera = () => {
-  //   setType(
-  //     type === Camera.Constants.Type.back
-  //       ? Camera.Constants.Type.front
-  //       : Camera.Constants.Type.back,
-  //   );
-  // };
-
   /** Submit function to upload image to db + aws */
   const saveScreenshot = async () => {
     const formData = new FormData();
@@ -145,9 +139,13 @@ const Scan = ({ navigation }) => {
   };
 
   /** Submit function to upload image to db + aws */
-  const savePhrase = async () => {
+  const savePhrase = async (dataObject) => {
+    let chinese;
+    let pinyin;
+    let translation;
+    ({ chinese, pinyin, translation } = dataObject);
     const data = {
-      chinesePhrase: '中国', pinyin: 'zhong guo', definition: 'China', userId,
+      chinesePhrase: chinese, pinyin, definition: translation, userId,
     };
     const result = await axios.post(`${REACT_APP_BACKEND}/api/phrases`, data, auth);
     console.log('status: ', result);
@@ -155,9 +153,9 @@ const Scan = ({ navigation }) => {
       ...allPhrases,
       {
         id: uuidv4(),
-        chinesePhrase: '中国',
-        pinyin: 'zhong guo',
-        definition: 'China',
+        chinesePhrase: chinese,
+        pinyin,
+        definition: translation,
       },
     ]);
     // Adds newly image data to allImages state.
@@ -235,17 +233,11 @@ const Scan = ({ navigation }) => {
               <ArrowLeftIcon color="white" />
             </TouchableOpacity>
             <TouchableOpacity
-                style={styles.button}
-                onPress={saveScreenshot}
-              >
-                <Text style={styles.text}>Save Image</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={savePhrase}
-              >
-                <Text style={styles.text}>Save Phrase</Text>
-              </TouchableOpacity>
+              style={styles.button}
+              onPress={saveScreenshot}
+            >
+              <Text style={styles.text}>Save Image</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
               onPress={() => setIsResults((prev) => !prev)}
@@ -270,10 +262,12 @@ const Scan = ({ navigation }) => {
         dimension={imageDimension}
         continueVideo={continueVideo}
         toggleOverlay={setIsResults}
+        saveScreenshot={saveScreenshot}
+        savePhrase={savePhrase}
       />
       )}
 
-      <Card>
+      <NavBar>
         <CustomButton
           style={styles.button}
           title="Image Gallery"
@@ -286,16 +280,9 @@ const Scan = ({ navigation }) => {
           color={Colors.primary}
           onPress={() => navigation.navigate('PhraseGallery')}
         />
-        <CustomButton
-          style={styles.button}
-          title="Log In"
-          color={Colors.primary}
-          onPress={() => navigation.navigate('LogIn')}
-        />
-      </Card>
-      
+      </NavBar>
     </View>
-    
+
   );
 };
 

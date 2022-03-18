@@ -11,19 +11,37 @@ import {
 } from 'react-native';
 import { Context } from '../Context.js';
 import Colors from '../constants/colors.js';
-import Card from '../components/Card.jsx';
+import NavBar from '../components/NavBar.jsx';
 import CustomButton from '../components/CustomButton.jsx';
 
 const styles = StyleSheet.create({
+  phraseCard: {
+    width: 200,
+    height: 200,
+  },
   text: {
     fontSize: 20,
     marginVertical: 10,
     color: 'black',
     textAlign: 'center',
   },
-  phraseCard: {
+  screen: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  img: {
     width: 200,
     height: 200,
+  },
+  button: {
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 50,
+    borderColor: 'white',
+    borderWidth: 1,
+    marginBottom: 5,
   },
 });
 
@@ -69,14 +87,20 @@ const PhraseGallery = ({ navigation }) => {
           </ScrollView>
         )
         : <View><Text>No phrases</Text></View>}
-      <Card>
+      <NavBar>
         <CustomButton
           style={styles.button}
           title="Scan"
           color={Colors.primary}
           onPress={() => navigation.navigate('Scan')}
         />
-      </Card>
+        <CustomButton
+          style={styles.button}
+          title="Image Gallery"
+          color={Colors.primary}
+          onPress={() => navigation.navigate('ImageGallery')}
+        />
+      </NavBar>
     </View>
   );
 };

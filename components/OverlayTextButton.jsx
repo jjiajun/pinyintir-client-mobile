@@ -13,21 +13,6 @@ import ChineseCard from './ChineseCard';
 // const Input = (props) => {
 //   return <TextInput {...props} style={{ ...styles.input, ...props.style }} />;
 // };
-
-const OverlayTextButton = (props) => (
-
-  <View style={{ position: 'absolute', ...props.styles }}>
-    <Menu onSelect={(value) => console.log(`Selected number: ${value}`)}>
-      <MenuTrigger text={props.text.pinyin} />
-      <MenuOptions>
-        <ChineseCard item={props.text} />
-        <MenuOption value={1} text="Save" />
-      </MenuOptions>
-    </Menu>
-  </View>
-
-);
-
 const styles = StyleSheet.create({
   menu: {
     position: 'absolute',
@@ -36,5 +21,25 @@ const styles = StyleSheet.create({
     padding: 5,
   },
 });
+
+const OverlayTextButton = (props) => (
+
+  <View style={{ position: 'absolute', ...props.styles }}>
+    <Menu onSelect={(value) => console.log(`Selected number: ${value}`)}>
+      <MenuTrigger text={props.text.pinyin} style={{ color: 'white' }} />
+      <MenuOptions>
+        <ChineseCard item={props.text} />
+        <MenuOption
+          value={1}
+          text="Save"
+          onPress={() => props.savePhrase(
+            props.text,
+          )}
+        />
+      </MenuOptions>
+    </Menu>
+  </View>
+
+);
 
 export default OverlayTextButton;
