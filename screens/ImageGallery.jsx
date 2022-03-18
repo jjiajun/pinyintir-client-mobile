@@ -54,6 +54,8 @@ const ImageGallery = ({ navigation }) => {
     getData().then(() => console.log('getData successful!', allImages));
   }, []);
 
+  console.log('allimages: ', allImages);
+
   /** Helper function to display all images stored in allImages state */
   return (
     <View style={styles.screen}>
