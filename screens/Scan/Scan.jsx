@@ -4,20 +4,16 @@ import React, {
 import axios from 'axios';
 import { Camera } from 'expo-camera';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
-import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { Context } from '../../Context.js';
-import Colors from '../../constants/colors.js';
-import NavBar from '../../components/NavBar.jsx';
-import CustomButton from '../../components/CustomButton.jsx';
 import Overlay from '../../components/Overlay.jsx';
 import styles from './Scan.styles.js';
 import CameraView from '../../components/CameraView.jsx';
 
-const Scan = ({ navigation }) => {
+const Scan = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [chinese, setChinese] = useState([]);
   const [isImage, setIsImage] = useState(false);
@@ -132,28 +128,8 @@ const Scan = ({ navigation }) => {
         />
       )}
 
-      <NavBar>
-        <CustomButton
-          style={styles.button}
-          title="Image Gallery"
-          color={Colors.primary}
-          onPress={() => navigation.navigate('ImageGallery')}
-        />
-        <CustomButton
-          style={styles.button}
-          title="Phrase Gallery"
-          color={Colors.primary}
-          onPress={() => navigation.navigate('PhraseGallery')}
-        />
-      </NavBar>
     </View>
   );
-};
-
-Scan.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
 };
 
 export default Scan;

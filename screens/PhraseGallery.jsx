@@ -10,10 +10,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { Context } from '../Context.js';
-import Colors from '../constants/colors.js';
 import Card from '../components/Card.jsx';
-import NavBar from '../components/NavBar.jsx';
-import CustomButton from '../components/CustomButton.jsx';
 
 const styles = StyleSheet.create({
   phraseCard: {
@@ -49,7 +46,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const PhraseGallery = ({ navigation }) => {
+const PhraseGallery = () => {
   const { allPhrases, setAllPhrases } = useContext(Context);
   let userId;
   let token;
@@ -94,28 +91,8 @@ const PhraseGallery = ({ navigation }) => {
           </ScrollView>
         )
         : <View><Text>No phrases</Text></View>}
-      <NavBar>
-        <CustomButton
-          style={styles.button}
-          title="Scan"
-          color={Colors.primary}
-          onPress={() => navigation.navigate('Scan')}
-        />
-        <CustomButton
-          style={styles.button}
-          title="Image Gallery"
-          color={Colors.primary}
-          onPress={() => navigation.navigate('ImageGallery')}
-        />
-      </NavBar>
     </View>
   );
-};
-
-PhraseGallery.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
 };
 
 export default PhraseGallery;

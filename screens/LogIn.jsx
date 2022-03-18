@@ -80,7 +80,7 @@ const LogIn = ({ navigation }) => {
             await AsyncStorage.setItem('@sessionToken', token);
             await AsyncStorage.setItem('@userId', userId);
           };
-          storeData().then(() => navigation.navigate('Scan'));
+          storeData().then(() => navigation.navigate('Home'));
         }
       })
       .catch((err) => console.log(err));
