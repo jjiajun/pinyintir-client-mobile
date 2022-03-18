@@ -16,22 +16,6 @@ import NavBar from '../components/NavBar.jsx';
 import CustomButton from '../components/CustomButton.jsx';
 
 const styles = StyleSheet.create({
-  text: {
-    fontSize: 20,
-    marginVertical: 10,
-    color: 'black',
-    textAlign: 'center',
-  },
-  screen: {
-    flex: 1,
-    alignItems: 'center',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  img: {
-    width: 200,
-    height: 200,
-  },
   button: {
     padding: 10,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
@@ -39,6 +23,22 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderWidth: 1,
     marginBottom: 5,
+  },
+  gallery: {
+    flex: 1,
+  },
+  img: {
+    width: 200,
+    height: 200,
+  },
+  screen: {
+    flex: 1,
+  },
+  text: {
+    fontSize: 20,
+    marginVertical: 10,
+    color: 'black',
+    textAlign: 'center',
   },
 });
 
@@ -77,7 +77,7 @@ const ImageGallery = ({ navigation }) => {
         ? (
           <ScrollView>
             {allImages.map((oneImage) => (
-              <View key={oneImage.id}>
+              <View key={oneImage.id} style={styles.gallery}>
                 <Image
                   style={styles.img}
                   source={{ uri: `${REACT_APP_BACKEND}${oneImage.imagePath}` }}
@@ -86,7 +86,11 @@ const ImageGallery = ({ navigation }) => {
             ))}
           </ScrollView>
         )
-        : <View><Text>No images</Text></View>}
+        : (
+          <View style={styles.gallery}>
+            <Text>No images</Text>
+          </View>
+        )}
       <NavBar>
         <CustomButton
           style={styles.button}

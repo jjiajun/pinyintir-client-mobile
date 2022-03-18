@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Context } from '../Context.js';
 import Colors from '../constants/colors.js';
+import Card from '../components/Card.jsx';
 import NavBar from '../components/NavBar.jsx';
 import CustomButton from '../components/CustomButton.jsx';
 
@@ -18,16 +19,19 @@ const styles = StyleSheet.create({
   phraseCard: {
     width: 200,
     height: 200,
+    margin: 6,
   },
   text: {
-    fontSize: 20,
+    fontSize: 16,
     marginVertical: 10,
     color: 'black',
     textAlign: 'center',
   },
   screen: {
     flex: 1,
-    alignItems: 'center',
+  },
+  scrollView: {
+    display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
@@ -77,13 +81,16 @@ const PhraseGallery = ({ navigation }) => {
       {allPhrases
         ? (
           <ScrollView>
-            {allPhrases.map((onePhrase) => (
-              <View key={onePhrase.id}>
-                <Text style={styles.text}>onePhrase.chinesePhrase</Text>
-                <Text style={styles.text}>onePhrase.pinyin</Text>
-                <Text style={styles.text}>onePhrase.definition</Text>
-              </View>
-            ))}
+            <View style={styles.scrollView}>
+              {allPhrases.map((onePhrase) => (
+                <Card key={onePhrase.id} style={styles.phraseCard}>
+                  {console.log(onePhrase)}
+                  <Text style={styles.text}>{onePhrase.chinesePhrase}</Text>
+                  <Text style={styles.text}>{onePhrase.pinyin}</Text>
+                  <Text style={styles.text}>{onePhrase.definition}</Text>
+                </Card>
+              ))}
+            </View>
           </ScrollView>
         )
         : <View><Text>No phrases</Text></View>}

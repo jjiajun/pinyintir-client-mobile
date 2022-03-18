@@ -15,17 +15,30 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
-import { CameraIcon, ArrowLeftIcon, DocumentTextIcon } from 'react-native-heroicons/outline';
+import {
+  CameraIcon, ArrowLeftIcon, DocumentTextIcon, BookmarkIcon,
+} from 'react-native-heroicons/outline';
 import { Context } from '../Context.js';
 import Colors from '../constants/colors.js';
-import ResultsOutput from '../components/ResultsOutput.jsx';
-// import Input from '../components/Input.jsx';
-import Card from '../components/Card.jsx';
-import NavBar from '../components/Card.jsx';
+import NavBar from '../components/NavBar.jsx';
 import CustomButton from '../components/CustomButton.jsx';
 import Overlay from '../components/Overlay.jsx';
 
 const styles = StyleSheet.create({
+  button: {
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 50,
+    borderColor: 'white',
+    borderWidth: 1,
+    marginBottom: 5,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    top: 0,
+    padding: 5,
+    zIndex: 100,
+  },
   container: {
     flex: 1,
   },
@@ -46,20 +59,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderColor: 'white',
     borderWidth: 1,
-  },
-  buttonContainer: {
-    position: 'absolute',
-    top: 0,
-    padding: 5,
-    zIndex: 100,
-  },
-  button: {
-    padding: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    borderRadius: 50,
-    borderColor: 'white',
-    borderWidth: 1,
-    marginBottom: 5,
   },
   text: {
     fontSize: 18,
@@ -140,27 +139,30 @@ const Scan = ({ navigation }) => {
 
   /** Submit function to upload image to db + aws */
   const savePhrase = async (dataObject) => {
-    let chinese;
-    let pinyin;
-    let translation;
-    ({ chinese, pinyin, translation } = dataObject);
-    const data = {
-      chinesePhrase: chinese, pinyin, definition: translation, userId,
-    };
-    const result = await axios.post(`${REACT_APP_BACKEND}/api/phrases`, data, auth);
-    console.log('status: ', result);
-    setAllPhrases([
-      ...allPhrases,
-      {
-        id: uuidv4(),
-        chinesePhrase: chinese,
-        pinyin,
-        definition: translation,
-      },
-    ]);
-    // Adds newly image data to allImages state.
-    // I am updating the allImages state on the FE so that the update is instantaneous.
-    // The BE is also updated. When the page is reloaded, the image list will still be the latest.
+    try {
+      let characters;
+      let pinyin;
+      let translation;
+      ({ characters, pinyin, translation } = dataObject);
+      const data = {
+        chinesePhrase: characters, pinyin, definition: translation, userId,
+      };
+      await axios.post(`${REACT_APP_BACKEND}/api/phrases`, data, auth);
+      setAllPhrases([
+        ...allPhrases,
+        {
+          id: uuidv4(),
+          chinesePhrase: characters,
+          pinyin,
+          definition: translation,
+        },
+      ]);
+      // Adds newly image data to allImages state.
+      // I am updating the allImages state on the FE so that the update is instantaneous.
+      // The BE is also updated. When the page is reloaded, the image list will still be the latest.
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const scanPicture = async () => {
@@ -236,7 +238,7 @@ const Scan = ({ navigation }) => {
               style={styles.button}
               onPress={saveScreenshot}
             >
-              <Text style={styles.text}>Save Image</Text>
+              <BookmarkIcon color="white" />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
@@ -266,7 +268,6 @@ const Scan = ({ navigation }) => {
         savePhrase={savePhrase}
       />
       )}
-
       <NavBar>
         <CustomButton
           style={styles.button}

@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.26,
     // shadow on android
     elevation: 8,
+    // position: 'absolute',
     backgroundColor: 'white',
     padding: 10,
     borderRadius: 10,
@@ -18,8 +19,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    position: 'absolute',
-    bottom: 0,
     width: '100%',
   },
 });

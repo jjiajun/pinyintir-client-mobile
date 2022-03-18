@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Dimensions, View, StyleSheet, TouchableOpacity, Text,
 } from 'react-native';
-import { ArrowLeftIcon, DocumentTextIcon } from 'react-native-heroicons/outline';
+import { ArrowLeftIcon, DocumentTextIcon, BookmarkIcon } from 'react-native-heroicons/outline';
 import { MenuProvider } from 'react-native-popup-menu';
 import OverlayTextButton from './OverlayTextButton.jsx';
 
@@ -53,7 +53,7 @@ const Overlay = ({
           style={styles.button}
           onPress={saveScreenshot}
         >
-          <Text style={styles.text}>Save Image</Text>
+          <BookmarkIcon color="white" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
