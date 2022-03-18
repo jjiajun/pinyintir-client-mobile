@@ -18,6 +18,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   CameraIcon, ArrowLeftIcon, DocumentTextIcon, BookmarkIcon,
 } from 'react-native-heroicons/outline';
+import { useIsFocused } from '@react-navigation/native';
 import { Context } from '../Context.js';
 import Colors from '../constants/colors.js';
 import NavBar from '../components/NavBar.jsx';
@@ -89,6 +90,7 @@ const Scan = ({ navigation }) => {
   let token;
 
   const camera = useRef(null);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     (async () => {
@@ -215,7 +217,7 @@ const Scan = ({ navigation }) => {
     setIsResults(false);
   };
 
-  if (hasPermission === null) {
+  if (hasPermission === null || !isFocused) {
     return <View />;
   }
   if (hasPermission === false) {
