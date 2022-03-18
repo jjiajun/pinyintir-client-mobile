@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Context } from './Context.js';
 import LogIn from './screens/LogIn.jsx';
-import Scan from './screens/Scan.jsx';
+import Scan from './screens/Scan/Scan.jsx';
 import ImageGallery from './screens/ImageGallery.jsx';
 import PhraseGallery from './screens/PhraseGallery.jsx';
 
