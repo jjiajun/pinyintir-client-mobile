@@ -67,6 +67,7 @@ const OverlayTextButton = (props) => (
     <Menu onSelect={(value) => console.log(`Selected number: ${value}`)} style={styles.menuTrigger}>
       <MenuTrigger text={props.text.pinyin} customStyles={triggerStyles} />
       <MenuOptions customStyles={optionsStyles}>
+        <Text>{props.text.vertices[0].y, props.text.vertices[0].x}</Text>
         <ChineseCard item={props.text} />
         <View
           style={{
