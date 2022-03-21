@@ -7,6 +7,7 @@ import {
 import { ArrowLeftIcon, DocumentTextIcon, BookmarkIcon } from 'react-native-heroicons/outline';
 import { MenuProvider } from 'react-native-popup-menu';
 import { v4 as uuidv4 } from 'uuid';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import OverlayTextButton from './OverlayTextButton.jsx';
 import { Context } from '../Context.js';
 
@@ -31,10 +32,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 5,
   },
-  text: {
-    fontSize: 18,
-    color: 'white',
-  },
+
 });
 
 const Overlay = ({
@@ -42,9 +40,9 @@ const Overlay = ({
 }) => {
   let heightRatio = 1;
   let widthRatio = 1;
-  const heightScaling = 0.8;
+  const navBarHeight = useBottomTabBarHeight();
   if (dimension.height) {
-    heightRatio = (Number(Dimensions.get('window').height) * heightScaling) / Number(dimension.height);
+    heightRatio = (Number(Dimensions.get('window').height) - navBarHeight) / Number(dimension.height);
     widthRatio = Number(Dimensions.get('window').width) / Number(dimension.width);
   }
   const { allPhrases, setAllPhrases } = useContext(Context);
