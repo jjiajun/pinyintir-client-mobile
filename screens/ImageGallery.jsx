@@ -55,6 +55,7 @@ const ImageGallery = () => {
         axios
           .post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth)
           .then((response) => {
+            console.log('response: ', response);
             setAllImages([...response.data.userProfile.images]);
           });
       } catch (err) {
@@ -76,7 +77,7 @@ const ImageGallery = () => {
               <View key={oneImage._id} style={styles.gallery}>
                 <Image
                   style={styles.img}
-                  source={{ uri: `${REACT_APP_BACKEND}${oneImage.imagePath}` }}
+                  source={{ uri: `${REACT_APP_BACKEND}/image${oneImage.imagePath}` }}
                 />
               </View>
             ))}
