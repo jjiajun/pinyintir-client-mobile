@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View,
-  Text,
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
@@ -66,7 +65,7 @@ const LogIn = ({ navigation }) => {
     };
     // verify log in. if not verified, send error messages
     axios
-      .post(`${REACT_APP_BACKEND}/login`, data)
+      .post(`${REACT_APP_BACKEND}/user/login`, data)
       .then((response) => {
         // If username or password incorrect, inform player
         if (response.data === 'The email or password is incorrect') {

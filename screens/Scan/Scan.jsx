@@ -67,7 +67,7 @@ const Scan = () => {
     const formData = new FormData();
     formData.append('image', file);
     formData.append('userId', userId); // need to append userId to formData in order to send userId to the backend. This method seems to be the only way - I tried putting formData and userId in an object to send it through but it didn't work.
-    const result = await axios.post(`${REACT_APP_BACKEND}/api/images`, formData, {
+    const result = await axios.post(`${REACT_APP_BACKEND}/image/uploadimage`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,

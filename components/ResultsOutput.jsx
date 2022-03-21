@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, Modal, FlatList, Button, TouchableOpacity,
+  View, Text, StyleSheet, Modal, FlatList, TouchableOpacity,
 } from 'react-native';
 import ChineseCard from './ChineseCard.jsx';
 

@@ -3,10 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Alert,
 } from 'react-native';
 
 const styles = StyleSheet.create({
