@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View, Text, StyleSheet, ScrollView,
 } from 'react-native';
+import { EmojiSadIcon } from 'react-native-heroicons/outline';
 import { Context } from '../Context.js';
 import Card from '../components/Card.jsx';
 
@@ -40,6 +41,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 5,
   },
+  messageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  message: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
 });
 
 const PhraseGallery = () => {
@@ -70,7 +81,7 @@ const PhraseGallery = () => {
 
   return (
     <View style={styles.screen}>
-      {allPhrases ? (
+      {allPhrases.length > 0 ? (
         <ScrollView>
           <View style={styles.scrollView}>
             {allPhrases.map((onePhrase) => (
@@ -84,8 +95,11 @@ const PhraseGallery = () => {
           </View>
         </ScrollView>
       ) : (
-        <View>
-          <Text>No phrases</Text>
+        <View style={styles.messageContainer}>
+          <EmojiSadIcon color="black" size={60} />
+          <Text style={styles.message}>No phrases!
+            You can save your favourite phrases after scanning an image.
+          </Text>
         </View>
       )}
     </View>

@@ -8,8 +8,8 @@ import HomeTabs from './components/HomeTabs.jsx';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
-  const [allImages, setAllImages] = useState();
-  const [allPhrases, setAllPhrases] = useState();
+  const [allImages, setAllImages] = useState([]);
+  const [allPhrases, setAllPhrases] = useState([]);
 
   return (
     <NavigationContainer>

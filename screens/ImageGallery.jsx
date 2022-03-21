@@ -9,6 +9,7 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
+import { EmojiSadIcon } from 'react-native-heroicons/outline';
 import { Context } from '../Context.js';
 
 const styles = StyleSheet.create({
@@ -34,6 +35,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginVertical: 10,
     color: 'black',
+    textAlign: 'center',
+  },
+  messageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  message: {
+    fontWeight: 'bold',
     textAlign: 'center',
   },
 });
@@ -70,7 +81,7 @@ const ImageGallery = () => {
   /** Helper function to display all images stored in allImages state */
   return (
     <View style={styles.screen}>
-      {allImages
+      {allImages.length > 0
         ? (
           <ScrollView>
             {allImages.map((oneImage) => (
@@ -84,8 +95,11 @@ const ImageGallery = () => {
           </ScrollView>
         )
         : (
-          <View style={styles.gallery}>
-            <Text>No images</Text>
+          <View style={styles.messageContainer}>
+            <EmojiSadIcon color="black" size={60} />
+            <Text style={styles.message}>No images!
+              You can save your favourite images after scanning an image.
+            </Text>
           </View>
         )}
     </View>
