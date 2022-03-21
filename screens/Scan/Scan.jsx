@@ -8,12 +8,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import { ExclamationCircleIcon } from 'react-native-heroicons/outline';
 import {
   Context, setChineseAction, addImageAction, setFileAction,
 } from '../../Context.jsx';
 import Overlay from '../../components/Overlay.jsx';
 import styles from './Scan.styles.js';
 import CameraView from '../../components/CameraView.jsx';
+import CustomButton from '../../components/CustomButton.jsx';
 
 const Scan = () => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -31,11 +33,13 @@ const Scan = () => {
   const camera = useRef(null);
   const isFocused = useIsFocused();
 
+  const requestPermissions = async () => {
+    const { status } = await Camera.requestCameraPermissionsAsync();
+    setHasPermission(status === 'granted');
+  };
+
   useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
+    requestPermissions();
   }, []);
 
   /** To get userId and token for axios calls at every render */
@@ -97,8 +101,17 @@ const Scan = () => {
   if (hasPermission === null || !isFocused) {
     return <View />;
   }
+
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+    return (
+      <View style={styles.noAccessContainer}>
+        <ExclamationCircleIcon color="red" size={60} />
+        <Text style={styles.noAccess}>PinYinTir needs access to this device&apos;s camera.
+          Please tap on the button below to allow access to the camera.
+        </Text>
+        <CustomButton title="Grant Access" style={styles.grantAccessButton} onPress={requestPermissions} />
+      </View>
+    );
   }
 
   return (
