@@ -56,7 +56,7 @@ const Overlay = ({
       const data = {
         chinesePhrase: characters, pinyin, definition: translation, userId,
       };
-      await axios.post(`${REACT_APP_BACKEND}/api/phrases`, data, auth);
+      await axios.post(`${REACT_APP_BACKEND}/phrase/uploadphrase`, data, auth);
       setAllPhrases([
         ...allPhrases,
         {

@@ -42,8 +42,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const PhraseGallery = () => {
+const Categories = () => {
   const { allPhrases, setAllPhrases } = useContext(Context);
+  const [allCategories, categories] = useState([]);
   let userId;
   let token;
   let auth;
@@ -70,7 +71,7 @@ const PhraseGallery = () => {
 
   return (
     <View style={styles.screen}>
-      {allPhrases ? (
+      {allCategories ? (
         <ScrollView>
           <View style={styles.scrollView}>
             {allPhrases.map((onePhrase) => (
@@ -92,4 +93,4 @@ const PhraseGallery = () => {
   );
 };
 
-export default PhraseGallery;
+export default Categories;

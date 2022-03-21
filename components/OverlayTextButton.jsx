@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import PropTypes from 'prop-types';
 import {
   MenuContext,
   Menu,
@@ -42,11 +41,5 @@ const OverlayTextButton = (props) => (
   </View>
 
 );
-
-// OverlayTextButton.propTypes = {
-//   navigation: PropTypes.shape({
-//     props.text: PropTypes.shape.isRequired,
-//   }).isRequired,
-// };
 
 export default OverlayTextButton;

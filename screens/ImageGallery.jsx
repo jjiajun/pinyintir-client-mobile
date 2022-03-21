@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
-import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View,
@@ -54,7 +53,7 @@ const ImageGallery = () => {
         // create authorization header
         auth = { headers: { Authorization: `Bearer ${token}` } };
         axios
-          .post(`${REACT_APP_BACKEND}/getuserdatabyid`, { userId }, auth)
+          .post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth)
           .then((response) => {
             setAllImages([...response.data.userProfile.images]);
           });
