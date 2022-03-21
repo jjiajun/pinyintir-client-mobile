@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import {
@@ -44,6 +44,7 @@ const Overlay = ({
   const navBarHeight = useBottomTabBarHeight();
   if (dimension.height) {
     heightRatio = (Number(Dimensions.get('window').height) - navBarHeight) / Number(dimension.height);
+    console.log('dimension get window height', Number(dimension.height));
     widthRatio = Number(Dimensions.get('window').width) / Number(dimension.width);
   }
   const { allPhrases, setAllPhrases } = useContext(Context);

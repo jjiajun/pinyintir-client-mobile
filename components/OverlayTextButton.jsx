@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import {
   Menu,
   MenuOptions,
@@ -66,6 +66,7 @@ const OverlayTextButton = (props) => (
     <Menu onSelect={(value) => console.log(`Selected number: ${value}`)} style={styles.menuTrigger}>
       <MenuTrigger text={props.text.pinyin} customStyles={triggerStyles} />
       <MenuOptions customStyles={optionsStyles}>
+        <Text>{props.text.vertices[0].y}, {props.text.vertices[0].x}</Text>
         <ChineseCard item={props.text} />
         <View
           style={{
