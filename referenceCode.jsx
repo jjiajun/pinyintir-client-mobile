@@ -6,8 +6,6 @@ useEffect(() => {
     try {
       userId = await AsyncStorage.getItem('@userId');
       token = await AsyncStorage.getItem('@sessionToken');
-      console.log('USERID: ', userId);
-      console.log('TOKEN: ', token);
     } catch (err) {
       console.log(err);
     }
@@ -22,7 +20,6 @@ useEffect(() => {
   axios
     .post(`${REACT_APP_BACKEND}/getuserdatabyid`, { userId }, auth)
     .then((response) => {
-      console.log(response);
       setAllImages([...response.data.userProfile.images]);
       // setState is async. The only way to check the allImages value after setState has completed is to use useEffect (runs after the page has re-rendered)!
     });

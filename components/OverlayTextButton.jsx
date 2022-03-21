@@ -1,21 +1,16 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import {
-  MenuContext,
   Menu,
   MenuOptions,
   MenuOption,
   MenuTrigger,
-  MenuProvider,
 } from 'react-native-popup-menu';
 import ChineseCard from './ChineseCard.jsx';
-
-// const Input = (props) => {
-//   return <TextInput {...props} style={{ ...styles.input, ...props.style }} />;
-// };
+import colors from '../constants/colors.js';
 
 const styles = StyleSheet.create({
-  menuText: {
+  menuTrigger: {
     padding: 5,
   },
   overlay: {
@@ -23,16 +18,65 @@ const styles = StyleSheet.create({
   },
 });
 
+const triggerStyles = {
+  triggerText: {
+    color: 'white',
+  },
+  triggerWrapper: {
+    backgroundColor: 'rgba(95, 26, 148, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  triggerTouchable: {
+    underlayColor: 'darkblue',
+    activeOpacity: 70,
+    style: {
+      flex: 1,
+    },
+  },
+};
+
+const optionsStyles = {
+  optionsContainer: {
+    backgroundColor: colors.darkPurple,
+    padding: 5,
+    borderRadius: 5,
+  },
+};
+const optionStyles = {
+  optionTouchable: {
+    underlayColor: 'darkblue',
+    activeOpacity: 40,
+  },
+  optionWrapper: {
+    backgroundColor: colors.darkPurple,
+    margin: 1,
+
+  },
+  optionText: {
+    color: 'white',
+    padding: 5,
+  },
+};
+
 const OverlayTextButton = (props) => (
 
   <View style={{ ...styles.overlay, ...props.styles }}>
-    <Menu onSelect={(value) => console.log(`Selected number: ${value}`)}>
-      <MenuTrigger text={props.text.pinyin} />
-      <MenuOptions>
+    <Menu onSelect={(value) => console.log(`Selected number: ${value}`)} style={styles.menuTrigger}>
+      <MenuTrigger text={props.text.pinyin} customStyles={triggerStyles} />
+      <MenuOptions customStyles={optionsStyles}>
         <ChineseCard item={props.text} />
+        <View
+          style={{
+            borderBottomColor: 'white',
+            borderBottomWidth: StyleSheet.hairlineWidth,
+          }}
+        />
         <MenuOption
           value={1}
           text="Save"
+          customStyles={optionStyles}
           onSelect={() => {
             props.savePhrase(props.text); }}
         />

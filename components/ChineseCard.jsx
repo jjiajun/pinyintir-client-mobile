@@ -4,14 +4,16 @@ import {
 } from 'react-native';
 import * as Speech from 'expo-speech';
 import { MicrophoneIcon } from 'react-native-heroicons/outline';
+import colors from '../constants/colors';
 
 const styles = StyleSheet.create({
   listItem: {
     padding: 10,
     marginVertical: 10,
-    backgroundColor: '#ccc',
-    borderColor: 'black',
-    borderWidth: 1,
+    backgroundColor: colors.darkPurple,
+    // borderColor: 'black',
+    // borderWidth: 1,
+    color: 'white',
   },
   characters: {
     flexDirection: 'row',
@@ -19,6 +21,7 @@ const styles = StyleSheet.create({
   },
   chineseText: {
     marginRight: 5,
+    color: 'white',
   },
 });
 
@@ -36,11 +39,11 @@ const ChineseCard = ({ item }) => {
       <View style={styles.characters}>
         <Text style={styles.chineseText}>{item.characters}</Text>
         <TouchableOpacity onPress={() => speakText(item.characters)}>
-          <MicrophoneIcon color="black" size={16} fill="black" />
+          <MicrophoneIcon color="white" size={16} fill="white" />
         </TouchableOpacity>
       </View>
-      <Text>{item.pinyin}</Text>
-      <Text>{item.translation}</Text>
+      <Text style={styles.chineseText}>{item.pinyin}</Text>
+      <Text style={styles.chineseText}>{item.translation}</Text>
     </View>
   ); };
 
