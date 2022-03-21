@@ -51,6 +51,7 @@ const LogIn = ({ navigation }) => {
   const [password, setPassword] = useState('');
   // State and setter for signup and login message
   const [message, setMessage] = useState('');
+  console.log(`${REACT_APP_BACKEND}/login`);
 
   const loginAttempt = () => {
     // immediately reject log in if there is a missing field\

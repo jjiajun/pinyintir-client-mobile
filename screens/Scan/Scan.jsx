@@ -42,8 +42,6 @@ const Scan = () => {
       try {
         userId = await AsyncStorage.getItem('@userId');
         token = await AsyncStorage.getItem('@sessionToken');
-        console.log('USERID: ', userId);
-        console.log('TOKEN: ', token);
         auth = { headers: { Authorization: `Bearer ${token}` } };
       } catch (err) {
         console.log(err);
