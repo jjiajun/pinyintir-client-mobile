@@ -11,9 +11,6 @@ import {
   ScrollView,
 } from 'react-native';
 import { Context } from '../Context.js';
-import Colors from '../constants/colors.js';
-import NavBar from '../components/NavBar.jsx';
-import CustomButton from '../components/CustomButton.jsx';
 
 const styles = StyleSheet.create({
   button: {
@@ -42,7 +39,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const ImageGallery = ({ navigation }) => {
+const ImageGallery = () => {
   const { allImages, setAllImages } = useContext(Context);
   let userId;
   let token;
@@ -77,7 +74,7 @@ const ImageGallery = ({ navigation }) => {
         ? (
           <ScrollView>
             {allImages.map((oneImage) => (
-              <View key={oneImage.id} style={styles.gallery}>
+              <View key={oneImage._id} style={styles.gallery}>
                 <Image
                   style={styles.img}
                   source={{ uri: `${REACT_APP_BACKEND}${oneImage.imagePath}` }}
@@ -91,27 +88,8 @@ const ImageGallery = ({ navigation }) => {
             <Text>No images</Text>
           </View>
         )}
-      <NavBar>
-        <CustomButton
-          style={styles.button}
-          title="Scan"
-          color={Colors.primary}
-          onPress={() => navigation.navigate('Scan')}
-        />
-        <CustomButton
-          style={styles.button}
-          title="Phrase Gallery"
-          color={Colors.primary}
-          onPress={() => navigation.navigate('PhraseGallery')}
-        />
-      </NavBar>
     </View>
   );
-};
-ImageGallery.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
 };
 
 export default ImageGallery;

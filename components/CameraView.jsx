@@ -3,7 +3,7 @@ import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import { Camera } from 'expo-camera';
 import axios from 'axios';
 import {
-  Dimensions, View, TouchableOpacity, ActivityIndicator,
+  Dimensions, View, TouchableOpacity, ActivityIndicator, Text,
 } from 'react-native';
 import {
   CameraIcon, ArrowLeftIcon, DocumentTextIcon, BookmarkIcon,
@@ -16,11 +16,14 @@ const CameraView = ({
 }) => {
   const [loading, setLoading] = useState(false);
   console.log(`${REACT_APP_BACKEND}/login`);
+  const [msg, setMsg] = useState('');
+
   const scanPicture = async () => {
     if (!camera) return;
 
     try {
       setLoading(true);
+      setMsg('');
       const picture = await camera.current.takePictureAsync({
         quality: 0.3,
         base64: true,
@@ -38,15 +41,28 @@ const CameraView = ({
       };
 
       const resp = await axios.post(`${REACT_APP_BACKEND}/vision`, data);
+      setLoading(false);
+
+      if (resp.data.chinese.length === 0) {
+        setMsg('No Chinese text found!');
+        setTimeout(() => {
+          setMsg('');
+        }, 3000);
+        camera.current.resumePreview();
+        return;
+      }
       setChinese(resp.data.chinese);
       setIsImage(true);
       setIsResults(true);
-      setLoading(false);
       setImageDimension({ height, width });
     } catch (err) {
       console.log(err);
       camera.current.resumePreview();
       setLoading(false);
+      setMsg('An error occured, please try again');
+      setTimeout(() => {
+        setMsg('');
+      }, 3000);
     }
   };
 
@@ -55,6 +71,12 @@ const CameraView = ({
       <View style={styles.spinner}>
         <ActivityIndicator animating={loading} size="large" color="#00ff00" />
       </View>
+
+      {msg !== '' && (
+        <View style={styles.messageContainer}>
+          <Text style={styles.message}>{msg}</Text>
+        </View>
+      )}
 
       {isImage ? (
         <View style={styles.buttonContainer}>

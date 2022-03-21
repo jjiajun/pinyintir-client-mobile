@@ -46,4 +46,17 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  messageContainer: {
+    width: '80%',
+    height: 30,
+    alignSelf: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  message: {
+    color: 'red',
+    fontWeight: 'bold',
+  },
 });
