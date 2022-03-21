@@ -40,6 +40,7 @@ const Overlay = ({
 }) => {
   let heightRatio = 1;
   let widthRatio = 1;
+  const overlayTextVerticalOffset = 0;
   const navBarHeight = useBottomTabBarHeight();
   if (dimension.height) {
     heightRatio = (Number(Dimensions.get('window').height) - navBarHeight) / Number(dimension.height);
@@ -101,7 +102,7 @@ const Overlay = ({
             text={text}
             savePhrase={savePhrase}
             styles={{
-              top: text.vertices[0].y * heightRatio,
+              top: text.vertices[0].y * heightRatio - overlayTextVerticalOffset,
               left: text.vertices[0].x * widthRatio,
             }}
           />

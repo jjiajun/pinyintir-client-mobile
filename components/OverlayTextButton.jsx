@@ -68,6 +68,12 @@ const OverlayTextButton = (props) => (
       <MenuTrigger text={props.text.pinyin} customStyles={triggerStyles} />
       <MenuOptions customStyles={optionsStyles}>
         <ChineseCard item={props.text} />
+        <View
+          style={{
+            borderBottomColor: 'white',
+            borderBottomWidth: StyleSheet.hairlineWidth,
+          }}
+        />
         <MenuOption
           value={1}
           text="Save"
