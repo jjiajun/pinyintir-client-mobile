@@ -10,7 +10,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { EmojiSadIcon } from 'react-native-heroicons/outline';
-import { Context } from '../Context.js';
+import { Context, setImagesAction } from '../Context.jsx';
 
 const styles = StyleSheet.create({
   button: {
@@ -50,7 +50,8 @@ const styles = StyleSheet.create({
 });
 
 const ImageGallery = () => {
-  const { allImages, setAllImages } = useContext(Context);
+  const { store, dispatch } = useContext(Context);
+  const { images } = store;
   let userId;
   let token;
   let auth;
@@ -63,28 +64,25 @@ const ImageGallery = () => {
         token = await AsyncStorage.getItem('@sessionToken');
         // create authorization header
         auth = { headers: { Authorization: `Bearer ${token}` } };
-        axios
-          .post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth)
-          .then((response) => {
-            console.log('response: ', response);
-            setAllImages([...response.data.userProfile.images]);
-          });
+        const response = await axios.post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth);
+        console.log('response: ', response);
+        dispatch(setImagesAction([...response.data.userProfile.images]));
       } catch (err) {
         console.log(err);
       }
     };
-    getData().then(() => console.log('getData successful!', allImages));
+    getData().then(() => console.log('getData successful!', images));
   }, []);
 
-  console.log('allimages: ', allImages);
+  console.log('allimages: ', images);
 
   /** Helper function to display all images stored in allImages state */
   return (
     <View style={styles.screen}>
-      {allImages.length > 0
+      {images.length > 0
         ? (
           <ScrollView>
-            {allImages.map((oneImage) => (
+            {images.map((oneImage) => (
               <View key={oneImage._id} style={styles.gallery}>
                 <Image
                   style={styles.img}

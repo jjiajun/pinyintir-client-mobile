@@ -6,7 +6,7 @@ import {
   View, Text, StyleSheet, ScrollView,
 } from 'react-native';
 import { EmojiSadIcon } from 'react-native-heroicons/outline';
-import { Context } from '../Context.js';
+import { Context, setPhrasesAction } from '../Context.jsx';
 import Card from '../components/Card.jsx';
 
 const styles = StyleSheet.create({
@@ -54,7 +54,8 @@ const styles = StyleSheet.create({
 });
 
 const PhraseGallery = () => {
-  const { allPhrases, setAllPhrases } = useContext(Context);
+  const { store, dispatch } = useContext(Context);
+  const { phrases } = store;
   let userId;
   let token;
   let auth;
@@ -67,24 +68,21 @@ const PhraseGallery = () => {
         token = await AsyncStorage.getItem('@sessionToken');
         // create authorization header
         auth = { headers: { Authorization: `Bearer ${token}` } };
-        axios
-          .post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth)
-          .then((response) => {
-            setAllPhrases([...response.data.userProfile.phrases]);
-          });
+        const response = await axios.post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth);
+        dispatch(setPhrasesAction([...response.data.userProfile.phrases]));
       } catch (err) {
         console.log(err);
       }
     };
-    getData().then(() => console.log('getData successful!', allPhrases));
+    getData().then(() => console.log('getData successful!', phrases));
   }, []);
 
   return (
     <View style={styles.screen}>
-      {allPhrases.length > 0 ? (
+      {phrases.length > 0 ? (
         <ScrollView>
           <View style={styles.scrollView}>
-            {allPhrases.map((onePhrase) => (
+            {phrases.map((onePhrase) => (
               <Card key={onePhrase._id} style={styles.phraseCard}>
                 {console.log(onePhrase)}
                 <Text style={styles.text}>{onePhrase.chinesePhrase}</Text>

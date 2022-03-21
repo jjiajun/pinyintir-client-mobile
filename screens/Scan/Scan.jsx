@@ -8,19 +8,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import { Context } from '../../Context.js';
+import {
+  Context, setChineseAction, addImageAction, setFileAction,
+} from '../../Context.jsx';
 import Overlay from '../../components/Overlay.jsx';
 import styles from './Scan.styles.js';
 import CameraView from '../../components/CameraView.jsx';
 
 const Scan = () => {
   const [hasPermission, setHasPermission] = useState(null);
-  const [chinese, setChinese] = useState([]);
   const [isImage, setIsImage] = useState(false);
   const [isResults, setIsResults] = useState(false);
-  const [file, setFile] = useState();
-  const { allImages, setAllImages } = useContext(Context);
   const [imageDimension, setImageDimension] = useState({});
+
+  const { store, dispatch } = useContext(Context);
+  const { file } = store;
 
   let auth;
   let userId;
@@ -55,10 +57,10 @@ const Scan = () => {
   // will get a live camera view but prev overlays still active
   useFocusEffect(
     React.useCallback(() => {
-      setChinese([]);
+      dispatch(setChineseAction([]));
+      dispatch(setFileAction(null));
       setIsImage(false);
       setIsResults(false);
-      setFile(null);
     }, []),
   );
 
@@ -74,13 +76,12 @@ const Scan = () => {
       },
       transformRequest: (d) => d,
     });
-    setAllImages([
-      ...allImages,
+    dispatch(addImageAction(
       {
         id: uuidv4(),
         imagePath: result.data.imagePath,
       },
-    ]);
+    ));
     // Adds newly image data to allImages state.
     // I am updating the allImages state on the FE so that the update is instantaneous.
     // The BE is also updated. When the page is reloaded, the image list will still be the latest.
@@ -88,7 +89,7 @@ const Scan = () => {
 
   const continueVideo = () => {
     camera.current.resumePreview();
-    setChinese([]);
+    dispatch(setChineseAction([]));
     setIsImage(false);
     setIsResults(false);
   };
@@ -105,8 +106,6 @@ const Scan = () => {
       <CameraView
         camera={camera}
         continueVideo={continueVideo}
-        setFile={setFile}
-        setChinese={setChinese}
         setIsImage={setIsImage}
         isImage={isImage}
         setIsResults={setIsResults}
@@ -116,7 +115,6 @@ const Scan = () => {
 
       {isResults && (
         <Overlay
-          returnData={chinese}
           dimension={imageDimension}
           continueVideo={continueVideo}
           toggleOverlay={setIsResults}

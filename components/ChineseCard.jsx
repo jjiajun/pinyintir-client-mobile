@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import * as Speech from 'expo-speech';
 import { MicrophoneIcon } from 'react-native-heroicons/outline';
-import colors from '../constants/colors';
+import colors from '../constants/colors.js';
 
 const styles = StyleSheet.create({
   listItem: {
