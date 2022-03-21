@@ -31,7 +31,6 @@ const CameraView = ({
       const picture = await camera.current.takePictureAsync({
         quality: 0.3,
         base64: true,
-
       });
       camera.current.pausePreview();
 

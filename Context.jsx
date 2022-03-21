@@ -6,12 +6,16 @@ const SET_IMAGES = 'SET_IMAGES';
 const SET_PHRASES = 'SET_PHRASES';
 const SET_CHINESE = 'SET_CHINESE';
 const SET_FILE = 'SET_FILE';
+const SET_SPEECH_SPEED = 'SET_SPEECH_SPEED';
+const SET_SPEECH_PITCH = 'SET_SPEECH_PITCH';
 
 const initialState = {
   images: [],
   phrases: [],
   chinese: [],
   file: null,
+  speechSpeed: 1,
+  speechPitch: 1,
 };
 
 const pinyintirReducer = (state, action) => {
@@ -28,6 +32,10 @@ const pinyintirReducer = (state, action) => {
       return { ...state, chinese: action.payload.chinese };
     case SET_FILE:
       return { ...state, file: action.payload.file };
+    case SET_SPEECH_SPEED:
+      return { ...state, speechSpeed: action.payload.speed };
+    case SET_SPEECH_PITCH:
+      return { ...state, speechPitch: action.payload.pitch };
     default:
       return state;
   }
@@ -61,6 +69,16 @@ export const setChineseAction = (chinese) => ({
 export const setFileAction = (file) => ({
   type: SET_FILE,
   payload: { file },
+});
+
+export const setSpeechSpeedAction = (speed) => ({
+  type: SET_SPEECH_SPEED,
+  payload: { speed },
+});
+
+export const setSpeechPitchAction = (pitch) => ({
+  type: SET_SPEECH_PITCH,
+  payload: { pitch },
 });
 
 /** Initialize useContext */
