@@ -1,3 +1,4 @@
+import { View, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
@@ -12,6 +13,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
+      <View style={{ height: StatusBar.currentHeight }} />
       <Context.Provider
         value={{
           allImages, setAllImages, allPhrases, setAllPhrases,
