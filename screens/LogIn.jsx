@@ -80,6 +80,8 @@ const LogIn = ({ navigation }) => {
             await AsyncStorage.setItem('@sessionToken', token);
             await AsyncStorage.setItem('@userId', userId);
           };
+          setEmail('');
+          setPassword('');
           storeData().then(() => navigation.navigate('Home'));
         }
       })
