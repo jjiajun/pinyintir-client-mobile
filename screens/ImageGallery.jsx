@@ -7,11 +7,9 @@ import {
   Text,
   StyleSheet,
   Image,
-  ScrollView,
   FlatList,
 } from 'react-native';
 import { EmojiSadIcon } from 'react-native-heroicons/outline';
-import GridImageView from 'react-native-grid-image-viewer';
 import { Context, setImagesAction } from '../Context.jsx';
 
 const styles = StyleSheet.create({
@@ -82,16 +80,6 @@ const ImageGallery = () => {
     <View style={styles.screen}>
       {images.length > 0
         ? (
-          // <ScrollView>
-          //   {images.map((oneImage) => (
-          //     <View key={oneImage._id} style={styles.gallery}>
-          //       <Image
-          //         style={styles.img}
-          //         source={{ uri: `${REACT_APP_BACKEND}/image${oneImage.imagePath}` }}
-          //       />
-          //     </View>
-          //   ))}
-          // </ScrollView>
           <FlatList
             data={images}
             renderItem={({ item }) => (
