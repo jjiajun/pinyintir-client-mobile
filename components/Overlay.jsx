@@ -9,7 +9,7 @@ import { MenuProvider } from 'react-native-popup-menu';
 import { v4 as uuidv4 } from 'uuid';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import OverlayTextButton from './OverlayTextButton.jsx';
-import { Context } from '../Context.js';
+import { Context, addPhraseAction } from '../Context.jsx';
 
 const styles = StyleSheet.create({
   overlay: {
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 });
 
 const Overlay = ({
-  returnData, dimension, continueVideo, toggleOverlay, saveScreenshot, userId, auth,
+  dimension, continueVideo, toggleOverlay, saveScreenshot, userId, auth,
 }) => {
   let heightRatio = 1;
   let widthRatio = 1;
@@ -47,7 +47,9 @@ const Overlay = ({
     console.log('dimension get window height', Number(dimension.height));
     widthRatio = Number(Dimensions.get('window').width) / Number(dimension.width);
   }
-  const { allPhrases, setAllPhrases } = useContext(Context);
+
+  const { store, dispatch } = useContext(Context);
+  const { chinese } = store;
 
   /** Submit function to upload image to db + aws */
   const savePhrase = async (dataObject) => {
@@ -56,18 +58,27 @@ const Overlay = ({
       const data = {
         chinesePhrase: characters, pinyin, definition: translation, userId,
       };
+<<<<<<< HEAD
       console.log('THE POST REQUEST IS WORKING');
       const returnResult = await axios.post(`${REACT_APP_BACKEND}/phrase/uploadphrase`, data);
       setAllPhrases([
         ...allPhrases,
+=======
+      await axios.post(`${REACT_APP_BACKEND}/phrase/uploadphrase`, data, auth);
+      dispatch(addPhraseAction(
+>>>>>>> f0d15115408a86d2edb7504fd596b61fff162cb3
         {
           id: uuidv4(),
           chinesePhrase: characters,
           pinyin,
           definition: translation,
         },
+<<<<<<< HEAD
       ]);
       console.log('RETURN RESULT: ', returnResult);
+=======
+      ));
+>>>>>>> f0d15115408a86d2edb7504fd596b61fff162cb3
       // Adds newly image data to allImages state.
       // I am updating the allImages state on the FE so that the update is instantaneous.
       // The BE is also updated. When the page is reloaded, the image list will still be the latest.
@@ -96,7 +107,7 @@ const Overlay = ({
         </TouchableOpacity>
       </View>
       <MenuProvider>
-        {returnData.map((text) => (
+        {chinese.map((text) => (
           <OverlayTextButton
             key={text.id}
             pinyin={text.pinyin}

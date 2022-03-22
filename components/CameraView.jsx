@@ -1,22 +1,26 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import { Camera } from 'expo-camera';
 import axios from 'axios';
 import {
-  Dimensions, View, TouchableOpacity, ActivityIndicator, Text,
+  View, TouchableOpacity, ActivityIndicator, Text,
 } from 'react-native';
 import {
   CameraIcon, ArrowLeftIcon, DocumentTextIcon, BookmarkIcon,
 } from 'react-native-heroicons/outline';
+import {
+  Context, setChineseAction, setFileAction,
+} from '../Context.jsx';
 import styles from '../screens/Scan/Scan.styles.js';
 
 const CameraView = ({
-  camera, continueVideo, setFile, setChinese,
-  setIsImage, isImage, setIsResults, setImageDimension, saveScreenshot,
+  camera, continueVideo, setIsImage, isImage, setIsResults, setImageDimension, saveScreenshot,
 }) => {
   const [loading, setLoading] = useState(false);
-  console.log(`${REACT_APP_BACKEND}/login`);
   const [msg, setMsg] = useState('');
+
+  const { dispatch } = useContext(Context);
+  console.log(`${REACT_APP_BACKEND}/login`);
 
   const scanPicture = async () => {
     if (!camera) return;
@@ -27,14 +31,13 @@ const CameraView = ({
       const picture = await camera.current.takePictureAsync({
         quality: 0.3,
         base64: true,
-
       });
       camera.current.pausePreview();
 
       const { base64, height, width } = picture;
       const localUri = picture.uri;
       const filename = localUri.split('/').pop();
-      setFile({ uri: localUri, name: filename, type: 'image/jpeg' });
+      dispatch(setFileAction({ uri: localUri, name: filename, type: 'image/jpeg' }));
       const data = {
         requests: [
           { image: { content: base64 }, features: [{ type: 'TEXT_DETECTION', maxResults: 50 }] },
@@ -52,7 +55,7 @@ const CameraView = ({
         camera.current.resumePreview();
         return;
       }
-      setChinese(resp.data.chinese);
+      dispatch(setChineseAction(resp.data.chinese));
       setIsImage(true);
       setIsResults(true);
       setImageDimension({ height, width });

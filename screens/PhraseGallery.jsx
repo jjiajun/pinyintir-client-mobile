@@ -13,7 +13,8 @@ import {
 } from 'react-native-popup-menu';
 import { ChevronDownIcon } from 'react-native-heroicons/solid';
 import { v4 as uuidv4 } from 'uuid';
-import { Context } from '../Context.js';
+import { EmojiSadIcon } from 'react-native-heroicons/outline';
+import { Context, setPhrasesAction, setCategoriesAction, selectCategoryAction, setNewCategoryNameAction } from '../Context.jsx';
 import Card from '../components/Card.jsx';
 import Colors from '../constants/colors.js';
 import Input from '../components/Input.jsx';
@@ -113,15 +114,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 10,
   },
+  messageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  message: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
 });
 
 const PhraseGallery = () => {
-  const { allPhrases, setAllPhrases } = useContext(Context);
-  const [allCategories, setAllCategories] = useState([]);
-  const [selectedCategory, selectCategory] = useState('Saved Phrases');
+  const { store, dispatch } = useContext(Context);
+  const { phrases, categories, selectedCategory, newCategoryName } = store;
   const [modalVisible, setModalVisible] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState();
-  // const [userId, setUserId] = useState();
   let userId;
   let token;
   let auth;
@@ -137,18 +145,9 @@ const PhraseGallery = () => {
         token = await AsyncStorage.getItem('@sessionToken');
         // create authorization header
         auth = { headers: { Authorization: `Bearer ${token}` } };
-        const getPhrases = axios
-          .post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth)
-          .then((response) => {
-            console.log('RESPONSE NEWEST: ', response.data);
-            setAllPhrases([...response.data.userProfile.phrases]);
-          });
-        const getCategories = axios
-          .post(`${REACT_APP_BACKEND}/phrase/getcategories`, { userId }, auth)
-          .then((response) => {
-            setAllCategories([...response.data]);
-          });
-        await Promise.all(getPhrases, getCategories);
+        const response = await axios.post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth);
+        dispatch(setPhrasesAction([...response.data.userProfile.phrases]));
+        dispatch(setCategoriesAction([...response.data.userProfile.categories]))
       } catch (err) {
         console.log(err);
       }
@@ -156,17 +155,16 @@ const PhraseGallery = () => {
     getData().then(() => console.log('getData successful!'));
   }, []);
 
+  /** call backend api to create new category by userId */
   const createNewCategory = (newCategory, userId) => {
-    // call backend api to create new category by userId
-    console.log('userId: ', userId);
-    console.log('newCategory: ', newCategory);
     axios
       .post(`${REACT_APP_BACKEND}/phrase/addnewcategory`, { userId, newCategory }, auth)
       .then((response) => {
         console.log(response.data);
-        setAllCategories([...allCategories, {
-          id: uuidv4(), name: newCategory,
-        }]);
+        dispatch(setCategoriesAction([...categories, {
+          id: uuidv4(), 
+          name: newCategory,
+        }]))
       });
   };
 
@@ -194,7 +192,7 @@ const PhraseGallery = () => {
                 <Text style={styles.header}>Create new category</Text>
                 <Input
                   placeholder="Category name"
-                  onChangeText={(el) => setNewCategoryName(el)}
+                  onChangeText={(el) => dispatch(setNewCategoryNameAction(el))}
                   style={styles.input}
                 />
                 <CustomButton
@@ -206,7 +204,6 @@ const PhraseGallery = () => {
             </Pressable>
           </Pressable>
         </Modal>
-
       </View>
       <Menu style={styles.menu}>
         <MenuTrigger style={styles.dropdownTrigger}>
@@ -214,11 +211,11 @@ const PhraseGallery = () => {
           <ChevronDownIcon style={styles.icon} />
         </MenuTrigger>
         <MenuOptions optionsContainerStyle={{ ...styles.optionsContainer, width: optionWidth }}>
-          {allCategories.map((oneCategory) => (
+          {categories.map((oneCategory) => (
             <MenuOption
               key={oneCategory._id}
               style={{ ...styles.options, width: optionWidth }}
-              onSelect={() => selectCategory(oneCategory.name)}
+              onSelect={() => dispatch(selectCategoryAction(oneCategory.name))}
             >
               <Text style={styles.text}>{oneCategory.name}</Text>
             </MenuOption>
@@ -234,10 +231,10 @@ const PhraseGallery = () => {
         </MenuOptions>
       </Menu>
       <View style={styles.container}>
-        {allPhrases.length > 0 ? (
+        {phrases.length > 0 ? (
           <ScrollView>
             <View style={styles.scrollView}>
-              {allPhrases
+              {phrases
                 .filter((onePhrase) => onePhrase.category === selectedCategory)
                 .map((onePhrase) => (
                   <Card key={onePhrase._id} style={styles.phraseCard}>
@@ -249,15 +246,16 @@ const PhraseGallery = () => {
                 ))}
             </View>
           </ScrollView>
-        ) : (
-          <View>
-            <Text>No phrases</Text>
-          </View>
-        )}
-      </View>
-
+      ) : (
+        <View style={styles.messageContainer}>
+          <EmojiSadIcon color="black" size={60} />
+          <Text style={styles.message}>No phrases!
+            You can save your favourite phrases after scanning an image.
+          </Text>
+        </View>
+      )}
     </View>
-
+    </View>
   );
 };
 

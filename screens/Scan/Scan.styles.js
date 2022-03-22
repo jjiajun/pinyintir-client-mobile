@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../constants/colors.js';
 
 export default StyleSheet.create({
   button: {
@@ -58,5 +59,18 @@ export default StyleSheet.create({
   message: {
     color: 'red',
     fontWeight: 'bold',
+  },
+  noAccessContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  noAccess: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  grantAccessButton: {
+    backgroundColor: Colors.primary,
   },
 });

@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity,
 } from 'react-native';
 import * as Speech from 'expo-speech';
 import { MicrophoneIcon } from 'react-native-heroicons/outline';
-import colors from '../constants/colors';
+import colors from '../constants/colors.js';
+import { Context } from '../Context.jsx';
 
 const styles = StyleSheet.create({
   listItem: {
     padding: 10,
     marginVertical: 10,
-    backgroundColor: colors.darkPurple,
+    backgroundColor: colors.primary,
     // borderColor: 'black',
     // borderWidth: 1,
     color: 'white',
@@ -26,9 +27,12 @@ const styles = StyleSheet.create({
 });
 
 const ChineseCard = ({ item }) => {
+  const { store } = useContext(Context);
+  const { speechSpeed, speechPitch } = store;
+
   const speakText = (text) => {
     try {
-      Speech.speak(text, { language: 'zh-CN' });
+      Speech.speak(text, { language: 'zh-CN', rate: speechSpeed, pitch: speechPitch });
     } catch (err) {
       console.log(err);
     }

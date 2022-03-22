@@ -9,7 +9,8 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import { Context } from '../Context.js';
+import { EmojiSadIcon } from 'react-native-heroicons/outline';
+import { Context, setImagesAction } from '../Context.jsx';
 
 const styles = StyleSheet.create({
   button: {
@@ -36,10 +37,21 @@ const styles = StyleSheet.create({
     color: 'black',
     textAlign: 'center',
   },
+  messageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  message: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
 });
 
 const ImageGallery = () => {
-  const { allImages, setAllImages } = useContext(Context);
+  const { store, dispatch } = useContext(Context);
+  const { images } = store;
   let userId;
   let token;
   let auth;
@@ -52,28 +64,29 @@ const ImageGallery = () => {
         token = await AsyncStorage.getItem('@sessionToken');
         // create authorization header
         auth = { headers: { Authorization: `Bearer ${token}` } };
-        axios
-          .post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth)
-          .then((response) => {
-            console.log('response: ', response);
-            setAllImages([...response.data.userProfile.images]);
-          });
+        const response = await axios.post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth);
+        console.log('response: ', response);
+        dispatch(setImagesAction([...response.data.userProfile.images]));
       } catch (err) {
         console.log(err);
       }
     };
-    getData().then(() => console.log('getData successful!', allImages));
+    getData().then(() => console.log('getData successful!', images));
   }, []);
 
-  console.log('allimages: ', allImages);
+  console.log('allimages: ', images);
 
   /** Helper function to display all images stored in allImages state */
   return (
     <View style={styles.screen}>
+<<<<<<< HEAD
       {allImages.length > 0
+=======
+      {images.length > 0
+>>>>>>> f0d15115408a86d2edb7504fd596b61fff162cb3
         ? (
           <ScrollView>
-            {allImages.map((oneImage) => (
+            {images.map((oneImage) => (
               <View key={oneImage._id} style={styles.gallery}>
                 <Image
                   style={styles.img}
@@ -84,8 +97,11 @@ const ImageGallery = () => {
           </ScrollView>
         )
         : (
-          <View style={styles.gallery}>
-            <Text>No images</Text>
+          <View style={styles.messageContainer}>
+            <EmojiSadIcon color="black" size={60} />
+            <Text style={styles.message}>No images!
+              You can save your favourite images after scanning an image.
+            </Text>
           </View>
         )}
     </View>
