@@ -24,7 +24,7 @@ const Scan = () => {
   const [imageDimension, setImageDimension] = useState({});
 
   const { store, dispatch } = useContext(Context);
-  const { file } = store;
+  const { file, chinese } = store;
 
   let auth;
   const [userId, setUserId] = useState(null);
@@ -72,7 +72,8 @@ const Scan = () => {
   const saveScreenshot = async () => {
     const formData = new FormData();
     formData.append('image', file);
-    formData.append('userId', userId); // need to append userId to formData in order to send userId to the backend. This method seems to be the only way - I tried putting formData and userId in an object to send it through but it didn't work.
+    formData.append('userId', userId);
+    formData.append('result', chinese); // need to append userId to formData in order to send userId to the backend. This method seems to be the only way - I tried putting formData and userId in an object to send it through but it didn't work.
     const result = await axios.post(`${REACT_APP_BACKEND}/image/uploadimage`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -80,6 +81,7 @@ const Scan = () => {
       },
       transformRequest: (d) => d,
     });
+    console.log(result);
     dispatch(addImageAction(
       {
         id: uuidv4(),
