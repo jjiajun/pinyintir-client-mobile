@@ -27,7 +27,7 @@ const Scan = () => {
   const { file } = store;
 
   let auth;
-  let userId;
+  const [userId, setUserId] = useState(null);
   let token;
 
   const camera = useRef(null);
@@ -46,7 +46,7 @@ const Scan = () => {
   useEffect(() => {
     (async () => {
       try {
-        userId = await AsyncStorage.getItem('@userId');
+        setUserId(await AsyncStorage.getItem('@userId'));
         token = await AsyncStorage.getItem('@sessionToken');
         auth = { headers: { Authorization: `Bearer ${token}` } };
       } catch (err) {
