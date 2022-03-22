@@ -6,16 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View,
   StyleSheet,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Image,
   ActivityIndicator,
 } from 'react-native';
-import Message from '../components/Message.jsx';
+import Message from './Message.jsx';
 import Colors from '../constants/colors.js';
-import Input from '../components/Input.jsx';
-import Card from '../components/Card.jsx';
-import CustomButton from '../components/CustomButton.jsx';
+import Input from './Input.jsx';
+import CustomButton from './CustomButton.jsx';
 
 const styles = StyleSheet.create({
   screen: {
@@ -32,7 +28,7 @@ const styles = StyleSheet.create({
   container: {
     width: 300,
     maxWidth: '80%',
-    height: 300,
+    height: 150,
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'center',
@@ -45,7 +41,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const LogIn = ({ navigation }) => {
+const LogInBox = ({ navigation }) => {
   // State and setter for login details
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -71,10 +67,13 @@ const LogIn = ({ navigation }) => {
       return;
     }
     // wrap email and data in an object for easier manipulation
-    const data = { email, password };
+    const data = {
+      email,
+      password,
+    };
+    // verify log in. if not verified, send error messages
     try {
       setLoading(true);
-      // verify log in. if not verified, send error messages
       const response = await axios.post(`${REACT_APP_BACKEND}/user/login`, data);
 
       setLoading(false);
@@ -99,60 +98,48 @@ const LogIn = ({ navigation }) => {
       console.log(err);
     }
   };
-
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}
-    >
-      <View style={styles.screen}>
-        <Card style={styles.container}>
-          <Image
-            // eslint-disable-next-line global-require
-            source={require('../assets/pinyintir.png')}
-            style={{ width: '80%', height: 100 }}
+
+    <View style={styles.container}>
+      <Input
+        style={styles.input}
+        placeholder="Email"
+        blurOnSubmit
+        autoCapitalize="none"
+        autoCorrect={false}
+        onChangeText={handleEmailChange}
+        value={email}
+      />
+      <Input
+        secureTextEntry
+        style={styles.input}
+        placeholder="Password"
+        blurOnSubmit
+        autoCapitalize="none"
+        autoCorrect={false}
+        onChangeText={handlePasswordChange}
+        value={password}
+      />
+      {loading
+        ? (<ActivityIndicator animating={loading} size="large" color="#00ff00" />)
+        : (
+          <CustomButton
+            style={styles.button}
+            title="Log In"
+            color={Colors.primary}
+            onPress={loginAttempt}
           />
-          <Input
-            style={styles.input}
-            placeholder="Email"
-            blurOnSubmit
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={handleEmailChange}
-            value={email}
-          />
-          <Input
-            secureTextEntry
-            style={styles.input}
-            placeholder="Password"
-            blurOnSubmit
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={handlePasswordChange}
-            value={password}
-          />
-          {loading
-            ? (<ActivityIndicator animating={loading} size="large" color="#00ff00" />)
-            : (
-              <CustomButton
-                style={styles.button}
-                title="Log In"
-                color={Colors.primary}
-                onPress={loginAttempt}
-              />
-            )}
-          <View>{message !== '' && <Message message={message} />}</View>
-        </Card>
-      </View>
-    </TouchableWithoutFeedback>
+        )}
+      <View>{message !== '' && <Message message={message} />}</View>
+    </View>
+
   );
 };
 
-LogIn.propTypes = {
+LogInBox.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
 };
 
-export default LogIn;
+export default LogInBox;
