@@ -10,11 +10,11 @@ import {
   Keyboard,
   Image,
 } from 'react-native';
-import Message from '../components/Message.jsx';
+import Message from './Message.jsx';
 import Colors from '../constants/colors.js';
-import Input from '../components/Input.jsx';
-import Card from '../components/Card.jsx';
-import CustomButton from '../components/CustomButton.jsx';
+import Input from './Input.jsx';
+import Card from './Card.jsx';
+import CustomButton from './CustomButton.jsx';
 
 const styles = StyleSheet.create({
   screen: {
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   container: {
     width: 300,
     maxWidth: '80%',
-    height: 400,
+    height: 150,
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'center',
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const LogIn = ({ navigation }) => {
+const LogInBox = ({ navigation }) => {
   // State and setter for login details
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -87,54 +87,43 @@ const LogIn = ({ navigation }) => {
   };
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}
-    >
-      <View style={styles.screen}>
-        <Card style={styles.container}>
-          <Image
-            // eslint-disable-next-line global-require
-            source={require('../assets/pinyintir.png')}
-            style={{ width: '80%', height: 100 }}
-          />
-          <Input
-            style={styles.input}
-            placeholder="Email"
-            blurOnSubmit
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={(el) => setEmail(el)}
-            value={email}
-          />
-          <Input
-            secureTextEntry
-            style={styles.input}
-            placeholder="Password"
-            blurOnSubmit
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={(el) => setPassword(el)}
-            value={password}
-          />
-          <CustomButton
-            style={styles.button}
-            title="Log In"
-            color={Colors.primary}
-            onPress={loginAttempt}
-          />
-          <View>{message !== '' && <Message message={message} />}</View>
-        </Card>
-      </View>
-    </TouchableWithoutFeedback>
+
+    <View style={styles.container}>
+      <Input
+        style={styles.input}
+        placeholder="Email"
+        blurOnSubmit
+        autoCapitalize="none"
+        autoCorrect={false}
+        onChangeText={(el) => setEmail(el)}
+        value={email}
+      />
+      <Input
+        secureTextEntry
+        style={styles.input}
+        placeholder="Password"
+        blurOnSubmit
+        autoCapitalize="none"
+        autoCorrect={false}
+        onChangeText={(el) => setPassword(el)}
+        value={password}
+      />
+      <CustomButton
+        style={styles.button}
+        title="Log In"
+        color={Colors.primary}
+        onPress={loginAttempt}
+      />
+      <View>{message !== '' && <Message message={message} />}</View>
+    </View>
+
   );
 };
 
-LogIn.propTypes = {
+LogInBox.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
 };
 
-export default LogIn;
+export default LogInBox;

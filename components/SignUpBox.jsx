@@ -10,11 +10,11 @@ import {
   Keyboard,
   Image,
 } from 'react-native';
-import Message from '../components/Message.jsx';
+import Message from './Message.jsx';
 import Colors from '../constants/colors.js';
-import Input from '../components/Input.jsx';
-import Card from '../components/Card.jsx';
-import CustomButton from '../components/CustomButton.jsx';
+import Input from './Input.jsx';
+import Card from './Card.jsx';
+import CustomButton from './CustomButton.jsx';
 
 const styles = StyleSheet.create({
   screen: {
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   container: {
     width: 300,
     maxWidth: '80%',
-    height: 400,
+    height: 150,
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'center',
@@ -44,32 +44,34 @@ const styles = StyleSheet.create({
   },
 });
 
-const LogIn = ({ navigation }) => {
+const SignUpBox = ({ navigation }) => {
   // State and setter for login details
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   // State and setter for signup and login message
   const [message, setMessage] = useState('');
   console.log(`${REACT_APP_BACKEND}/login`);
 
-  const loginAttempt = () => {
+  const signupAttempt = () => {
     // immediately reject log in if there is a missing field\
-    if (!email || !password) {
-      setMessage('Please enter an email and password');
+    if (!email || !password || !username) {
+      setMessage('Please enter an username, email and password');
       return;
     }
     // wrap email and data in an object for easier manipulation
     const data = {
       email,
       password,
+      lastName: username,
     };
     // verify log in. if not verified, send error messages
     axios
-      .post(`${REACT_APP_BACKEND}/user/login`, data)
+      .post(`${REACT_APP_BACKEND}/user/signup`, data)
       .then((response) => {
         // If username or password incorrect, inform player
-        if (response.data === 'The email or password is incorrect') {
-          setMessage('Invalid login. Please try again.');
+        if (response.data === 'Something went wrong when creating a new user') {
+          setMessage('Email is taken. Please try again.');
         }
         // If successful, redirect to home page
         if (response.data.success === true) {
@@ -87,54 +89,52 @@ const LogIn = ({ navigation }) => {
   };
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}
-    >
-      <View style={styles.screen}>
-        <Card style={styles.container}>
-          <Image
-            // eslint-disable-next-line global-require
-            source={require('../assets/pinyintir.png')}
-            style={{ width: '80%', height: 100 }}
-          />
-          <Input
-            style={styles.input}
-            placeholder="Email"
-            blurOnSubmit
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={(el) => setEmail(el)}
-            value={email}
-          />
-          <Input
-            secureTextEntry
-            style={styles.input}
-            placeholder="Password"
-            blurOnSubmit
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={(el) => setPassword(el)}
-            value={password}
-          />
-          <CustomButton
-            style={styles.button}
-            title="Log In"
-            color={Colors.primary}
-            onPress={loginAttempt}
-          />
-          <View>{message !== '' && <Message message={message} />}</View>
-        </Card>
-      </View>
-    </TouchableWithoutFeedback>
+
+    <View style={styles.container}>
+      <Input
+        style={styles.input}
+        placeholder="Username"
+        blurOnSubmit
+        autoCapitalize="none"
+        autoCorrect={false}
+        onChangeText={(el) => setUsername(el)}
+        value={username}
+      />
+      <Input
+        style={styles.input}
+        placeholder="Email"
+        blurOnSubmit
+        autoCapitalize="none"
+        autoCorrect={false}
+        onChangeText={(el) => setEmail(el)}
+        value={email}
+      />
+      <Input
+        secureTextEntry
+        style={styles.input}
+        placeholder="Password"
+        blurOnSubmit
+        autoCapitalize="none"
+        autoCorrect={false}
+        onChangeText={(el) => setPassword(el)}
+        value={password}
+      />
+      <CustomButton
+        style={styles.button}
+        title="Sign Up"
+        color={Colors.primary}
+        onPress={signupAttempt}
+      />
+      <View>{message !== '' && <Message message={message} />}</View>
+    </View>
+
   );
 };
 
-LogIn.propTypes = {
+SignUpBox.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
 };
 
-export default LogIn;
+export default SignUpBox;

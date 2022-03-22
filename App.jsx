@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { Context } from './Context.js';
 import LogIn from './screens/LogIn.jsx';
 import HomeTabs from './components/HomeTabs.jsx';
+import LandingPage from './screens/LandingPage.jsx';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -19,10 +20,10 @@ export default function App() {
           allImages, setAllImages, allPhrases, setAllPhrases,
         }}
       >
-        <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="LogIn" screenOptions={{ headerShown: false }}>
           <Stack.Screen
             name="LogIn"
-            component={LogIn}
+            component={LandingPage}
             options={{ title: 'Log In' }}
           />
           <Stack.Screen

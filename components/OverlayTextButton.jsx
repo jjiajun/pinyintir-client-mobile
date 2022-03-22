@@ -23,7 +23,7 @@ const triggerStyles = {
     color: 'white',
   },
   triggerWrapper: {
-    backgroundColor: 'rgba(95, 26, 148, 0.5)',
+    backgroundColor: 'rgba(255, 155, 83, 0.5)',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
@@ -39,7 +39,7 @@ const triggerStyles = {
 
 const optionsStyles = {
   optionsContainer: {
-    backgroundColor: colors.darkPurple,
+    backgroundColor: colors.primary,
     padding: 5,
     borderRadius: 5,
   },
@@ -50,7 +50,7 @@ const optionStyles = {
     activeOpacity: 40,
   },
   optionWrapper: {
-    backgroundColor: colors.darkPurple,
+    backgroundColor: colors.primary,
     margin: 1,
 
   },
