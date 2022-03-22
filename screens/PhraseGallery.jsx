@@ -5,7 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View, Text, StyleSheet, ScrollView,
 } from 'react-native';
-import { Context } from '../Context.js';
+import { EmojiSadIcon } from 'react-native-heroicons/outline';
+import { Context, setPhrasesAction } from '../Context.jsx';
 import Card from '../components/Card.jsx';
 
 const styles = StyleSheet.create({
@@ -40,10 +41,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 5,
   },
+  messageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  message: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
 });
 
 const PhraseGallery = () => {
-  const { allPhrases, setAllPhrases } = useContext(Context);
+  const { store, dispatch } = useContext(Context);
+  const { phrases } = store;
   let userId;
   let token;
   let auth;
@@ -56,24 +68,21 @@ const PhraseGallery = () => {
         token = await AsyncStorage.getItem('@sessionToken');
         // create authorization header
         auth = { headers: { Authorization: `Bearer ${token}` } };
-        axios
-          .post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth)
-          .then((response) => {
-            setAllPhrases([...response.data.userProfile.phrases]);
-          });
+        const response = await axios.post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth);
+        dispatch(setPhrasesAction([...response.data.userProfile.phrases]));
       } catch (err) {
         console.log(err);
       }
     };
-    getData().then(() => console.log('getData successful!', allPhrases));
+    getData().then(() => console.log('getData successful!', phrases));
   }, []);
 
   return (
     <View style={styles.screen}>
-      {allPhrases ? (
+      {phrases.length > 0 ? (
         <ScrollView>
           <View style={styles.scrollView}>
-            {allPhrases.map((onePhrase) => (
+            {phrases.map((onePhrase) => (
               <Card key={onePhrase._id} style={styles.phraseCard}>
                 {console.log(onePhrase)}
                 <Text style={styles.text}>{onePhrase.chinesePhrase}</Text>
@@ -84,8 +93,11 @@ const PhraseGallery = () => {
           </View>
         </ScrollView>
       ) : (
-        <View>
-          <Text>No phrases</Text>
+        <View style={styles.messageContainer}>
+          <EmojiSadIcon color="black" size={60} />
+          <Text style={styles.message}>No phrases!
+            You can save your favourite phrases after scanning an image.
+          </Text>
         </View>
       )}
     </View>
