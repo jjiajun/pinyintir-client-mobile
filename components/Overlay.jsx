@@ -124,6 +124,7 @@ const Overlay = ({
             top: text.vertices[0].y * heightRatio - overlayTextVerticalOffset,
             left: text.vertices[0].x * widthRatio,
           }}
+          allowSave
         />
       ))}
 
