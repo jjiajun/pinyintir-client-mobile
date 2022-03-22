@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,11 +8,13 @@ import {
   StyleSheet,
   Image,
   FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import { EmojiSadIcon } from 'react-native-heroicons/outline';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Context, setImagesAction } from '../Context.jsx';
 import Colors from '../constants/colors.js';
+import OverlayOneImage from '../components/OverlayOneImage.jsx';
 
 const styles = StyleSheet.create({
   button: {
@@ -77,6 +79,8 @@ const ImageGallery = () => {
   let userId;
   let token;
   let auth;
+  const [oneImageData, setOneImageData] = useState('');
+  const [overlayVisible, setOverlayVisible] = useState(false);
 
   /** To get userId and token for axios calls at every render */
   useEffect(() => {
@@ -95,7 +99,16 @@ const ImageGallery = () => {
     };
     getData().then(() => console.log('getData successful!', images));
   }, []);
+  const displayOneImage = (data, imgPath, dims) => {
+    console.log('in data', data, imgPath, dims);
+    console.log('dims data', dims);
 
+    setOneImageData({ data, imgPath, dims });
+    setOverlayVisible(true);
+  };
+  const closeOverlay = () => {
+    setOverlayVisible(false);
+  };
   /** Helper function to display all images stored in allImages state */
   return (
     <View style={styles.screen}>
@@ -104,38 +117,42 @@ const ImageGallery = () => {
         style={styles.linearGradient}
         start={{ x: 0.9, y: 0.1 }}
         end={{ x: 0.1, y: 0.5 }}
-      >
-        {/* <View style={styles.topBar}>
-          <Text style={styles.header}>
-            Image Gallery
-          </Text>
-        </View> */}
-        {images.length > 0
-          ? (
+      />
+      {images.length > 0
+        ? (
+          <View>
             <FlatList
               data={images}
               renderItem={({ item }) => (
                 <View style={styles.gallery}>
-                  <Image
-                    style={styles.img}
-                    source={{ uri: `${REACT_APP_BACKEND}/image${item.imagePath}` }}
-                  />
+                  <TouchableOpacity onPress={() => { displayOneImage(
+                    item.result,
+                    item.imagePath,
+                    item.dimension,
+                  ); }}
+                  >
+                    <Image
+                      style={styles.img}
+                      source={{ uri: `${REACT_APP_BACKEND}/image${item.imagePath}` }}
+                    />
+                  </TouchableOpacity>
                 </View>
               )}
             // Setting the number of column
               numColumns={2}
               keyExtractor={(item, index) => index.toString()}
             />
-          )
-          : (
-            <View style={styles.messageContainer}>
-              <EmojiSadIcon style={styles.iconWhite} size={60} />
-              <Text style={styles.message}>No images!
-                You can save your favourite images after scanning an image.
-              </Text>
-            </View>
-          )}
-      </LinearGradient>
+            {overlayVisible && <OverlayOneImage backToGallery={closeOverlay} data={oneImageData} />}
+          </View>
+        )
+        : (
+          <View style={styles.messageContainer}>
+            <EmojiSadIcon style={styles.iconWhite} size={60} />
+            <Text style={styles.message}>No images!
+              You can save your favourite images after scanning an image.
+            </Text>
+          </View>
+        )}
     </View>
   );
 };

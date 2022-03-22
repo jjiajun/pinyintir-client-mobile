@@ -5,7 +5,9 @@ import {
 } from 'react-native';
 import Colors from '../constants/colors.js';
 import CustomButton from '../components/CustomButton.jsx';
-import { Context, setSpeechSpeedAction, setSpeechPitchAction } from '../Context.jsx';
+import {
+  Context, setSpeechSpeedAction, setSpeechPitchAction, setAuthAction,
+} from '../Context.jsx';
 import RangeInput from '../components/RangeInput.jsx';
 
 const styles = StyleSheet.create({
@@ -35,7 +37,8 @@ const Settings = ({ navigation }) => {
   const handleLogout = async () => {
     await AsyncStorage.removeItem('@sessionToken');
     await AsyncStorage.removeItem('@userId');
-    navigation.navigate('LogIn');
+    dispatch(setAuthAction(false));
+    navigation.navigate('Log In');
   };
 
   const showAlert = () => {

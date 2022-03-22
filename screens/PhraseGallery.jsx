@@ -18,7 +18,12 @@ import { EmojiSadIcon, PlusCircleIcon } from 'react-native-heroicons/outline';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import {
-  Context, setPhrasesAction, setCategoriesAction, selectCategoryAction, setNewCategoryNameAction, removePhraseAction,
+  Context,
+  setPhrasesAction,
+  setCategoriesAction,
+  selectCategoryAction,
+  setNewCategoryNameAction,
+  removePhraseAction,
 } from '../Context.jsx';
 import Card from '../components/Card.jsx';
 import Colors from '../constants/colors.js';
@@ -90,7 +95,6 @@ const styles = StyleSheet.create({
   iconBlack: {
     color: 'black',
     marginRight: 10,
-
   },
   input: {
     height: 40,
