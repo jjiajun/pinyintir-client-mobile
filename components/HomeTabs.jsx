@@ -16,7 +16,7 @@ const HomeTabs = () => {
     <Tab.Navigator initialRouteName="Scan" screenOptions={{ headerShown: false }}>
       <Tab.Screen name="Images" component={ImageGallery} options={{ tabBarIcon: ImagesTabIcon }} />
       <Tab.Screen name="Scan" component={Scan} options={{ tabBarIcon: ScanTabIcon }} />
-      <Tab.Screen name="Phrases" component={PhraseGallery} options={{ tabBarIcon: PhrasesTabIcon }} />
+      <Tab.Screen name="PhraseGallery" component={PhraseGallery} options={{ tabBarIcon: PhrasesTabIcon }} />
     </Tab.Navigator>
   );
 };

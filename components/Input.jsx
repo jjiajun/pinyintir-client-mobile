@@ -3,10 +3,10 @@ import { TextInput, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   input: {
-    height: 30,
+    height: 35,
     borderColor: '#8C8D8D',
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 10,
     paddingHorizontal: 10,
     marginVertical: 6,
   },

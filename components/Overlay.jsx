@@ -56,7 +56,8 @@ const Overlay = ({
       const data = {
         chinesePhrase: characters, pinyin, definition: translation, userId,
       };
-      await axios.post(`${REACT_APP_BACKEND}/phrase/uploadphrase`, data, auth);
+      console.log('THE POST REQUEST IS WORKING');
+      const returnResult = await axios.post(`${REACT_APP_BACKEND}/phrase/uploadphrase`, data);
       setAllPhrases([
         ...allPhrases,
         {
@@ -66,6 +67,7 @@ const Overlay = ({
           definition: translation,
         },
       ]);
+      console.log('RETURN RESULT: ', returnResult);
       // Adds newly image data to allImages state.
       // I am updating the allImages state on the FE so that the update is instantaneous.
       // The BE is also updated. When the page is reloaded, the image list will still be the latest.

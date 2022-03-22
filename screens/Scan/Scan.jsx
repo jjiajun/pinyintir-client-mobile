@@ -22,9 +22,9 @@ const Scan = () => {
   const { allImages, setAllImages } = useContext(Context);
   const [imageDimension, setImageDimension] = useState({});
 
-  let auth;
-  let userId;
+  const [userId, setUserId] = useState();
   let token;
+  let auth;
 
   const camera = useRef(null);
   const isFocused = useIsFocused();
@@ -40,7 +40,7 @@ const Scan = () => {
   useEffect(() => {
     (async () => {
       try {
-        userId = await AsyncStorage.getItem('@userId');
+        setUserId(await AsyncStorage.getItem('@userId'));
         token = await AsyncStorage.getItem('@sessionToken');
         auth = { headers: { Authorization: `Bearer ${token}` } };
       } catch (err) {

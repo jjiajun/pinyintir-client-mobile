@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 7,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
     color: 'white',

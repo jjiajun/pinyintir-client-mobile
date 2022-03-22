@@ -70,7 +70,7 @@ const ImageGallery = () => {
   /** Helper function to display all images stored in allImages state */
   return (
     <View style={styles.screen}>
-      {allImages
+      {allImages.length > 0
         ? (
           <ScrollView>
             {allImages.map((oneImage) => (
