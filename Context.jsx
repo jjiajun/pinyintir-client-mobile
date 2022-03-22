@@ -11,6 +11,7 @@ const SET_FILE = 'SET_FILE';
 const SET_SPEECH_SPEED = 'SET_SPEECH_SPEED';
 const SET_SPEECH_PITCH = 'SET_SPEECH_PITCH';
 const SET_NEW_CATEGORY_NAME = 'SET_NEW_CATEGORY_NAME';
+const REMOVE_PHRASE = 'REMOVE_PHRASE';
 
 const initialState = {
   images: [],
@@ -30,6 +31,11 @@ const pinyintirReducer = (state, action) => {
       return { ...state, images: [...state.images, action.payload.imgObj] };
     case ADD_PHRASE:
       return { ...state, phrases: [...state.phrases, action.payload.phraseObj] };
+    case REMOVE_PHRASE:
+      return {
+        ...state,
+        phrases: [...state.phrases.filter((phrase) => phrase._id !== action.payload.phraseId)],
+      };
     case SET_IMAGES:
       return { ...state, images: action.payload.images };
     case SET_PHRASES:
@@ -61,6 +67,11 @@ export const addImageAction = (imgObj) => ({
 export const addPhraseAction = (phraseObj) => ({
   type: ADD_PHRASE,
   payload: { phraseObj },
+});
+
+export const removePhraseAction = (phraseId) => ({
+  type: REMOVE_PHRASE,
+  payload: { phraseId },
 });
 
 export const setImagesAction = (images) => ({

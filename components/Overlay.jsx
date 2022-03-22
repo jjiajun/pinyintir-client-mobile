@@ -95,22 +95,22 @@ const Overlay = ({
           <DocumentTextIcon color="white" />
         </TouchableOpacity>
       </View>
-      <MenuProvider>
-        {chinese.map((text) => (
-          <OverlayTextButton
-            key={text.id}
-            pinyin={text.pinyin}
-            chinese={text.characters}
-            translation={text.translation}
-            text={text}
-            savePhrase={savePhrase}
-            styles={{
-              top: text.vertices[0].y * heightRatio - overlayTextVerticalOffset,
-              left: text.vertices[0].x * widthRatio,
-            }}
-          />
-        ))}
-      </MenuProvider>
+      {/* <MenuProvider> */}
+      {chinese.map((text) => (
+        <OverlayTextButton
+          key={text.id}
+          pinyin={text.pinyin}
+          chinese={text.characters}
+          translation={text.translation}
+          text={text}
+          savePhrase={savePhrase}
+          styles={{
+            top: text.vertices[0].y * heightRatio - overlayTextVerticalOffset,
+            left: text.vertices[0].x * widthRatio,
+          }}
+        />
+      ))}
+      {/* </MenuProvider> */}
     </View>
   );
 };
