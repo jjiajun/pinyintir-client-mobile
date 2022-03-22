@@ -4,10 +4,13 @@ const ADD_IMAGE = 'ADD_IMAGE';
 const ADD_PHRASE = 'ADD_PHRASE';
 const SET_IMAGES = 'SET_IMAGES';
 const SET_PHRASES = 'SET_PHRASES';
+const SET_CATEGORIES = 'SET_CATEGORIES';
+const SELECT_CATEGORY = 'SELECT_CATEGORY';
 const SET_CHINESE = 'SET_CHINESE';
 const SET_FILE = 'SET_FILE';
 const SET_SPEECH_SPEED = 'SET_SPEECH_SPEED';
 const SET_SPEECH_PITCH = 'SET_SPEECH_PITCH';
+const SET_NEW_CATEGORY_NAME = 'SET_NEW_CATEGORY_NAME';
 
 const initialState = {
   images: [],
@@ -18,7 +21,7 @@ const initialState = {
   speechPitch: 1,
   categories: [],
   selectedCategory: 'Saved Phrases',
-  newCategoryName: null
+  newCategoryName: null,
 };
 
 const pinyintirReducer = (state, action) => {
@@ -104,7 +107,6 @@ export const setSpeechPitchAction = (pitch) => ({
   type: SET_SPEECH_PITCH,
   payload: { pitch },
 });
-
 
 /** Initialize useContext */
 export const Context = React.createContext(null);
