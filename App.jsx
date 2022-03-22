@@ -3,7 +3,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { PinyintirProvider } from './Context.jsx';
-import LogIn from './screens/LogIn.jsx';
 import HomeTabs from './components/HomeTabs.jsx';
 import LandingPage from './screens/LandingPage.jsx';
 

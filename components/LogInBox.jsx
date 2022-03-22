@@ -6,14 +6,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View,
   StyleSheet,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Image,
+  ActivityIndicator,
 } from 'react-native';
 import Message from './Message.jsx';
 import Colors from '../constants/colors.js';
 import Input from './Input.jsx';
-import Card from './Card.jsx';
 import CustomButton from './CustomButton.jsx';
 
 const styles = StyleSheet.create({
@@ -50,9 +47,20 @@ const LogInBox = ({ navigation }) => {
   const [password, setPassword] = useState('');
   // State and setter for signup and login message
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   console.log(`${REACT_APP_BACKEND}/login`);
 
-  const loginAttempt = () => {
+  const handleEmailChange = (el) => {
+    setEmail(el);
+    setMessage('');
+  };
+
+  const handlePasswordChange = (el) => {
+    setPassword(el);
+    setMessage('');
+  };
+
+  const loginAttempt = async () => {
     // immediately reject log in if there is a missing field\
     if (!email || !password) {
       setMessage('Please enter an email and password');
@@ -64,28 +72,32 @@ const LogInBox = ({ navigation }) => {
       password,
     };
     // verify log in. if not verified, send error messages
-    axios
-      .post(`${REACT_APP_BACKEND}/user/login`, data)
-      .then((response) => {
-        // If username or password incorrect, inform player
-        if (response.data === 'The email or password is incorrect') {
-          setMessage('Invalid login. Please try again.');
-        }
-        // If successful, redirect to home page
-        if (response.data.success === true) {
-          const { userId, token } = response.data;
-          console.log('userId: ', userId);
-          console.log('token: ', token);
-          const storeData = async () => {
-            await AsyncStorage.setItem('@sessionToken', token);
-            await AsyncStorage.setItem('@userId', userId);
-          };
-          storeData().then(() => navigation.navigate('Home'));
-        }
-      })
-      .catch((err) => console.log(err));
-  };
+    try {
+      setLoading(true);
+      const response = await axios.post(`${REACT_APP_BACKEND}/user/login`, data);
 
+      setLoading(false);
+      // If username or password incorrect, inform player
+      if (response.data === 'The email or password is incorrect') {
+        setMessage('Invalid login. Please try again.');
+        return;
+      }
+      // If successful, redirect to home page
+      if (response.data.success === true) {
+        const { userId, token } = response.data;
+        console.log('userId: ', userId);
+        console.log('token: ', token);
+        setEmail('');
+        setPassword('');
+        setMessage('');
+        await AsyncStorage.setItem('@sessionToken', token);
+        await AsyncStorage.setItem('@userId', userId);
+        navigation.navigate('Home');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
 
     <View style={styles.container}>
@@ -95,7 +107,7 @@ const LogInBox = ({ navigation }) => {
         blurOnSubmit
         autoCapitalize="none"
         autoCorrect={false}
-        onChangeText={(el) => setEmail(el)}
+        onChangeText={handleEmailChange}
         value={email}
       />
       <Input
@@ -105,15 +117,19 @@ const LogInBox = ({ navigation }) => {
         blurOnSubmit
         autoCapitalize="none"
         autoCorrect={false}
-        onChangeText={(el) => setPassword(el)}
+        onChangeText={handlePasswordChange}
         value={password}
       />
-      <CustomButton
-        style={styles.button}
-        title="Log In"
-        color={Colors.primary}
-        onPress={loginAttempt}
-      />
+      {loading
+        ? (<ActivityIndicator animating={loading} size="large" color="#00ff00" />)
+        : (
+          <CustomButton
+            style={styles.button}
+            title="Log In"
+            color={Colors.primary}
+            onPress={loginAttempt}
+          />
+        )}
       <View>{message !== '' && <Message message={message} />}</View>
     </View>
 
