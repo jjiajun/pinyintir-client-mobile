@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import {
   Menu,
@@ -7,6 +7,7 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 import ChineseCard from './ChineseCard.jsx';
+import { Context } from '../Context.jsx';
 import colors from '../constants/colors.js';
 
 const styles = StyleSheet.create({
@@ -60,31 +61,38 @@ const optionStyles = {
   },
 };
 
-const OverlayTextButton = (props) => (
+const OverlayTextButton = (props) => {
+  const { store } = useContext(Context);
+  const { auth } = store;
 
-  <View style={{ ...styles.overlay, ...props.styles }}>
-    <Menu onSelect={(value) => console.log(`Selected number: ${value}`)} style={styles.menuTrigger}>
-      <MenuTrigger text={props.text.pinyin} customStyles={triggerStyles} />
-      <MenuOptions customStyles={optionsStyles}>
-        <Text>{props.text.vertices[0].y}, {props.text.vertices[0].x}</Text>
-        <ChineseCard item={props.text} />
-        <View
-          style={{
-            borderBottomColor: 'white',
-            borderBottomWidth: StyleSheet.hairlineWidth,
-          }}
-        />
-        <MenuOption
-          value={1}
-          text="Save"
-          customStyles={optionStyles}
-          onSelect={() => {
-            props.savePhrase(props.text); }}
-        />
-      </MenuOptions>
-    </Menu>
-  </View>
+  return (
+    <View style={{ ...styles.overlay, ...props.styles }}>
+      <Menu onSelect={(value) => console.log(`Selected number: ${value}`)} style={styles.menuTrigger}>
+        <MenuTrigger text={props.text.pinyin} customStyles={triggerStyles} />
+        <MenuOptions customStyles={optionsStyles}>
+          <Text>{props.text.vertices[0].y}, {props.text.vertices[0].x}</Text>
+          <ChineseCard item={props.text} />
 
-);
+          {auth && (
+            <>
+              <View
+                style={{
+                  borderBottomColor: 'white',
+                  borderBottomWidth: StyleSheet.hairlineWidth,
+                }}
+              />
+              <MenuOption
+                value={1}
+                text="Save"
+                customStyles={optionStyles}
+                onSelect={() => {
+                  props.savePhrase(props.text); }}
+              />
+            </>
+          )}
+        </MenuOptions>
+      </Menu>
+    </View>
+  ); };
 
 export default OverlayTextButton;

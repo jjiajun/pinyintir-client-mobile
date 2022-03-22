@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import PropTypes from 'prop-types';
@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
+import { Context, setAuthAction } from '../Context.jsx';
 import Message from './Message.jsx';
 import Colors from '../constants/colors.js';
 import Input from './Input.jsx';
@@ -49,6 +50,8 @@ const LogInBox = ({ navigation }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   console.log(`${REACT_APP_BACKEND}/login`);
+
+  const { dispatch } = useContext(Context);
 
   const handleEmailChange = (el) => {
     setEmail(el);
@@ -92,9 +95,11 @@ const LogInBox = ({ navigation }) => {
         setMessage('');
         await AsyncStorage.setItem('@sessionToken', token);
         await AsyncStorage.setItem('@userId', userId);
-        navigation.navigate('Home');
+        dispatch(setAuthAction(true));
+        navigation.navigate('Scan');
       }
     } catch (err) {
+      dispatch(setAuthAction(false));
       console.log(err);
     }
   };
