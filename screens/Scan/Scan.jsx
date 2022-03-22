@@ -26,10 +26,6 @@ const Scan = () => {
   const { store, dispatch } = useContext(Context);
   const { file, chinese } = store;
 
-  const [userId, setUserId] = useState(null);
-  let token;
-  let auth;
-
   const camera = useRef(null);
   const isFocused = useIsFocused();
 
@@ -41,19 +37,6 @@ const Scan = () => {
   useEffect(() => {
     requestPermissions();
   }, []);
-
-  /** To get userId and token for axios calls at every render */
-  useEffect(() => {
-    (async () => {
-      try {
-        setUserId(await AsyncStorage.getItem('@userId'));
-        token = await AsyncStorage.getItem('@sessionToken');
-        auth = { headers: { Authorization: `Bearer ${token}` } };
-      } catch (err) {
-        console.log(err);
-      }
-    })();
-  });
 
   // this will reinitialise this component's state whenever it comes into focus
   // if not then we may run into scenario where user has overlay on from taking a picture
@@ -72,6 +55,8 @@ const Scan = () => {
   /** Submit function to upload image to db + aws */
   const saveScreenshot = async () => {
     const formData = new FormData();
+    const userId = await AsyncStorage.getItem('@userId');
+    const token = await AsyncStorage.getItem('@sessionToken');
     formData.append('image', file);
     formData.append('userId', userId);
     formData.append('result', JSON.stringify(chinese));
@@ -139,8 +124,6 @@ const Scan = () => {
           continueVideo={continueVideo}
           toggleOverlay={setIsResults}
           saveScreenshot={saveScreenshot}
-          auth={auth}
-          userId={userId}
         />
       )}
 

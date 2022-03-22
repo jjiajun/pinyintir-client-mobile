@@ -5,6 +5,7 @@ import {
   Dimensions, View, StyleSheet, TouchableOpacity,
 } from 'react-native';
 import { ArrowLeftIcon, DocumentTextIcon, BookmarkIcon } from 'react-native-heroicons/outline';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MenuProvider } from 'react-native-popup-menu';
 import { v4 as uuidv4 } from 'uuid';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
 });
 
 const Overlay = ({
-  dimension, continueVideo, toggleOverlay, saveScreenshot, userId, auth,
+  dimension, continueVideo, toggleOverlay, saveScreenshot,
 }) => {
   let heightRatio = 1;
   let widthRatio = 1;
@@ -49,16 +50,20 @@ const Overlay = ({
   }
 
   const { store, dispatch } = useContext(Context);
-  const { chinese } = store;
+  const { chinese, auth } = store;
 
   /** Submit function to upload image to db + aws */
   const savePhrase = async (dataObject) => {
     try {
+      const userId = await AsyncStorage.getItem('@userId');
+      const token = await AsyncStorage.getItem('@sessionToken');
+      const authHeader = { headers: { Authorization: `Bearer ${token}` } };
+
       const { characters, pinyin, translation } = dataObject;
       const data = {
         chinesePhrase: characters, pinyin, definition: translation, userId,
       };
-      await axios.post(`${REACT_APP_BACKEND}/phrase/uploadphrase`, data, auth);
+      await axios.post(`${REACT_APP_BACKEND}/phrase/uploadphrase`, data, authHeader);
       dispatch(addPhraseAction(
         {
           id: uuidv4(),
@@ -82,12 +87,14 @@ const Overlay = ({
         <TouchableOpacity style={styles.button} onPress={continueVideo}>
           <ArrowLeftIcon color="white" />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={saveScreenshot}
-        >
-          <BookmarkIcon color="white" />
-        </TouchableOpacity>
+        {auth && (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={saveScreenshot}
+          >
+            <BookmarkIcon color="white" />
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={styles.button}
           onPress={() => toggleOverlay((prev) => !prev)}

@@ -19,7 +19,8 @@ const CameraView = ({
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
 
-  const { dispatch } = useContext(Context);
+  const { store, dispatch } = useContext(Context);
+  const { auth } = store;
   console.log(`${REACT_APP_BACKEND}/login`);
 
   const scanPicture = async () => {
@@ -87,12 +88,14 @@ const CameraView = ({
           <TouchableOpacity style={styles.button} onPress={continueVideo}>
             <ArrowLeftIcon color="white" />
           </TouchableOpacity>
+          {auth && (
           <TouchableOpacity
             style={styles.button}
             onPress={saveScreenshot}
           >
             <BookmarkIcon color="white" />
           </TouchableOpacity>
+          )}
           <TouchableOpacity
             style={styles.button}
             onPress={() => setIsResults((prev) => !prev)}

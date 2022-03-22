@@ -7,12 +7,10 @@ import {
   Text,
   StyleSheet,
   Image,
-  ScrollView,
   FlatList,
   TouchableOpacity,
 } from 'react-native';
 import { EmojiSadIcon } from 'react-native-heroicons/outline';
-import GridImageView from 'react-native-grid-image-viewer';
 import { Context, setImagesAction } from '../Context.jsx';
 import OverlayOneImage from '../components/OverlayOneImage.jsx';
 
