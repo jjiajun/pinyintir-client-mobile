@@ -8,8 +8,10 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  FlatList,
 } from 'react-native';
 import { EmojiSadIcon } from 'react-native-heroicons/outline';
+import GridImageView from 'react-native-grid-image-viewer';
 import { Context, setImagesAction } from '../Context.jsx';
 
 const styles = StyleSheet.create({
@@ -25,8 +27,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   img: {
-    width: 200,
+    width: '100%',
     height: 200,
+    margin: 0,
   },
   screen: {
     flex: 1,
@@ -74,23 +77,35 @@ const ImageGallery = () => {
     getData().then(() => console.log('getData successful!', images));
   }, []);
 
-  console.log('allimages: ', images);
-
   /** Helper function to display all images stored in allImages state */
   return (
     <View style={styles.screen}>
       {images.length > 0
         ? (
-          <ScrollView>
-            {images.map((oneImage) => (
-              <View key={oneImage._id} style={styles.gallery}>
+          // <ScrollView>
+          //   {images.map((oneImage) => (
+          //     <View key={oneImage._id} style={styles.gallery}>
+          //       <Image
+          //         style={styles.img}
+          //         source={{ uri: `${REACT_APP_BACKEND}/image${oneImage.imagePath}` }}
+          //       />
+          //     </View>
+          //   ))}
+          // </ScrollView>
+          <FlatList
+            data={images}
+            renderItem={({ item }) => (
+              <View style={styles.gallery}>
                 <Image
                   style={styles.img}
-                  source={{ uri: `${REACT_APP_BACKEND}/image${oneImage.imagePath}` }}
+                  source={{ uri: `${REACT_APP_BACKEND}/image${item.imagePath}` }}
                 />
               </View>
-            ))}
-          </ScrollView>
+            )}
+            // Setting the number of column
+            numColumns={2}
+            keyExtractor={(item, index) => index.toString()}
+          />
         )
         : (
           <View style={styles.messageContainer}>

@@ -26,9 +26,9 @@ const Scan = () => {
   const { store, dispatch } = useContext(Context);
   const { file, chinese } = store;
 
-  let auth;
   const [userId, setUserId] = useState(null);
   let token;
+  let auth;
 
   const camera = useRef(null);
   const isFocused = useIsFocused();

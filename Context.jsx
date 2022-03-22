@@ -4,10 +4,13 @@ const ADD_IMAGE = 'ADD_IMAGE';
 const ADD_PHRASE = 'ADD_PHRASE';
 const SET_IMAGES = 'SET_IMAGES';
 const SET_PHRASES = 'SET_PHRASES';
+const SET_CATEGORIES = 'SET_CATEGORIES';
+const SELECT_CATEGORY = 'SELECT_CATEGORY';
 const SET_CHINESE = 'SET_CHINESE';
 const SET_FILE = 'SET_FILE';
 const SET_SPEECH_SPEED = 'SET_SPEECH_SPEED';
 const SET_SPEECH_PITCH = 'SET_SPEECH_PITCH';
+const SET_NEW_CATEGORY_NAME = 'SET_NEW_CATEGORY_NAME';
 
 const initialState = {
   images: [],
@@ -16,6 +19,9 @@ const initialState = {
   file: null,
   speechSpeed: 1,
   speechPitch: 1,
+  categories: [],
+  selectedCategory: 'All Phrases',
+  newCategoryName: null,
 };
 
 const pinyintirReducer = (state, action) => {
@@ -28,6 +34,10 @@ const pinyintirReducer = (state, action) => {
       return { ...state, images: action.payload.images };
     case SET_PHRASES:
       return { ...state, phrases: action.payload.phrases };
+    case SET_CATEGORIES:
+      return { ...state, categories: action.payload.categories };
+    case SELECT_CATEGORY:
+      return { ...state, selectedCategory: action.payload.categoryName };
     case SET_CHINESE:
       return { ...state, chinese: action.payload.chinese };
     case SET_FILE:
@@ -36,6 +46,8 @@ const pinyintirReducer = (state, action) => {
       return { ...state, speechSpeed: action.payload.speed };
     case SET_SPEECH_PITCH:
       return { ...state, speechPitch: action.payload.pitch };
+    case SET_NEW_CATEGORY_NAME:
+      return { ...state, newCategoryName: action.payload.newCategoryName };
     default:
       return state;
   }
@@ -59,6 +71,21 @@ export const setImagesAction = (images) => ({
 export const setPhrasesAction = (phrases) => ({
   type: SET_PHRASES,
   payload: { phrases },
+});
+
+export const setCategoriesAction = (categories) => ({
+  type: SET_CATEGORIES,
+  payload: { categories },
+});
+
+export const selectCategoryAction = (categoryName) => ({
+  type: SELECT_CATEGORY,
+  payload: { categoryName },
+});
+
+export const setNewCategoryNameAction = (newCategoryName) => ({
+  type: SET_NEW_CATEGORY_NAME,
+  payload: { newCategoryName },
 });
 
 export const setChineseAction = (chinese) => ({
