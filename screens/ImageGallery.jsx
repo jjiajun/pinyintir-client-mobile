@@ -117,42 +117,44 @@ const ImageGallery = () => {
         style={styles.linearGradient}
         start={{ x: 0.9, y: 0.1 }}
         end={{ x: 0.1, y: 0.5 }}
-      />
-      {images.length > 0
-        ? (
-          <View>
-            <FlatList
-              data={images}
-              renderItem={({ item }) => (
-                <View style={styles.gallery}>
-                  <TouchableOpacity onPress={() => { displayOneImage(
-                    item.result,
-                    item.imagePath,
-                    item.dimension,
-                  ); }}
-                  >
-                    <Image
-                      style={styles.img}
-                      source={{ uri: `${REACT_APP_BACKEND}/image${item.imagePath}` }}
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
+      >
+        {images.length > 0
+          ? (
+            <View>
+              <FlatList
+                data={images}
+                renderItem={({ item }) => (
+                  <View style={styles.gallery}>
+                    <TouchableOpacity onPress={() => { displayOneImage(
+                      item.result,
+                      item.imagePath,
+                      item.dimension,
+                    ); }}
+                    >
+                      <Image
+                        style={styles.img}
+                        source={{ uri: `${REACT_APP_BACKEND}/image${item.imagePath}` }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
             // Setting the number of column
-              numColumns={2}
-              keyExtractor={(item, index) => index.toString()}
-            />
-            {overlayVisible && <OverlayOneImage backToGallery={closeOverlay} data={oneImageData} />}
-          </View>
-        )
-        : (
-          <View style={styles.messageContainer}>
-            <EmojiSadIcon style={styles.iconWhite} size={60} />
-            <Text style={styles.message}>No images!
-              You can save your favourite images after scanning an image.
-            </Text>
-          </View>
-        )}
+                numColumns={2}
+                keyExtractor={(item, index) => index.toString()}
+              />
+              {overlayVisible
+              && <OverlayOneImage backToGallery={closeOverlay} data={oneImageData} />}
+            </View>
+          )
+          : (
+            <View style={styles.messageContainer}>
+              <EmojiSadIcon style={styles.iconWhite} size={60} />
+              <Text style={styles.message}>No images!
+                You can save your favourite images after scanning an image.
+              </Text>
+            </View>
+          )}
+      </LinearGradient>
     </View>
   );
 };
