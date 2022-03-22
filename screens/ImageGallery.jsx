@@ -74,16 +74,10 @@ const ImageGallery = () => {
     getData().then(() => console.log('getData successful!', images));
   }, []);
 
-  console.log('allimages: ', images);
-
   /** Helper function to display all images stored in allImages state */
   return (
     <View style={styles.screen}>
-<<<<<<< HEAD
-      {allImages.length > 0
-=======
       {images.length > 0
->>>>>>> f0d15115408a86d2edb7504fd596b61fff162cb3
         ? (
           <ScrollView>
             {images.map((oneImage) => (

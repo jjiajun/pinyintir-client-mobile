@@ -12,23 +12,23 @@ export default function App() {
 
   return (
     <MenuProvider>
-    <NavigationContainer>
-      <View style={{ height: StatusBar.currentHeight }} />
-      <PinyintirProvider>
-        <Stack.Navigator initialRouteName="LogIn" screenOptions={{ headerShown: false }}>
-          <Stack.Screen
-            name="LogIn"
-            component={LandingPage}
-            options={{ title: 'Log In' }}
-          />
-          <Stack.Screen
-            name="Home"
-            component={HomeTabs}
-            options={{ title: 'Scan' }}
-          />
-        </Stack.Navigator>
-      </PinyintirProvider>
-    </NavigationContainer>
+      <NavigationContainer>
+        <View style={{ height: StatusBar.currentHeight }} />
+        <PinyintirProvider>
+          <Stack.Navigator initialRouteName="LogIn" screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+              name="LogIn"
+              component={LandingPage}
+              options={{ title: 'Log In' }}
+            />
+            <Stack.Screen
+              name="Home"
+              component={HomeTabs}
+              options={{ title: 'Scan' }}
+            />
+          </Stack.Navigator>
+        </PinyintirProvider>
+      </NavigationContainer>
     </MenuProvider>
   );
 }

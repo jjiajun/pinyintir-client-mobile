@@ -14,7 +14,9 @@ import {
 import { ChevronDownIcon } from 'react-native-heroicons/solid';
 import { v4 as uuidv4 } from 'uuid';
 import { EmojiSadIcon } from 'react-native-heroicons/outline';
-import { Context, setPhrasesAction, setCategoriesAction, selectCategoryAction, setNewCategoryNameAction } from '../Context.jsx';
+import {
+  Context, setPhrasesAction, setCategoriesAction, selectCategoryAction, setNewCategoryNameAction,
+} from '../Context.jsx';
 import Card from '../components/Card.jsx';
 import Colors from '../constants/colors.js';
 import Input from '../components/Input.jsx';
@@ -128,7 +130,9 @@ const styles = StyleSheet.create({
 
 const PhraseGallery = () => {
   const { store, dispatch } = useContext(Context);
-  const { phrases, categories, selectedCategory, newCategoryName } = store;
+  const {
+    phrases, categories, selectedCategory, newCategoryName,
+  } = store;
   const [modalVisible, setModalVisible] = useState(false);
   let userId;
   let token;
@@ -147,7 +151,7 @@ const PhraseGallery = () => {
         auth = { headers: { Authorization: `Bearer ${token}` } };
         const response = await axios.post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth);
         dispatch(setPhrasesAction([...response.data.userProfile.phrases]));
-        dispatch(setCategoriesAction([...response.data.userProfile.categories]))
+        dispatch(setCategoriesAction([...response.data.userProfile.categories]));
       } catch (err) {
         console.log(err);
       }
@@ -162,9 +166,9 @@ const PhraseGallery = () => {
       .then((response) => {
         console.log(response.data);
         dispatch(setCategoriesAction([...categories, {
-          id: uuidv4(), 
+          id: uuidv4(),
           name: newCategory,
-        }]))
+        }]));
       });
   };
 
@@ -246,15 +250,15 @@ const PhraseGallery = () => {
                 ))}
             </View>
           </ScrollView>
-      ) : (
-        <View style={styles.messageContainer}>
-          <EmojiSadIcon color="black" size={60} />
-          <Text style={styles.message}>No phrases!
-            You can save your favourite phrases after scanning an image.
-          </Text>
-        </View>
-      )}
-    </View>
+        ) : (
+          <View style={styles.messageContainer}>
+            <EmojiSadIcon color="black" size={60} />
+            <Text style={styles.message}>No phrases!
+              You can save your favourite phrases after scanning an image.
+            </Text>
+          </View>
+        )}
+      </View>
     </View>
   );
 };
