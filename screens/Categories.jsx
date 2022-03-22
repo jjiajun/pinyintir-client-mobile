@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View, Text, StyleSheet, ScrollView,
 } from 'react-native';
-import { Context } from '../Context.js';
+import { Context } from '../Context.jsx';
 import Card from '../components/Card.jsx';
 
 const styles = StyleSheet.create({
