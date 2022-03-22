@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 import { ArrowLeftIcon, DocumentTextIcon, BookmarkIcon } from 'react-native-heroicons/outline';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MenuProvider } from 'react-native-popup-menu';
 import { v4 as uuidv4 } from 'uuid';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import OverlayTextButton from './OverlayTextButton.jsx';
@@ -102,7 +101,6 @@ const Overlay = ({
           <DocumentTextIcon color="white" />
         </TouchableOpacity>
       </View>
-
       {chinese.map((text) => (
         <OverlayTextButton
           key={text.id}

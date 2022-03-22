@@ -10,15 +10,15 @@ export default function App() {
   const Stack = createNativeStackNavigator();
 
   return (
-    <MenuProvider>
-      <NavigationContainer>
-        <View style={{ height: StatusBar.currentHeight }} />
-        <PinyintirProvider>
+    <NavigationContainer>
+      <View style={{ height: StatusBar.currentHeight }} />
+      <PinyintirProvider>
+        <MenuProvider>
           <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Home" component={HomeTabs} />
           </Stack.Navigator>
-        </PinyintirProvider>
-      </NavigationContainer>
-    </MenuProvider>
+        </MenuProvider>
+      </PinyintirProvider>
+    </NavigationContainer>
   );
 }

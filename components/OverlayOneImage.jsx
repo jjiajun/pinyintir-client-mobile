@@ -5,7 +5,6 @@ import {
   Dimensions, View, StyleSheet, TouchableOpacity, Image,
 } from 'react-native';
 import { ArrowLeftIcon, DocumentTextIcon, BookmarkIcon } from 'react-native-heroicons/outline';
-import { MenuProvider } from 'react-native-popup-menu';
 import { v4 as uuidv4 } from 'uuid';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import OverlayTextButton from './OverlayTextButton.jsx';
