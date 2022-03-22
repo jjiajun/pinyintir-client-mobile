@@ -68,12 +68,15 @@ const Scan = () => {
     }, []),
   );
 
+  console.log(`${REACT_APP_BACKEND}/image/uploadimage`);
   /** Submit function to upload image to db + aws */
   const saveScreenshot = async () => {
     const formData = new FormData();
     formData.append('image', file);
     formData.append('userId', userId);
-    formData.append('result', chinese); // need to append userId to formData in order to send userId to the backend. This method seems to be the only way - I tried putting formData and userId in an object to send it through but it didn't work.
+    formData.append('result', JSON.stringify(chinese));
+    formData.append('dimension', JSON.stringify(imageDimension));
+    // need to append userId to formData in order to send userId to the backend. This method seems to be the only way - I tried putting formData and userId in an object to send it through but it didn't work.
     const result = await axios.post(`${REACT_APP_BACKEND}/image/uploadimage`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -81,11 +84,13 @@ const Scan = () => {
       },
       transformRequest: (d) => d,
     });
-    console.log(result);
+    console.log('img post result ', result);
     dispatch(addImageAction(
       {
         id: uuidv4(),
         imagePath: result.data.imagePath,
+        result: result.data.result,
+        dimension: result.data.dimension,
       },
     ));
     // Adds newly image data to allImages state.

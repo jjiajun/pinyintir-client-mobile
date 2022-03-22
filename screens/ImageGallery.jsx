@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,10 +9,12 @@ import {
   Image,
   ScrollView,
   FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import { EmojiSadIcon } from 'react-native-heroicons/outline';
 import GridImageView from 'react-native-grid-image-viewer';
 import { Context, setImagesAction } from '../Context.jsx';
+import OverlayOneImage from '../components/OverlayOneImage.jsx';
 
 const styles = StyleSheet.create({
   button: {
@@ -58,6 +60,8 @@ const ImageGallery = () => {
   let userId;
   let token;
   let auth;
+  const [oneImageData, setOneImageData] = useState('');
+  const [overlayVisible, setOverlayVisible] = useState(false);
 
   /** To get userId and token for axios calls at every render */
   useEffect(() => {
@@ -76,7 +80,16 @@ const ImageGallery = () => {
     };
     getData().then(() => console.log('getData successful!', images));
   }, []);
+  const displayOneImage = (data, imgPath, dims) => {
+    console.log('in data', data, imgPath, dims);
+    console.log('dims data', dims);
 
+    setOneImageData({ data, imgPath, dims });
+    setOverlayVisible(true);
+  };
+  const closeOverlay = () => {
+    setOverlayVisible(false);
+  };
   /** Helper function to display all images stored in allImages state */
   return (
     <View style={styles.screen}>
@@ -92,20 +105,30 @@ const ImageGallery = () => {
           //     </View>
           //   ))}
           // </ScrollView>
-          <FlatList
-            data={images}
-            renderItem={({ item }) => (
-              <View style={styles.gallery}>
-                <Image
-                  style={styles.img}
-                  source={{ uri: `${REACT_APP_BACKEND}/image${item.imagePath}` }}
-                />
-              </View>
-            )}
+          <View>
+            <FlatList
+              data={images}
+              renderItem={({ item }) => (
+                <View style={styles.gallery}>
+                  <TouchableOpacity onPress={() => { displayOneImage(
+                    item.result,
+                    item.imagePath,
+                    item.dimension,
+                  ); }}
+                  >
+                    <Image
+                      style={styles.img}
+                      source={{ uri: `${REACT_APP_BACKEND}/image${item.imagePath}` }}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
             // Setting the number of column
-            numColumns={2}
-            keyExtractor={(item, index) => index.toString()}
-          />
+              numColumns={2}
+              keyExtractor={(item, index) => index.toString()}
+            />
+            {overlayVisible && <OverlayOneImage backToGallery={closeOverlay} data={oneImageData} />}
+          </View>
         )
         : (
           <View style={styles.messageContainer}>
