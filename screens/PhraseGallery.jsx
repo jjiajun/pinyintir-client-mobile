@@ -3,30 +3,33 @@ import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  View, Text, StyleSheet, ScrollView, Dimensions, Modal, Pressable,
+  View, Text, StyleSheet, ScrollView, Dimensions,
 } from 'react-native';
 import {
   Menu,
   MenuOptions,
   MenuOption,
   MenuTrigger,
+  renderers,
 } from 'react-native-popup-menu';
 import { ChevronDownIcon } from 'react-native-heroicons/solid';
 import { v4 as uuidv4 } from 'uuid';
 import { EmojiSadIcon } from 'react-native-heroicons/outline';
 import {
-  Context, setPhrasesAction, setCategoriesAction, selectCategoryAction, setNewCategoryNameAction,
+  Context, setPhrasesAction, setCategoriesAction, selectCategoryAction,
 } from '../Context.jsx';
 import Card from '../components/Card.jsx';
 import Colors from '../constants/colors.js';
-import Input from '../components/Input.jsx';
-import CustomButton from '../components/CustomButton.jsx';
+import ModalComponent from '../components/Modal.jsx';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   phraseCard: {
-    width: 200,
-    height: 200,
-    margin: 6,
+    width: '85%',
+    height: 150,
+    margin: 8,
   },
   text: {
     fontSize: 14,
@@ -34,28 +37,19 @@ const styles = StyleSheet.create({
     color: 'black',
     textAlign: 'center',
   },
-  header: {
-    fontSize: 16,
-    marginVertical: 5,
-    fontWeight: '900',
-    color: 'black',
-    textAlign: 'center',
+  bold: {
+    fontWeight: 'bold',
+  },
+  italics: {
+    fontStyle: 'italic',
   },
   screen: {
     flex: 1,
   },
-  card: {
-    padding: 20,
-    height: 220,
-    width: 260,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  container: {
-  },
-  scrollView: {
+  cardContainer: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'center',
     flexWrap: 'wrap',
   },
   img: {
@@ -70,6 +64,8 @@ const styles = StyleSheet.create({
   menu: {
     marginHorizontal: 60,
     margin: 20,
+    // display: 'flex',
+    // justifyContent: 'flex-start',
   },
   options: {
     backgroundColor: 'transparent',
@@ -104,18 +100,6 @@ const styles = StyleSheet.create({
   icon: {
     color: 'black',
   },
-  input: {
-    height: 40,
-    width: 175,
-  },
-  modal: {
-    color: 'white',
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
-  },
   messageContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -131,7 +115,7 @@ const styles = StyleSheet.create({
 const PhraseGallery = () => {
   const { store, dispatch } = useContext(Context);
   const {
-    phrases, categories, selectedCategory, newCategoryName,
+    phrases, categories, selectedCategory,
   } = store;
   const [modalVisible, setModalVisible] = useState(false);
   let userId;
@@ -175,41 +159,18 @@ const PhraseGallery = () => {
   return (
 
     <View style={styles.screen}>
-      <View style={styles.modal}>
-
-        <Modal
-          animationType="fade"
-          transparent
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <Pressable
-            onPress={() => setModalVisible(false)}
-            style={[styles.modal, modalVisible ? { backgroundColor: 'rgba(0, 0, 0, 0.4)' } : '']}
-          >
-            <Pressable
-              onPress={() => setModalVisible(true)}
-            >
-              <Card style={styles.card}>
-                <Text style={styles.header}>Create new category</Text>
-                <Input
-                  placeholder="Category name"
-                  onChangeText={(el) => dispatch(setNewCategoryNameAction(el))}
-                  style={styles.input}
-                />
-                <CustomButton
-                  style={styles.button}
-                  title="Create"
-                  onPress={() => createNewCategory(newCategoryName, userId)}
-                />
-              </Card>
-            </Pressable>
-          </Pressable>
-        </Modal>
-      </View>
-      <Menu style={styles.menu}>
+      {modalVisible && (
+      <ModalComponent
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        submitFunction={createNewCategory}
+        userId={userId}
+      />
+      )}
+      <Menu
+        // renderer={renderers.SlideInMenu}
+        style={styles.menu}
+      >
         <MenuTrigger style={styles.dropdownTrigger}>
           <Text>{selectedCategory}</Text>
           <ChevronDownIcon style={styles.icon} />
@@ -237,14 +198,14 @@ const PhraseGallery = () => {
       <View style={styles.container}>
         {phrases.length > 0 ? (
           <ScrollView>
-            <View style={styles.scrollView}>
+            <View style={styles.cardContainer}>
               {phrases
-                .filter((onePhrase) => onePhrase.category === selectedCategory)
+                .filter((onePhrase) => onePhrase.category.includes(selectedCategory))
                 .map((onePhrase) => (
                   <Card key={onePhrase._id} style={styles.phraseCard}>
                     {console.log(onePhrase)}
-                    <Text style={styles.text}>{onePhrase.chinesePhrase}</Text>
-                    <Text style={styles.text}>{onePhrase.pinyin}</Text>
+                    <Text style={[styles.text, styles.bold]}>{onePhrase.chinesePhrase}</Text>
+                    <Text style={[styles.text, styles.italics]}>{onePhrase.pinyin}</Text>
                     <Text style={styles.text}>{onePhrase.definition}</Text>
                   </Card>
                 ))}

@@ -20,7 +20,7 @@ const initialState = {
   speechSpeed: 1,
   speechPitch: 1,
   categories: [],
-  selectedCategory: 'Saved Phrases',
+  selectedCategory: 'All Phrases',
   newCategoryName: null,
 };
 

@@ -65,6 +65,7 @@ const Overlay = ({
           chinesePhrase: characters,
           pinyin,
           definition: translation,
+          category: ['All Phrases'],
         },
       ));
       // Adds newly image data to allImages state.
