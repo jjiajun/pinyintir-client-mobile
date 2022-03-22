@@ -14,7 +14,9 @@ import {
 } from 'react-native-popup-menu';
 import { ChevronDownIcon } from 'react-native-heroicons/solid';
 import { v4 as uuidv4 } from 'uuid';
-import { EmojiSadIcon } from 'react-native-heroicons/outline';
+import { EmojiSadIcon, PlusCircleIcon } from 'react-native-heroicons/outline';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import {
   Context, setPhrasesAction, setCategoriesAction, selectCategoryAction,
 } from '../Context.jsx';
@@ -23,28 +25,14 @@ import Colors from '../constants/colors.js';
 import ModalComponent from '../components/Modal.jsx';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  phraseCard: {
-    width: '85%',
-    height: 150,
-    margin: 8,
-  },
-  text: {
-    fontSize: 14,
-    marginVertical: 5,
-    color: 'black',
-    textAlign: 'center',
-  },
   bold: {
     fontWeight: 'bold',
+    // fontSize: 16,
   },
-  italics: {
-    fontStyle: 'italic',
-  },
-  screen: {
-    flex: 1,
+  button: {
+    backgroundColor: Colors.primary,
+    width: 170,
+    height: 38,
   },
   cardContainer: {
     display: 'flex',
@@ -52,53 +40,48 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexWrap: 'wrap',
   },
-  img: {
-    width: 200,
-    height: 200,
+  categoryName: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
-  button: {
-    backgroundColor: Colors.primary,
-    width: 170,
-    height: 38,
-  },
-  menu: {
-    marginHorizontal: 60,
-    margin: 20,
-    // display: 'flex',
-    // justifyContent: 'flex-start',
-  },
-  options: {
-    backgroundColor: 'transparent',
-    textAlign: 'center',
-  },
-  optionsContainer: {
-    marginTop: 48,
-    borderRadius: 10,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
+  container: {
+    flex: 4,
   },
   dropdownTrigger: {
-    padding: 10,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    paddingHorizontal: 20,
+    borderRadius: 8,
+    paddingLeft: '3%',
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     textAlign: 'center',
-    // shadow but only for ios
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    shadowOpacity: 0.26,
-    // shadow on android
-    elevation: 8,
   },
-  icon: {
+  iconWhite: {
+    color: 'white',
+    marginHorizontal: 5,
+    marginRight: 10,
+  },
+  iconBlack: {
     color: 'black',
+    marginRight: 10,
+
+  },
+  italics: {
+    fontStyle: 'italic',
+  },
+  phraseCard: {
+    width: '88%',
+    margin: 8,
+    borderRadius: 8,
+  },
+  menu: {
+    margin: 20,
+  },
+  message: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'white',
   },
   messageContainer: {
     flex: 1,
@@ -106,9 +89,41 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
-  message: {
-    fontWeight: 'bold',
+  options: {
+    backgroundColor: 'white',
+    height: 50,
+    paddingHorizontal: 20,
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  optionsContainer: {
+    marginTop: 48,
+    borderRadius: 20,
+    paddingTop: 20,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     textAlign: 'center',
+  },
+  screen: {
+    flex: 1,
+  },
+  text: {
+    fontSize: 14,
+    marginVertical: 5,
+    color: 'black',
+    // textAlign: 'center',
+  },
+  linearGradient: {
+    flex: 1,
+  },
+  circle: {
+    height: 26,
+    width: 26,
+    marginHorizontal: 3,
+    borderRadius: 50,
+    backgroundColor: Colors.primary,
+    marginRight: 14,
   },
 });
 
@@ -121,9 +136,9 @@ const PhraseGallery = () => {
   let userId;
   let token;
   let auth;
+  const navBarHeight = useBottomTabBarHeight();
 
   const windowWidth = Number(Dimensions.get('window').width);
-  const optionWidth = windowWidth - 120;
   /** To get userId and token for axios calls at every render */
   useEffect(() => {
     const getData = async () => {
@@ -159,67 +174,90 @@ const PhraseGallery = () => {
   return (
 
     <View style={styles.screen}>
-      {modalVisible && (
-      <ModalComponent
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        submitFunction={createNewCategory}
-        userId={userId}
-      />
-      )}
-      <Menu
-        // renderer={renderers.SlideInMenu}
-        style={styles.menu}
+      <LinearGradient
+        colors={[Colors.primary, Colors.orangeyRed]}
+        style={styles.linearGradient}
+        start={{ x: 0.9, y: 0.1 }}
+        end={{ x: 0.1, y: 0.5 }}
       >
-        <MenuTrigger style={styles.dropdownTrigger}>
-          <Text>{selectedCategory}</Text>
-          <ChevronDownIcon style={styles.icon} />
-        </MenuTrigger>
-        <MenuOptions optionsContainerStyle={{ ...styles.optionsContainer, width: optionWidth }}>
-          {categories.map((oneCategory) => (
-            <MenuOption
-              key={oneCategory._id}
-              style={{ ...styles.options, width: optionWidth }}
-              onSelect={() => dispatch(selectCategoryAction(oneCategory.name))}
-            >
-              <Text style={styles.text}>{oneCategory.name}</Text>
-            </MenuOption>
-          ))}
-          <MenuOption
-            style={{ ...styles.options, width: optionWidth }}
-            onSelect={() => setModalVisible(!modalVisible)}
-          >
-            <Text style={styles.text}>
-              Create new category
-            </Text>
-          </MenuOption>
-        </MenuOptions>
-      </Menu>
-      <View style={styles.container}>
-        {phrases.length > 0 ? (
-          <ScrollView>
-            <View style={styles.cardContainer}>
-              {phrases
-                .filter((onePhrase) => onePhrase.category.includes(selectedCategory))
-                .map((onePhrase) => (
-                  <Card key={onePhrase._id} style={styles.phraseCard}>
-                    {console.log(onePhrase)}
-                    <Text style={[styles.text, styles.bold]}>{onePhrase.chinesePhrase}</Text>
-                    <Text style={[styles.text, styles.italics]}>{onePhrase.pinyin}</Text>
-                    <Text style={styles.text}>{onePhrase.definition}</Text>
-                  </Card>
-                ))}
-            </View>
-          </ScrollView>
-        ) : (
-          <View style={styles.messageContainer}>
-            <EmojiSadIcon color="black" size={60} />
-            <Text style={styles.message}>No phrases!
-              You can save your favourite phrases after scanning an image.
-            </Text>
-          </View>
+        {modalVisible && (
+        <ModalComponent
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          submitFunction={createNewCategory}
+          userId={userId}
+        />
         )}
-      </View>
+
+        <Menu
+          renderer={renderers.SlideInMenu}
+          style={styles.menu}
+        >
+          <MenuTrigger style={styles.dropdownTrigger}>
+            <Text style={styles.categoryName}>{selectedCategory}</Text>
+            <ChevronDownIcon style={styles.iconWhite} size={28} />
+          </MenuTrigger>
+          <MenuOptions optionsContainerStyle={
+            {
+              ...styles.optionsContainer,
+              width: windowWidth,
+              paddingBottom: navBarHeight,
+            }
+          }
+          >
+            {categories.map((oneCategory) => (
+              <MenuOption
+                key={oneCategory._id}
+                style={{ ...styles.options, width: windowWidth }}
+                onSelect={() => dispatch(selectCategoryAction(oneCategory.name))}
+              >
+                <View style={styles.circle} />
+                <Text style={[styles.text, styles.bold]}>{oneCategory.name}</Text>
+              </MenuOption>
+            ))}
+            <MenuOption
+              style={{ ...styles.options, width: windowWidth }}
+              onSelect={() => setModalVisible(!modalVisible)}
+            >
+              <PlusCircleIcon style={styles.iconBlack} size={32} />
+              <Text style={[styles.text, styles.bold]}>
+                Create new category
+              </Text>
+            </MenuOption>
+          </MenuOptions>
+        </Menu>
+        <View style={styles.container}>
+          {phrases.length > 0 ? (
+            <ScrollView>
+              <View style={styles.cardContainer}>
+                {phrases
+                  .filter((onePhrase) => onePhrase.category.includes(selectedCategory))
+                  .map((onePhrase) => (
+                    <Card key={onePhrase._id} style={styles.phraseCard}>
+                      {console.log(onePhrase)}
+                      <Text style={[
+                        styles.text,
+                        styles.bold,
+                        { fontSize: 16 }]}
+                      >{onePhrase.chinesePhrase}
+                      </Text>
+                      <Text style={[styles.text, styles.italics]}>{onePhrase.pinyin}</Text>
+                      <Text style={styles.text}>{onePhrase.definition}</Text>
+                    </Card>
+                  ))}
+              </View>
+            </ScrollView>
+          ) : (
+            <View style={styles.messageContainer}>
+              <EmojiSadIcon style={styles.iconWhite} size={60} />
+              <Text style={styles.message}>No phrases!
+                You can save your favourite phrases after scanning an image.
+              </Text>
+            </View>
+          )}
+        </View>
+      </LinearGradient>
+
     </View>
   );
 };
