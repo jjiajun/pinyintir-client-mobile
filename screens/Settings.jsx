@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Alert, StyleSheet, View,
 } from 'react-native';
-import Colors from '../constants/colors.js';
+import Colors from '../utils/colors.js';
 import CustomButton from '../components/CustomButton.jsx';
 import {
   Context, setSpeechSpeedAction, setSpeechPitchAction, setAuthAction,

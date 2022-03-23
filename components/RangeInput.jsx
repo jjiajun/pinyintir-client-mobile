@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
-import Colors from '../constants/colors.js';
+import Colors from '../utils/colors.js';
 
 const styles = StyleSheet.create({
   sliderContainer: {

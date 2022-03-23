@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Context, setAuthAction } from '../Context.jsx';
-import Colors from '../constants/colors.js';
+import Colors from '../utils/colors.js';
 import Input from './Input.jsx';
 import CustomButton from './CustomButton.jsx';
 

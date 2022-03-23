@@ -3,7 +3,7 @@ import React from 'react';
 import {
   View, StyleSheet, Modal, Pressable,
 } from 'react-native';
-import Colors from '../constants/colors.js';
+import Colors from '../utils/colors.js';
 
 const styles = StyleSheet.create({
   button: {

@@ -14,7 +14,7 @@ import {
 import { EmojiSadIcon } from 'react-native-heroicons/outline';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Context, setImagesAction } from '../Context.jsx';
-import Colors from '../constants/colors.js';
+import Colors from '../utils/colors.js';
 import OverlayOneImage from '../components/OverlayOneImage.jsx';
 
 const styles = StyleSheet.create({

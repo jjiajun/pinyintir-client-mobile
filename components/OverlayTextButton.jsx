@@ -8,7 +8,7 @@ import {
 } from 'react-native-popup-menu';
 import ChineseCard from './ChineseCard.jsx';
 import { Context } from '../Context.jsx';
-import colors from '../constants/colors.js';
+import colors from '../utils/colors.js';
 
 const styles = StyleSheet.create({
   menuTrigger: {

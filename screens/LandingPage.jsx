@@ -8,7 +8,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import Colors from '../constants/colors.js';
+import Colors from '../utils/colors.js';
 import Card from '../components/Card.jsx';
 import LogInBox from '../components/LogInBox.jsx';
 import SignUpBox from '../components/SignUpBox.jsx';
