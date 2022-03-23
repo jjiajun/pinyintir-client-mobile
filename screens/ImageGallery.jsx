@@ -134,7 +134,7 @@ const ImageGallery = () => {
                     ); }}
                     >
                       <Image
-                        style={[styles.img, { height: heightOfImage }]}
+                        style={[styles.img, { height: heightOfImage, width: heightOfImage }]}
                         source={{ uri: `${REACT_APP_BACKEND}/image${item.imagePath}` }}
                       />
                     </TouchableOpacity>

@@ -118,11 +118,7 @@ const styles = StyleSheet.create({
     margin: 8,
     borderRadius: 8,
   },
-  pill: {
-    backgroundColor: Colors.primary,
-  },
   pillsContainer: {
-    // height: 300,
     width: 300,
     paddingVertical: 12,
     flexDirection: 'row',
@@ -263,7 +259,7 @@ const PhraseGallery = () => {
                 .filter((category) => category.name !== 'All Phrases')
                 .map((category) => (
                   <Pill
-                    style={styles.pill}
+                    // style={styles.pill}
                     title={category.name}
                     selected={false}
                   />

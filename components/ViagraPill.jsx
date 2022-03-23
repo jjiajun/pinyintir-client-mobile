@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     elevation: 8,
     borderRadius: 10,
     margin: 6,
-    backgroundColor: 'black',
+    backgroundColor: '#949494',
     paddingHorizontal: 12,
     paddingVertical: 7,
     alignItems: 'center',
@@ -24,15 +24,14 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
+    // backgroundColor: 'transparent',
   },
   iconWhite: {
     color: 'white',
     marginLeft: 5,
+    // backgroundColor: 'transparent',
+
   },
-  // iconBlack: {
-  //   color: 'black',
-  //   marginRight: 10,
-  // },
 });
 
 const Pill = (props) => (
