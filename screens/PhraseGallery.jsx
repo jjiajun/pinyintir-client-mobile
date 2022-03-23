@@ -3,8 +3,9 @@ import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  View, Text, StyleSheet, ScrollView, Dimensions, Pressable, FlatList,
+  View, Text, StyleSheet, ScrollView, Dimensions, Pressable,
 } from 'react-native';
+import { v4 as uuidv4 } from 'uuid';
 import {
   Menu,
   MenuOptions,
@@ -119,10 +120,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   pillsContainer: {
-    width: 300,
+    width: '95%',
     paddingVertical: 12,
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'center',
   },
   message: {
     fontWeight: 'bold',
@@ -170,6 +172,7 @@ const PhraseGallery = () => {
   const [phraseModalVisible, setPhraseModalVisible] = useState(false);
   const navBarHeight = useBottomTabBarHeight();
   const [selectedPhrase, setSelectedPhrase] = useState();
+  const [categoriesInSelectedPhrase, setCategoriesInSelectedPhrase] = useState([]);
   const windowWidth = Number(Dimensions.get('window').width);
   /** To get userId and token for axios calls at every render */
 
@@ -215,10 +218,6 @@ const PhraseGallery = () => {
     dispatch(removePhraseAction(phraseId));
   };
 
-  const sortIntoCategories = () => {
-
-  };
-
   return (
 
     <View style={styles.screen}>
@@ -254,21 +253,24 @@ const PhraseGallery = () => {
           setModalVisible={setPhraseModalVisible}
         >
           <Card style={styles.card}>
+            {console.log('ALL CATS', categoriesInSelectedPhrase)}
             <View style={styles.pillsContainer}>
               {categories && categories
                 .filter((category) => category.name !== 'All Phrases')
                 .map((category) => (
                   <Pill
-                    // style={styles.pill}
+                    key={uuidv4()}
                     title={category.name}
-                    selected={false}
+                    categories={categoriesInSelectedPhrase}
                   />
                 ))}
             </View>
             <CustomButton
               style={styles.redButton}
               title="Delete Phrase"
-              onPress={() => deletePhrase(selectedPhrase)}
+              onPress={() => {
+                deletePhrase(selectedPhrase).then(() => setPhraseModalVisible(false));
+              }}
             />
           </Card>
         </ModalComponent>
@@ -322,6 +324,7 @@ const PhraseGallery = () => {
                         onLongPress={() => {
                           setPhraseModalVisible(true);
                           setSelectedPhrase(onePhrase._id);
+                          setCategoriesInSelectedPhrase(onePhrase.category);
                         }}
                       >
                         <Text style={[
