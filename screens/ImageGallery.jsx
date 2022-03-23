@@ -30,6 +30,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
+    marginVertical: 20,
+    paddingLeft: '7%',
   },
   iconWhite: {
     color: 'white',
@@ -37,7 +39,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   thumbnailContainer: {
-    flex: 1,
+    // flex: 1,
+    marginVertical: 5,
+    // padding: 2,
+    alignItems: 'center',
+    width: '50%',
   },
   linearGradient: {
     flex: 1,
@@ -82,7 +88,7 @@ const ImageGallery = () => {
   const [oneImageData, setOneImageData] = useState('');
   const [overlayVisible, setOverlayVisible] = useState(false);
   const windowWidth = Number(Dimensions.get('window').width);
-  const heightOfImage = windowWidth / 2;
+  const heightOfImage = (windowWidth / 2) * 0.95;
 
   /** To get userId and token for axios calls at every render */
   useEffect(() => {
@@ -123,6 +129,7 @@ const ImageGallery = () => {
         {images.length > 0
           ? (
             <View style={styles.screen}>
+              <Text style={styles.header}>Image Gallery</Text>
               <FlatList
                 data={images}
                 renderItem={({ item }) => (
@@ -134,7 +141,7 @@ const ImageGallery = () => {
                     ); }}
                     >
                       <Image
-                        style={[styles.img, { height: heightOfImage, width: heightOfImage }]}
+                        style={{ ...styles.img, height: heightOfImage, width: heightOfImage }}
                         source={{ uri: `${REACT_APP_BACKEND}/image${item.imagePath}` }}
                       />
                     </TouchableOpacity>
