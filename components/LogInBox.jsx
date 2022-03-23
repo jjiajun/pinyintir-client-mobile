@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Context, setAuthAction } from '../Context.jsx';
-import Message from './Message.jsx';
 import Colors from '../constants/colors.js';
 import Input from './Input.jsx';
 import CustomButton from './CustomButton.jsx';
@@ -42,12 +41,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const LogInBox = ({ navigation }) => {
+const LogInBox = ({ navigation, setMessage }) => {
   // State and setter for login details
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   // State and setter for signup and login message
-  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   console.log(`${REACT_APP_BACKEND}/login`);
 
@@ -135,7 +133,6 @@ const LogInBox = ({ navigation }) => {
             onPress={loginAttempt}
           />
         )}
-      <View>{message !== '' && <Message message={message} />}</View>
     </View>
 
   );

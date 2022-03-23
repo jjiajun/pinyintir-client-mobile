@@ -10,7 +10,7 @@ import { Context } from '../Context.jsx';
 const styles = StyleSheet.create({
   listItem: {
     padding: 10,
-    marginVertical: 10,
+    // marginVertical: 10,
     backgroundColor: colors.primary,
     // borderColor: 'black',
     // borderWidth: 1,
@@ -18,11 +18,12 @@ const styles = StyleSheet.create({
   },
   characters: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   chineseText: {
     marginRight: 5,
     color: 'white',
+    marginBottom: 10,
   },
 });
 

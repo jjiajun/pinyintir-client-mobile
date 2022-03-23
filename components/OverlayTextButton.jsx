@@ -73,7 +73,7 @@ const OverlayTextButton = (props) => {
           <Text>{props.text.vertices[0].y}, {props.text.vertices[0].x}</Text>
           <ChineseCard item={props.text} />
 
-          {auth && (
+          {auth && props.allowSave && (
             <>
               <View
                 style={{

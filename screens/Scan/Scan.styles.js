@@ -48,10 +48,12 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   messageContainer: {
+    position: 'absolute',
+    top: '50%',
     width: '80%',
     height: 30,
     alignSelf: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',

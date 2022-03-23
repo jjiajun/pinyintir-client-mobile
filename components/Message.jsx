@@ -8,12 +8,15 @@ import {
 const styles = StyleSheet.create({
   message: {
     color: 'red',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
 });
 
 const Message = (props) => (
-  <View style={styles.message}>
-    <Text>
+  <View>
+    <Text style={styles.message}>
       {props.message}
     </Text>
   </View>
