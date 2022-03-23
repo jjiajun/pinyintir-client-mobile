@@ -3,7 +3,7 @@ import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  View, Text, StyleSheet, ScrollView, Dimensions, Pressable, FlatList,
+  View, Text, StyleSheet, ScrollView, Dimensions, Pressable, FlatList, TouchableOpacity,
 } from 'react-native';
 import {
   Menu,
@@ -12,7 +12,7 @@ import {
   MenuTrigger,
   renderers,
 } from 'react-native-popup-menu';
-import { ChevronDownIcon } from 'react-native-heroicons/solid';
+import { ChevronDownIcon, MicrophoneIcon } from 'react-native-heroicons/solid';
 import { EmojiSadIcon, PlusCircleIcon } from 'react-native-heroicons/outline';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
@@ -25,7 +25,8 @@ import {
   removePhraseAction,
 } from '../Context.jsx';
 import Card from '../components/Card.jsx';
-import Colors from '../constants/colors.js';
+import Colors from '../utils/colors.js';
+import speakText from '../utils/textToSpeech.js';
 import ModalComponent from '../components/Modal.jsx';
 import Input from '../components/Input.jsx';
 import CustomButton from '../components/CustomButton.jsx';
@@ -158,13 +159,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginVertical: 5,
     color: 'black',
+    marginRight: 3,
+  },
+  characters: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
 const PhraseGallery = () => {
   const { store, dispatch } = useContext(Context);
   const {
-    phrases, categories, selectedCategory, newCategoryName,
+    phrases, categories, selectedCategory, newCategoryName, speechSpeed, speechPitch,
   } = store;
   const [newCatModalVisible, setNewCatModalVisible] = useState(false);
   const [phraseModalVisible, setPhraseModalVisible] = useState(false);
@@ -324,12 +330,23 @@ const PhraseGallery = () => {
                           setSelectedPhrase(onePhrase._id);
                         }}
                       >
-                        <Text style={[
-                          styles.text,
-                          styles.bold,
-                          { fontSize: 16 }]}
-                        >{onePhrase.chinesePhrase}
-                        </Text>
+                        <View style={styles.characters}>
+                          <Text style={[
+                            styles.text,
+                            styles.bold,
+                            { fontSize: 16 }]}
+                          >{onePhrase.chinesePhrase}
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() => speakText(
+                              onePhrase.chinesePhrase,
+                              speechSpeed,
+                              speechPitch,
+                            )}
+                          >
+                            <MicrophoneIcon color="black" size={16} fill="black" />
+                          </TouchableOpacity>
+                        </View>
                         <Text style={[styles.text, styles.italics]}>{onePhrase.pinyin}</Text>
                         <Text style={styles.text}>{onePhrase.definition}</Text>
                       </Pressable>
