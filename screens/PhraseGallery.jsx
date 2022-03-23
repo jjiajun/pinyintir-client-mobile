@@ -3,7 +3,7 @@ import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  View, Text, StyleSheet, ScrollView, Dimensions, Pressable,
+  View, Text, StyleSheet, ScrollView, Dimensions, Pressable, FlatList,
 } from 'react-native';
 import {
   Menu,
@@ -29,6 +29,7 @@ import Colors from '../constants/colors.js';
 import ModalComponent from '../components/Modal.jsx';
 import Input from '../components/Input.jsx';
 import CustomButton from '../components/CustomButton.jsx';
+import Pill from '../components/ViagraPill.jsx';
 
 const styles = StyleSheet.create({
   bold: {
@@ -46,8 +47,8 @@ const styles = StyleSheet.create({
   },
   card: {
     padding: 20,
-    height: 200,
-    width: 280,
+    // height: 200,
+    // width: 280,
     justifyContent: 'space-around',
     alignItems: 'center',
   },
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 16,
-    marginVertical: 5,
+    marginVertical: 10,
     fontWeight: '900',
     color: 'black',
     textAlign: 'center',
@@ -102,6 +103,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     width: 220,
+    marginVertical: 10,
     paddingHorizontal: 15,
     textAlign: 'center',
   },
@@ -115,6 +117,16 @@ const styles = StyleSheet.create({
     width: '88%',
     margin: 8,
     borderRadius: 8,
+  },
+  pill: {
+    backgroundColor: Colors.primary,
+  },
+  pillsContainer: {
+    // height: 300,
+    width: 300,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   message: {
     fontWeight: 'bold',
@@ -246,15 +258,20 @@ const PhraseGallery = () => {
           setModalVisible={setPhraseModalVisible}
         >
           <Card style={styles.card}>
-            <Text style={styles.modalTitle}>Select categories</Text>
-            <Input
-              placeholder="Category name"
-              onChangeText={(el) => dispatch(setNewCategoryNameAction(el))}
-              style={styles.input}
-            />
+            <View style={styles.pillsContainer}>
+              {categories && categories
+                .filter((category) => category.name !== 'All Phrases')
+                .map((category) => (
+                  <Pill
+                    style={styles.pill}
+                    title={category.name}
+                    selected={false}
+                  />
+                ))}
+            </View>
             <CustomButton
               style={styles.redButton}
-              title="Delete"
+              title="Delete Phrase"
               onPress={() => deletePhrase(selectedPhrase)}
             />
           </Card>

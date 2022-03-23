@@ -9,6 +9,7 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import { EmojiSadIcon } from 'react-native-heroicons/outline';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     marginRight: 10,
   },
-  gallery: {
+  thumbnailContainer: {
     flex: 1,
   },
   linearGradient: {
@@ -48,7 +49,6 @@ const styles = StyleSheet.create({
   },
   img: {
     width: '100%',
-    height: 200,
     margin: 0,
   },
   screen: {
@@ -81,6 +81,8 @@ const ImageGallery = () => {
   let auth;
   const [oneImageData, setOneImageData] = useState('');
   const [overlayVisible, setOverlayVisible] = useState(false);
+  const windowWidth = Number(Dimensions.get('window').width);
+  const heightOfImage = windowWidth / 2;
 
   /** To get userId and token for axios calls at every render */
   useEffect(() => {
@@ -124,7 +126,7 @@ const ImageGallery = () => {
               <FlatList
                 data={images}
                 renderItem={({ item }) => (
-                  <View style={styles.gallery}>
+                  <View style={styles.thumbnailContainer}>
                     <TouchableOpacity onPress={() => { displayOneImage(
                       item.result,
                       item.imagePath,
@@ -132,7 +134,7 @@ const ImageGallery = () => {
                     ); }}
                     >
                       <Image
-                        style={styles.img}
+                        style={[styles.img, { height: heightOfImage }]}
                         source={{ uri: `${REACT_APP_BACKEND}/image${item.imagePath}` }}
                       />
                     </TouchableOpacity>

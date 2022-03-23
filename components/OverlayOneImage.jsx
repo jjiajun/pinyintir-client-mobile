@@ -1,14 +1,11 @@
-import React, { useContext } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import {
   Dimensions, View, StyleSheet, TouchableOpacity, Image,
 } from 'react-native';
-import { ArrowLeftIcon, DocumentTextIcon, BookmarkIcon } from 'react-native-heroicons/outline';
-import { v4 as uuidv4 } from 'uuid';
+import { ArrowLeftIcon } from 'react-native-heroicons/outline';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import OverlayTextButton from './OverlayTextButton.jsx';
-import { Context, addPhraseAction } from '../Context.jsx';
 
 const styles = StyleSheet.create({
   overlay: {
