@@ -252,7 +252,10 @@ const PhraseGallery = () => {
             <CustomButton
               style={styles.button}
               title="Create"
-              onPress={() => createNewCategory(newCategoryName)}
+              onPress={() => {
+                createNewCategory(newCategoryName);
+                setNewCatModalVisible(false);
+              }}
             />
           </Card>
         </ModalComponent>
