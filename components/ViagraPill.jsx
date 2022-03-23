@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   StyleSheet, TouchableOpacity, Text,
 } from 'react-native';
 import { XIcon, CheckIcon } from 'react-native-heroicons/outline';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import Colors from '../utils/colors.js';
+import {
+  Context,
+  addCategoryToPhrase,
+  removeCategoryFromPhrase,
+} from '../Context.jsx';
 
 const styles = StyleSheet.create({
   pill: {
@@ -15,13 +23,14 @@ const styles = StyleSheet.create({
     // shadow on android
     elevation: 8,
     borderRadius: 10,
-    margin: 6,
+    marginVertical: 6,
     backgroundColor: '#949494',
-    paddingHorizontal: 15,
+    paddingHorizontal: 16,
     paddingVertical: 7,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     flexDirection: 'row',
+    height: 38,
   },
   text: {
     color: 'white',
@@ -35,23 +44,54 @@ const styles = StyleSheet.create({
 });
 
 const Pill = (props) => {
-  // check if selected phrase is already in this category (true / false)
-  const isCategoryInUse = props.categories.includes(props.title);
-  const [selected, setSelected] = useState(isCategoryInUse);
+  const { title, selectedPhrase, categories } = props;
+  const { dispatch } = useContext(Context);
+  const [selected, setSelected] = useState();
+
+  useEffect(() => {
+    // const isCategoryInUse = categories.includes(title);
+    // console.log('USE EFFECT IS RUN', isCategoryInUse);
+    // setSelected(isCategoryInUse);
+  }, []);
+
+  /** call backend api to add category to this phrase */
+  const addCategory = async () => {
+    setSelected(!selected);
+    const userId = await AsyncStorage.getItem('@userId');
+    const token = await AsyncStorage.getItem('@sessionToken');
+    // create authorization header
+    const auth = { headers: { Authorization: `Bearer ${token}` } };
+    await axios
+      .post(`${REACT_APP_BACKEND}/phrase/addcategorytophrase`, { userId, newCategory: title, phraseId: selectedPhrase }, auth);
+    dispatch(addCategoryToPhrase(title, selectedPhrase));
+  };
+
+  /** call backend api to remove category from this phrase */
+  const removeCategory = async () => {
+    console.log('remove category');
+    setSelected(!selected);
+    const userId = await AsyncStorage.getItem('@userId');
+    const token = await AsyncStorage.getItem('@sessionToken');
+    // create authorization header
+    const auth = { headers: { Authorization: `Bearer ${token}` } };
+    await axios
+      .post(`${REACT_APP_BACKEND}/phrase/removecategoryfromphrase`, { userId, category: title, phraseId: selectedPhrase }, auth);
+    dispatch(removeCategoryFromPhrase(title, selectedPhrase));
+  };
 
   return (
   // using spread operators below lets you add other styles from outside this component
     <TouchableOpacity
-      style={[styles.pill, props.style, selected ? { backgroundColor: Colors.primary } : { backgroundColor: '#949494' }]}
+      style={[styles.pill, selected ? { backgroundColor: Colors.primary } : { backgroundColor: '#949494' }]}
       onPress={() => {
         // if !selected, call /addcategorytophrase : call /removecategoryfromphrase
-        setSelected(!selected);
+        !selected ? addCategory() : removeCategory();
       }}
     >
-      <Text style={styles.text}>{props.title}</Text>
+      <Text style={styles.text}>{title}</Text>
       {selected
-        ? <XIcon style={styles.iconWhite} size={20} />
-        : <CheckIcon style={styles.iconWhite} size={20} />}
+        ? <XIcon style={styles.iconWhite} size={16} />
+        : <CheckIcon style={styles.iconWhite} size={16} />}
     </TouchableOpacity>
   );
 };

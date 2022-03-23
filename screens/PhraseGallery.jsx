@@ -44,13 +44,12 @@ const styles = StyleSheet.create({
   },
   redButton: {
     backgroundColor: Colors.orangeyRed,
-    width: 220,
+    width: 200,
+    margin: 10,
     height: 38,
   },
   card: {
     padding: 20,
-    // height: 200,
-    // width: 280,
     justifyContent: 'space-around',
     alignItems: 'center',
   },
@@ -85,6 +84,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  helperText: {
+    fontSize: 11,
+    marginVertical: 4,
+    color: 'grey',
   },
   modalTitle: {
     fontSize: 16,
@@ -121,10 +125,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   pillsContainer: {
-    width: '95%',
+    width: 200,
     paddingVertical: 12,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    // flexDirection: 'row',
+    // flexWrap: 'wrap',
     justifyContent: 'center',
   },
   message: {
@@ -260,6 +264,11 @@ const PhraseGallery = () => {
         >
           <Card style={styles.card}>
             {console.log('ALL CATS', categoriesInSelectedPhrase)}
+            <Text style={[styles.text, { fontSize: 16 }]}>Categories</Text>
+            <Text style={styles.helperText}>
+              Tap to toggle the categories{'\n'}
+              that this phrase belongs to
+            </Text>
             <View style={styles.pillsContainer}>
               {categories && categories
                 .filter((category) => category.name !== 'All Phrases')
@@ -268,9 +277,16 @@ const PhraseGallery = () => {
                     key={uuidv4()}
                     title={category.name}
                     categories={categoriesInSelectedPhrase}
+                    selectedPhrase={selectedPhrase}
                   />
                 ))}
             </View>
+            <View
+              style={{
+                borderBottomColor: 'black',
+                borderBottomWidth: 1,
+              }}
+            />
             <CustomButton
               style={styles.redButton}
               title="Delete Phrase"
@@ -324,7 +340,6 @@ const PhraseGallery = () => {
                 {phrases
                   .filter((onePhrase) => onePhrase.category.includes(selectedCategory))
                   .map((onePhrase) => (
-
                     <Card key={onePhrase._id} style={styles.phraseCard}>
                       <Pressable
                         onLongPress={() => {
