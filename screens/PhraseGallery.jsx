@@ -39,6 +39,11 @@ const styles = StyleSheet.create({
     width: 220,
     height: 38,
   },
+  redButton: {
+    backgroundColor: Colors.orangeyRed,
+    width: 220,
+    height: 38,
+  },
   card: {
     padding: 20,
     height: 200,
@@ -156,7 +161,7 @@ const PhraseGallery = () => {
   const [newCatModalVisible, setNewCatModalVisible] = useState(false);
   const [phraseModalVisible, setPhraseModalVisible] = useState(false);
   const navBarHeight = useBottomTabBarHeight();
-
+  const [selectedPhrase, setSelectedPhrase] = useState();
   const windowWidth = Number(Dimensions.get('window').width);
   /** To get userId and token for axios calls at every render */
 
@@ -192,12 +197,14 @@ const PhraseGallery = () => {
   };
 
   /** call backend api to add current phrase into selected categories */
-  const deletePhrase = (userId, phraseId) => {
-    axios
-      .post(`${REACT_APP_BACKEND}/phrase/deletephrase`, { userId, phraseId }, auth)
-      .then(() => {
-        dispatch(removePhraseAction(phraseId));
-      });
+  const deletePhrase = async (phraseId) => {
+    const userId = await AsyncStorage.getItem('@userId');
+    const token = await AsyncStorage.getItem('@sessionToken');
+    // create authorization header
+    const auth = { headers: { Authorization: `Bearer ${token}` } };
+    await axios
+      .post(`${REACT_APP_BACKEND}/phrase/deletephrase`, { userId, phraseId }, auth);
+    dispatch(removePhraseAction(phraseId));
   };
 
   const sortIntoCategories = () => {
@@ -237,7 +244,21 @@ const PhraseGallery = () => {
         <ModalComponent
           modalVisible={phraseModalVisible}
           setModalVisible={setPhraseModalVisible}
-        />
+        >
+          <Card style={styles.card}>
+            <Text style={styles.modalTitle}>Select categories</Text>
+            <Input
+              placeholder="Category name"
+              onChangeText={(el) => dispatch(setNewCategoryNameAction(el))}
+              style={styles.input}
+            />
+            <CustomButton
+              style={styles.redButton}
+              title="Delete"
+              onPress={() => deletePhrase(selectedPhrase)}
+            />
+          </Card>
+        </ModalComponent>
         )}
         <Menu
           renderer={renderers.SlideInMenu}
@@ -285,7 +306,10 @@ const PhraseGallery = () => {
 
                     <Card key={onePhrase._id} style={styles.phraseCard}>
                       <Pressable
-                        onLongPress={() => setPhraseModalVisible(true)}
+                        onLongPress={() => {
+                          setPhraseModalVisible(true);
+                          setSelectedPhrase(onePhrase._id);
+                        }}
                       >
                         <Text style={[
                           styles.text,
