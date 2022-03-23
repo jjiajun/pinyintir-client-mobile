@@ -122,7 +122,7 @@ const ImageGallery = () => {
       >
         {images.length > 0
           ? (
-            <View>
+            <View style={styles.screen}>
               <FlatList
                 data={images}
                 renderItem={({ item }) => (
