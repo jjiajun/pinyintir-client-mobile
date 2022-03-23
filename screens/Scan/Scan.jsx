@@ -6,7 +6,6 @@ import { Camera } from 'expo-camera';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text } from 'react-native';
-import { v4 as uuidv4 } from 'uuid';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { ExclamationCircleIcon } from 'react-native-heroicons/outline';
 import {
@@ -65,7 +64,9 @@ const Scan = () => {
       formData.append('userId', userId);
       formData.append('result', JSON.stringify(chinese));
       formData.append('dimension', JSON.stringify(imageDimension));
-      // need to append userId to formData in order to send userId to the backend. This method seems to be the only way - I tried putting formData and userId in an object to send it through but it didn't work.
+      // need to append userId to formData in order to send userId to the backend.
+      // This method seems to be the only way - I tried putting formData and
+      // userId in an object to send it through but it didn't work.
       const result = await axios.post(`${REACT_APP_BACKEND}/image/uploadimage`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -79,9 +80,10 @@ const Scan = () => {
       setTimeout(() => {
         setMsg('');
       }, 3000);
+
       dispatch(addImageAction(
         {
-          id: uuidv4(),
+          id: result.data.imageId,
           imagePath: result.data.imagePath,
           result: result.data.result,
           dimension: result.data.dimension,

@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 import { ArrowLeftIcon, DocumentTextIcon, BookmarkIcon } from 'react-native-heroicons/outline';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { v4 as uuidv4 } from 'uuid';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import OverlayTextButton from './OverlayTextButton.jsx';
 import { Context, addPhraseAction } from '../Context.jsx';
@@ -63,7 +62,7 @@ const Overlay = ({
       const data = {
         chinesePhrase: characters, pinyin, definition: translation, userId,
       };
-      await axios.post(`${REACT_APP_BACKEND}/phrase/uploadphrase`, data, authHeader);
+      const response = await axios.post(`${REACT_APP_BACKEND}/phrase/uploadphrase`, data, authHeader);
       setLoading(false);
       setMsg('Save successful!');
       setTimeout(() => {
@@ -71,7 +70,7 @@ const Overlay = ({
       }, 3000);
       dispatch(addPhraseAction(
         {
-          id: uuidv4(),
+          id: response.data,
           chinesePhrase: characters,
           pinyin,
           definition: translation,

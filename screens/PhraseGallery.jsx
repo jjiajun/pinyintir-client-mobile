@@ -13,7 +13,6 @@ import {
   renderers,
 } from 'react-native-popup-menu';
 import { ChevronDownIcon } from 'react-native-heroicons/solid';
-import { v4 as uuidv4 } from 'uuid';
 import { EmojiSadIcon, PlusCircleIcon } from 'react-native-heroicons/outline';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
@@ -34,7 +33,6 @@ import CustomButton from '../components/CustomButton.jsx';
 const styles = StyleSheet.create({
   bold: {
     fontWeight: 'bold',
-    // fontSize: 16,
   },
   button: {
     backgroundColor: Colors.primary,
@@ -152,27 +150,23 @@ const styles = StyleSheet.create({
 
 const PhraseGallery = () => {
   const { store, dispatch } = useContext(Context);
-  const { newCategoryName } = store;
   const {
-    phrases, categories, selectedCategory,
+    phrases, categories, selectedCategory, newCategoryName,
   } = store;
   const [newCatModalVisible, setNewCatModalVisible] = useState(false);
   const [phraseModalVisible, setPhraseModalVisible] = useState(false);
-  let userId;
-  let token;
-  let auth;
   const navBarHeight = useBottomTabBarHeight();
 
   const windowWidth = Number(Dimensions.get('window').width);
   /** To get userId and token for axios calls at every render */
+
   useEffect(() => {
     const getData = async () => {
       try {
-        // setUserId(await AsyncStorage.getItem('@userId'));
-        userId = await AsyncStorage.getItem('@userId');
-        token = await AsyncStorage.getItem('@sessionToken');
+        const userId = await AsyncStorage.getItem('@userId');
+        const token = await AsyncStorage.getItem('@sessionToken');
         // create authorization header
-        auth = { headers: { Authorization: `Bearer ${token}` } };
+        const auth = { headers: { Authorization: `Bearer ${token}` } };
         const response = await axios.post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth);
         dispatch(setPhrasesAction([...response.data.userProfile.phrases]));
         dispatch(setCategoriesAction([...response.data.userProfile.categories]));
@@ -184,16 +178,17 @@ const PhraseGallery = () => {
   }, []);
 
   /** call backend api to create new category by userId */
-  const createNewCategory = (newCategory, userId) => {
-    axios
-      .post(`${REACT_APP_BACKEND}/phrase/addnewcategory`, { userId, newCategory }, auth)
-      .then((response) => {
-        console.log(response.data);
-        dispatch(setCategoriesAction([...categories, {
-          id: uuidv4(),
-          name: newCategory,
-        }]));
-      });
+  const createNewCategory = async (newCategory) => {
+    const userId = await AsyncStorage.getItem('@userId');
+    const token = await AsyncStorage.getItem('@sessionToken');
+    // create authorization header
+    const auth = { headers: { Authorization: `Bearer ${token}` } };
+    const response = await axios
+      .post(`${REACT_APP_BACKEND}/phrase/addnewcategory`, { userId, newCategory }, auth);
+    dispatch(setCategoriesAction([...categories, {
+      id: response.data,
+      name: newCategory,
+    }]));
   };
 
   /** call backend api to add current phrase into selected categories */
@@ -233,7 +228,7 @@ const PhraseGallery = () => {
             <CustomButton
               style={styles.button}
               title="Create"
-              onPress={() => createNewCategory(newCategoryName, userId)}
+              onPress={() => createNewCategory(newCategoryName)}
             />
           </Card>
         </ModalComponent>
@@ -242,8 +237,6 @@ const PhraseGallery = () => {
         <ModalComponent
           modalVisible={phraseModalVisible}
           setModalVisible={setPhraseModalVisible}
-          submitFunction={{ deletePhrase, sortIntoCategories }}
-          userId={userId}
         />
         )}
         <Menu

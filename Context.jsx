@@ -1,6 +1,7 @@
 import React, { useReducer } from 'react';
 
 const SET_AUTH = 'SET_AUTH';
+// const SET_USERID = 'SET_USERID';
 const ADD_IMAGE = 'ADD_IMAGE';
 const ADD_PHRASE = 'ADD_PHRASE';
 const SET_IMAGES = 'SET_IMAGES';
@@ -16,6 +17,7 @@ const REMOVE_PHRASE = 'REMOVE_PHRASE';
 
 const initialState = {
   auth: false,
+  userId: null,
   images: [],
   phrases: [],
   chinese: [],
@@ -31,6 +33,8 @@ const pinyintirReducer = (state, action) => {
   switch (action.type) {
     case SET_AUTH:
       return { ...state, auth: action.payload.auth };
+    // case SET_USERID:
+    //   return { ...state, userId: action.payload.userId };
     case ADD_IMAGE:
       return { ...state, images: [...state.images, action.payload.imgObj] };
     case ADD_PHRASE:
@@ -64,6 +68,8 @@ const pinyintirReducer = (state, action) => {
 };
 
 export const setAuthAction = (auth) => ({ type: SET_AUTH, payload: { auth } });
+
+// export const setUserIdAction = (userId) => ({ type: SET_USERID, payload: { userId } });
 
 export const addImageAction = (imgObj) => ({ type: ADD_IMAGE, payload: { imgObj } });
 
