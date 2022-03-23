@@ -70,7 +70,7 @@ const CameraView = ({
   };
 
   return (
-    <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={camera}>
+    <Camera style={styles.camera} type={Camera.Constants.Type.back} ratio="16:9" ref={camera}>
       <View style={styles.spinner}>
         <ActivityIndicator animating={loading} size="large" color="#00ff00" />
       </View>

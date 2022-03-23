@@ -64,7 +64,6 @@ const OverlayOneImage = ({
             <ArrowLeftIcon color="white" />
           </TouchableOpacity>
         </View>
-
         {chinese.map((text) => (
           <OverlayTextButton
             key={text.id}
