@@ -3,7 +3,7 @@ import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  View, Text, StyleSheet, ScrollView, Dimensions,
+  View, Text, StyleSheet, ScrollView, Dimensions, Pressable,
 } from 'react-native';
 import {
   Menu,
@@ -13,26 +13,38 @@ import {
   renderers,
 } from 'react-native-popup-menu';
 import { ChevronDownIcon } from 'react-native-heroicons/solid';
-import { v4 as uuidv4 } from 'uuid';
 import { EmojiSadIcon, PlusCircleIcon } from 'react-native-heroicons/outline';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import {
-  Context, setPhrasesAction, setCategoriesAction, selectCategoryAction,
+  Context,
+  setPhrasesAction,
+  setCategoriesAction,
+  selectCategoryAction,
+  setNewCategoryNameAction,
+  removePhraseAction,
 } from '../Context.jsx';
 import Card from '../components/Card.jsx';
 import Colors from '../constants/colors.js';
 import ModalComponent from '../components/Modal.jsx';
+import Input from '../components/Input.jsx';
+import CustomButton from '../components/CustomButton.jsx';
 
 const styles = StyleSheet.create({
   bold: {
     fontWeight: 'bold',
-    // fontSize: 16,
   },
   button: {
     backgroundColor: Colors.primary,
-    width: 170,
+    width: 220,
     height: 38,
+  },
+  card: {
+    padding: 20,
+    height: 200,
+    width: 280,
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
   cardContainer: {
     display: 'flex',
@@ -40,21 +52,37 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexWrap: 'wrap',
   },
-  categoryName: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
+  circle: {
+    height: 26,
+    width: 26,
+    marginHorizontal: 3,
+    borderRadius: 50,
+    backgroundColor: Colors.primary,
+    marginRight: 14,
   },
   container: {
     flex: 4,
   },
   dropdownTrigger: {
     borderRadius: 8,
-    paddingLeft: '3%',
+    paddingLeft: '7%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    textAlign: 'center',
+    marginVertical: 20,
+  },
+  header: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  modalTitle: {
+    fontSize: 16,
+    marginVertical: 5,
+    fontWeight: '900',
+    color: 'black',
     textAlign: 'center',
   },
   iconWhite: {
@@ -65,18 +93,23 @@ const styles = StyleSheet.create({
   iconBlack: {
     color: 'black',
     marginRight: 10,
-
+  },
+  input: {
+    height: 40,
+    width: 220,
+    paddingHorizontal: 15,
+    textAlign: 'center',
   },
   italics: {
     fontStyle: 'italic',
+  },
+  linearGradient: {
+    flex: 1,
   },
   phraseCard: {
     width: '88%',
     margin: 8,
     borderRadius: 8,
-  },
-  menu: {
-    margin: 20,
   },
   message: {
     fontWeight: 'bold',
@@ -112,42 +145,28 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginVertical: 5,
     color: 'black',
-    // textAlign: 'center',
-  },
-  linearGradient: {
-    flex: 1,
-  },
-  circle: {
-    height: 26,
-    width: 26,
-    marginHorizontal: 3,
-    borderRadius: 50,
-    backgroundColor: Colors.primary,
-    marginRight: 14,
   },
 });
 
 const PhraseGallery = () => {
   const { store, dispatch } = useContext(Context);
   const {
-    phrases, categories, selectedCategory,
+    phrases, categories, selectedCategory, newCategoryName,
   } = store;
-  const [modalVisible, setModalVisible] = useState(false);
-  let userId;
-  let token;
-  let auth;
+  const [newCatModalVisible, setNewCatModalVisible] = useState(false);
+  const [phraseModalVisible, setPhraseModalVisible] = useState(false);
   const navBarHeight = useBottomTabBarHeight();
 
   const windowWidth = Number(Dimensions.get('window').width);
   /** To get userId and token for axios calls at every render */
+
   useEffect(() => {
     const getData = async () => {
       try {
-        // setUserId(await AsyncStorage.getItem('@userId'));
-        userId = await AsyncStorage.getItem('@userId');
-        token = await AsyncStorage.getItem('@sessionToken');
+        const userId = await AsyncStorage.getItem('@userId');
+        const token = await AsyncStorage.getItem('@sessionToken');
         // create authorization header
-        auth = { headers: { Authorization: `Bearer ${token}` } };
+        const auth = { headers: { Authorization: `Bearer ${token}` } };
         const response = await axios.post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth);
         dispatch(setPhrasesAction([...response.data.userProfile.phrases]));
         dispatch(setCategoriesAction([...response.data.userProfile.categories]));
@@ -159,16 +178,30 @@ const PhraseGallery = () => {
   }, []);
 
   /** call backend api to create new category by userId */
-  const createNewCategory = (newCategory, userId) => {
+  const createNewCategory = async (newCategory) => {
+    const userId = await AsyncStorage.getItem('@userId');
+    const token = await AsyncStorage.getItem('@sessionToken');
+    // create authorization header
+    const auth = { headers: { Authorization: `Bearer ${token}` } };
+    const response = await axios
+      .post(`${REACT_APP_BACKEND}/phrase/addnewcategory`, { userId, newCategory }, auth);
+    dispatch(setCategoriesAction([...categories, {
+      id: response.data,
+      name: newCategory,
+    }]));
+  };
+
+  /** call backend api to add current phrase into selected categories */
+  const deletePhrase = (userId, phraseId) => {
     axios
-      .post(`${REACT_APP_BACKEND}/phrase/addnewcategory`, { userId, newCategory }, auth)
-      .then((response) => {
-        console.log(response.data);
-        dispatch(setCategoriesAction([...categories, {
-          id: uuidv4(),
-          name: newCategory,
-        }]));
+      .post(`${REACT_APP_BACKEND}/phrase/deletephrase`, { userId, phraseId }, auth)
+      .then(() => {
+        dispatch(removePhraseAction(phraseId));
       });
+  };
+
+  const sortIntoCategories = () => {
+
   };
 
   return (
@@ -180,21 +213,37 @@ const PhraseGallery = () => {
         start={{ x: 0.9, y: 0.1 }}
         end={{ x: 0.1, y: 0.5 }}
       >
-        {modalVisible && (
+        {newCatModalVisible && (
         <ModalComponent
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          submitFunction={createNewCategory}
-          userId={userId}
+          modalVisible={newCatModalVisible}
+          setModalVisible={setNewCatModalVisible}
+        >
+          <Card style={styles.card}>
+            <Text style={styles.modalTitle}>New category</Text>
+            <Input
+              placeholder="Category name"
+              onChangeText={(el) => dispatch(setNewCategoryNameAction(el))}
+              style={styles.input}
+            />
+            <CustomButton
+              style={styles.button}
+              title="Create"
+              onPress={() => createNewCategory(newCategoryName)}
+            />
+          </Card>
+        </ModalComponent>
+        )}
+        {phraseModalVisible && (
+        <ModalComponent
+          modalVisible={phraseModalVisible}
+          setModalVisible={setPhraseModalVisible}
         />
         )}
-
         <Menu
           renderer={renderers.SlideInMenu}
-          style={styles.menu}
         >
           <MenuTrigger style={styles.dropdownTrigger}>
-            <Text style={styles.categoryName}>{selectedCategory}</Text>
+            <Text style={styles.header}>{selectedCategory}</Text>
             <ChevronDownIcon style={styles.iconWhite} size={28} />
           </MenuTrigger>
           <MenuOptions optionsContainerStyle={
@@ -217,7 +266,7 @@ const PhraseGallery = () => {
             ))}
             <MenuOption
               style={{ ...styles.options, width: windowWidth }}
-              onSelect={() => setModalVisible(!modalVisible)}
+              onSelect={() => setNewCatModalVisible(!newCatModalVisible)}
             >
               <PlusCircleIcon style={styles.iconBlack} size={32} />
               <Text style={[styles.text, styles.bold]}>
@@ -233,16 +282,20 @@ const PhraseGallery = () => {
                 {phrases
                   .filter((onePhrase) => onePhrase.category.includes(selectedCategory))
                   .map((onePhrase) => (
+
                     <Card key={onePhrase._id} style={styles.phraseCard}>
-                      {console.log(onePhrase)}
-                      <Text style={[
-                        styles.text,
-                        styles.bold,
-                        { fontSize: 16 }]}
-                      >{onePhrase.chinesePhrase}
-                      </Text>
-                      <Text style={[styles.text, styles.italics]}>{onePhrase.pinyin}</Text>
-                      <Text style={styles.text}>{onePhrase.definition}</Text>
+                      <Pressable
+                        onLongPress={() => setPhraseModalVisible(true)}
+                      >
+                        <Text style={[
+                          styles.text,
+                          styles.bold,
+                          { fontSize: 16 }]}
+                        >{onePhrase.chinesePhrase}
+                        </Text>
+                        <Text style={[styles.text, styles.italics]}>{onePhrase.pinyin}</Text>
+                        <Text style={styles.text}>{onePhrase.definition}</Text>
+                      </Pressable>
                     </Card>
                   ))}
               </View>

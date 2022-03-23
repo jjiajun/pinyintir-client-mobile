@@ -6,8 +6,6 @@ import {
 } from 'react-native';
 import { ArrowLeftIcon, DocumentTextIcon, BookmarkIcon } from 'react-native-heroicons/outline';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MenuProvider } from 'react-native-popup-menu';
-import { v4 as uuidv4 } from 'uuid';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import OverlayTextButton from './OverlayTextButton.jsx';
 import { Context, addPhraseAction } from '../Context.jsx';
@@ -37,7 +35,7 @@ const styles = StyleSheet.create({
 });
 
 const Overlay = ({
-  dimension, continueVideo, toggleOverlay, saveScreenshot,
+  dimension, continueVideo, toggleOverlay, saveScreenshot, loading, setLoading, setMsg,
 }) => {
   let heightRatio = 1;
   let widthRatio = 1;
@@ -55,6 +53,7 @@ const Overlay = ({
   /** Submit function to upload image to db + aws */
   const savePhrase = async (dataObject) => {
     try {
+      setLoading(true);
       const userId = await AsyncStorage.getItem('@userId');
       const token = await AsyncStorage.getItem('@sessionToken');
       const authHeader = { headers: { Authorization: `Bearer ${token}` } };
@@ -63,10 +62,15 @@ const Overlay = ({
       const data = {
         chinesePhrase: characters, pinyin, definition: translation, userId,
       };
-      await axios.post(`${REACT_APP_BACKEND}/phrase/uploadphrase`, data, authHeader);
+      const response = await axios.post(`${REACT_APP_BACKEND}/phrase/uploadphrase`, data, authHeader);
+      setLoading(false);
+      setMsg('Save successful!');
+      setTimeout(() => {
+        setMsg('');
+      }, 3000);
       dispatch(addPhraseAction(
         {
-          id: uuidv4(),
+          id: response.data,
           chinesePhrase: characters,
           pinyin,
           definition: translation,
@@ -78,6 +82,11 @@ const Overlay = ({
       // The BE is also updated. When the page is reloaded, the image list will still be the latest.
     } catch (err) {
       console.log(err);
+      setLoading(false);
+      setMsg('An error occured, please try again');
+      setTimeout(() => {
+        setMsg('');
+      }, 3000);
     }
   };
 
@@ -102,7 +111,6 @@ const Overlay = ({
           <DocumentTextIcon color="white" />
         </TouchableOpacity>
       </View>
-
       {chinese.map((text) => (
         <OverlayTextButton
           key={text.id}
@@ -115,9 +123,9 @@ const Overlay = ({
             top: text.vertices[0].y * heightRatio - overlayTextVerticalOffset,
             left: text.vertices[0].x * widthRatio,
           }}
+          allowSave
         />
       ))}
-
     </View>
   );
 };

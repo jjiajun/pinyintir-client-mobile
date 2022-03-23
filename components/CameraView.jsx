@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import { Camera } from 'expo-camera';
 import axios from 'axios';
 import {
-  View, TouchableOpacity, ActivityIndicator, Text,
+  View, TouchableOpacity, ActivityIndicator,
 } from 'react-native';
 import {
   CameraIcon, ArrowLeftIcon, DocumentTextIcon, BookmarkIcon,
@@ -14,11 +14,9 @@ import {
 import styles from '../screens/Scan/Scan.styles.js';
 
 const CameraView = ({
-  camera, continueVideo, setIsImage, isImage, setIsResults, setImageDimension, saveScreenshot,
+  camera, continueVideo, setIsImage, isImage, setMsg,
+  setIsResults, setImageDimension, saveScreenshot, loading, setLoading,
 }) => {
-  const [loading, setLoading] = useState(false);
-  const [msg, setMsg] = useState('');
-
   const { store, dispatch } = useContext(Context);
   const { auth } = store;
   console.log(`${REACT_APP_BACKEND}/login`);
@@ -76,12 +74,6 @@ const CameraView = ({
       <View style={styles.spinner}>
         <ActivityIndicator animating={loading} size="large" color="#00ff00" />
       </View>
-
-      {msg !== '' && (
-        <View style={styles.messageContainer}>
-          <Text style={styles.message}>{msg}</Text>
-        </View>
-      )}
 
       {isImage ? (
         <View style={styles.buttonContainer}>

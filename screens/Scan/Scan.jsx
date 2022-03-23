@@ -6,7 +6,6 @@ import { Camera } from 'expo-camera';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text } from 'react-native';
-import { v4 as uuidv4 } from 'uuid';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { ExclamationCircleIcon } from 'react-native-heroicons/outline';
 import {
@@ -22,6 +21,8 @@ const Scan = () => {
   const [isImage, setIsImage] = useState(false);
   const [isResults, setIsResults] = useState(false);
   const [imageDimension, setImageDimension] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState('');
 
   const { store, dispatch } = useContext(Context);
   const { file, chinese } = store;
@@ -54,33 +55,51 @@ const Scan = () => {
   console.log(`${REACT_APP_BACKEND}/image/uploadimage`);
   /** Submit function to upload image to db + aws */
   const saveScreenshot = async () => {
-    const formData = new FormData();
-    const userId = await AsyncStorage.getItem('@userId');
-    const token = await AsyncStorage.getItem('@sessionToken');
-    formData.append('image', file);
-    formData.append('userId', userId);
-    formData.append('result', JSON.stringify(chinese));
-    formData.append('dimension', JSON.stringify(imageDimension));
-    // need to append userId to formData in order to send userId to the backend. This method seems to be the only way - I tried putting formData and userId in an object to send it through but it didn't work.
-    const result = await axios.post(`${REACT_APP_BACKEND}/image/uploadimage`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${token}`,
-      },
-      transformRequest: (d) => d,
-    });
-    console.log('img post result ', result);
-    dispatch(addImageAction(
-      {
-        id: uuidv4(),
-        imagePath: result.data.imagePath,
-        result: result.data.result,
-        dimension: result.data.dimension,
-      },
-    ));
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      const userId = await AsyncStorage.getItem('@userId');
+      const token = await AsyncStorage.getItem('@sessionToken');
+      formData.append('image', file);
+      formData.append('userId', userId);
+      formData.append('result', JSON.stringify(chinese));
+      formData.append('dimension', JSON.stringify(imageDimension));
+      // need to append userId to formData in order to send userId to the backend.
+      // This method seems to be the only way - I tried putting formData and
+      // userId in an object to send it through but it didn't work.
+      const result = await axios.post(`${REACT_APP_BACKEND}/image/uploadimage`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+        transformRequest: (d) => d,
+      });
+      console.log('img post result ', result);
+      setLoading(false);
+      setMsg('Save successful!');
+      setTimeout(() => {
+        setMsg('');
+      }, 3000);
+
+      dispatch(addImageAction(
+        {
+          id: result.data.imageId,
+          imagePath: result.data.imagePath,
+          result: result.data.result,
+          dimension: result.data.dimension,
+        },
+      ));
     // Adds newly image data to allImages state.
     // I am updating the allImages state on the FE so that the update is instantaneous.
     // The BE is also updated. When the page is reloaded, the image list will still be the latest.
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      setMsg('An error occured, please try again');
+      setTimeout(() => {
+        setMsg('');
+      }, 3000);
+    }
   };
 
   const continueVideo = () => {
@@ -116,6 +135,9 @@ const Scan = () => {
         setIsResults={setIsResults}
         setImageDimension={setImageDimension}
         saveScreenshot={saveScreenshot}
+        loading={loading}
+        setLoading={setLoading}
+        setMsg={setMsg}
       />
 
       {isResults && (
@@ -124,7 +146,16 @@ const Scan = () => {
           continueVideo={continueVideo}
           toggleOverlay={setIsResults}
           saveScreenshot={saveScreenshot}
+          loading={loading}
+          setLoading={setLoading}
+          setMsg={setMsg}
         />
+      )}
+
+      {msg !== '' && (
+        <View style={styles.messageContainer}>
+          <Text style={styles.message}>{msg}</Text>
+        </View>
       )}
 
     </View>

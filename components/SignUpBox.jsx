@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Context, setAuthAction } from '../Context.jsx';
-import Message from './Message.jsx';
 import Colors from '../constants/colors.js';
 import Input from './Input.jsx';
 import CustomButton from './CustomButton.jsx';
@@ -42,13 +41,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const SignUpBox = ({ navigation }) => {
+const SignUpBox = ({ navigation, setMessage }) => {
   // State and setter for login details
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   // State and setter for signup and login message
-  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   console.log(`${REACT_APP_BACKEND}/login`);
 
@@ -72,7 +70,7 @@ const SignUpBox = ({ navigation }) => {
   const signupAttempt = async () => {
     // immediately reject log in if there is a missing field\
     if (!email || !password || !username) {
-      setMessage('Please enter an username, email and password');
+      setMessage('Please enter a username, email and password');
       return;
     }
     // wrap email and data in an object for easier manipulation
@@ -153,7 +151,6 @@ const SignUpBox = ({ navigation }) => {
             onPress={signupAttempt}
           />
         )}
-      <View>{message !== '' && <Message message={message} />}</View>
     </View>
 
   );

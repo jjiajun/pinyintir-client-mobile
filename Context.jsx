@@ -1,6 +1,7 @@
 import React, { useReducer } from 'react';
 
 const SET_AUTH = 'SET_AUTH';
+// const SET_USERID = 'SET_USERID';
 const ADD_IMAGE = 'ADD_IMAGE';
 const ADD_PHRASE = 'ADD_PHRASE';
 const SET_IMAGES = 'SET_IMAGES';
@@ -12,9 +13,11 @@ const SET_FILE = 'SET_FILE';
 const SET_SPEECH_SPEED = 'SET_SPEECH_SPEED';
 const SET_SPEECH_PITCH = 'SET_SPEECH_PITCH';
 const SET_NEW_CATEGORY_NAME = 'SET_NEW_CATEGORY_NAME';
+const REMOVE_PHRASE = 'REMOVE_PHRASE';
 
 const initialState = {
   auth: false,
+  userId: null,
   images: [],
   phrases: [],
   chinese: [],
@@ -30,10 +33,17 @@ const pinyintirReducer = (state, action) => {
   switch (action.type) {
     case SET_AUTH:
       return { ...state, auth: action.payload.auth };
+    // case SET_USERID:
+    //   return { ...state, userId: action.payload.userId };
     case ADD_IMAGE:
       return { ...state, images: [...state.images, action.payload.imgObj] };
     case ADD_PHRASE:
       return { ...state, phrases: [...state.phrases, action.payload.phraseObj] };
+    case REMOVE_PHRASE:
+      return {
+        ...state,
+        phrases: [...state.phrases.filter((phrase) => phrase._id !== action.payload.phraseId)],
+      };
     case SET_IMAGES:
       return { ...state, images: action.payload.images };
     case SET_PHRASES:
@@ -59,7 +69,14 @@ const pinyintirReducer = (state, action) => {
 
 export const setAuthAction = (auth) => ({ type: SET_AUTH, payload: { auth } });
 
+// export const setUserIdAction = (userId) => ({ type: SET_USERID, payload: { userId } });
+
 export const addImageAction = (imgObj) => ({ type: ADD_IMAGE, payload: { imgObj } });
+
+export const removePhraseAction = (phraseId) => ({
+  type: REMOVE_PHRASE,
+  payload: { phraseId },
+});
 
 export const addPhraseAction = (phraseObj) => ({ type: ADD_PHRASE, payload: { phraseObj } });
 

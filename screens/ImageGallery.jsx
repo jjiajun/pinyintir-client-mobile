@@ -11,7 +11,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { EmojiSadIcon } from 'react-native-heroicons/outline';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Context, setImagesAction } from '../Context.jsx';
+import Colors from '../constants/colors.js';
 import OverlayOneImage from '../components/OverlayOneImage.jsx';
 
 const styles = StyleSheet.create({
@@ -23,8 +25,26 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 5,
   },
+  header: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  iconWhite: {
+    color: 'white',
+    marginHorizontal: 5,
+    marginRight: 10,
+  },
   gallery: {
     flex: 1,
+  },
+  linearGradient: {
+    flex: 1,
+  },
+  topBar: {
+    borderRadius: 8,
+    paddingLeft: '7%',
+    marginVertical: 20,
   },
   img: {
     width: '100%',
@@ -49,6 +69,7 @@ const styles = StyleSheet.create({
   message: {
     fontWeight: 'bold',
     textAlign: 'center',
+    color: 'white',
   },
 });
 
@@ -91,51 +112,49 @@ const ImageGallery = () => {
   /** Helper function to display all images stored in allImages state */
   return (
     <View style={styles.screen}>
-      {images.length > 0
-        ? (
-          // <ScrollView>
-          //   {images.map((oneImage) => (
-          //     <View key={oneImage._id} style={styles.gallery}>
-          //       <Image
-          //         style={styles.img}
-          //         source={{ uri: `${REACT_APP_BACKEND}/image${oneImage.imagePath}` }}
-          //       />
-          //     </View>
-          //   ))}
-          // </ScrollView>
-          <View>
-            <FlatList
-              data={images}
-              renderItem={({ item }) => (
-                <View style={styles.gallery}>
-                  <TouchableOpacity onPress={() => { displayOneImage(
-                    item.result,
-                    item.imagePath,
-                    item.dimension,
-                  ); }}
-                  >
-                    <Image
-                      style={styles.img}
-                      source={{ uri: `${REACT_APP_BACKEND}/image${item.imagePath}` }}
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
+      <LinearGradient
+        colors={[Colors.primary, Colors.orangeyRed]}
+        style={styles.linearGradient}
+        start={{ x: 0.9, y: 0.1 }}
+        end={{ x: 0.1, y: 0.5 }}
+      >
+        {images.length > 0
+          ? (
+            <View>
+              <FlatList
+                data={images}
+                renderItem={({ item }) => (
+                  <View style={styles.gallery}>
+                    <TouchableOpacity onPress={() => { displayOneImage(
+                      item.result,
+                      item.imagePath,
+                      item.dimension,
+                    ); }}
+                    >
+                      <Image
+                        style={styles.img}
+                        source={{ uri: `${REACT_APP_BACKEND}/image${item.imagePath}` }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
             // Setting the number of column
-              numColumns={2}
-              keyExtractor={(item, index) => index.toString()}
-            />
-            {overlayVisible && <OverlayOneImage backToGallery={closeOverlay} data={oneImageData} />}
-          </View>
-        )
-        : (
-          <View style={styles.messageContainer}>
-            <EmojiSadIcon color="black" size={60} />
-            <Text style={styles.message}>No images!
-              You can save your favourite images after scanning an image.
-            </Text>
-          </View>
-        )}
+                numColumns={2}
+                keyExtractor={(item, index) => index.toString()}
+              />
+              {overlayVisible
+              && <OverlayOneImage backToGallery={closeOverlay} data={oneImageData} />}
+            </View>
+          )
+          : (
+            <View style={styles.messageContainer}>
+              <EmojiSadIcon style={styles.iconWhite} size={60} />
+              <Text style={styles.message}>No images!
+                You can save your favourite images after scanning an image.
+              </Text>
+            </View>
+          )}
+      </LinearGradient>
     </View>
   );
 };
