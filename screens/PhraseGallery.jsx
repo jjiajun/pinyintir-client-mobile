@@ -13,7 +13,7 @@ import {
   MenuTrigger,
   renderers,
 } from 'react-native-popup-menu';
-import { ChevronDownIcon, MicrophoneIcon } from 'react-native-heroicons/solid';
+import { ChevronDownIcon, MicrophoneIcon, XIcon } from 'react-native-heroicons/solid';
 import { EmojiSadIcon, PlusCircleIcon } from 'react-native-heroicons/outline';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
@@ -120,18 +120,6 @@ const styles = StyleSheet.create({
   linearGradient: {
     flex: 1,
   },
-  phraseCard: {
-    width: '88%',
-    margin: 8,
-    borderRadius: 8,
-  },
-  pillsContainer: {
-    width: 200,
-    paddingVertical: 12,
-    // flexDirection: 'row',
-    // flexWrap: 'wrap',
-    justifyContent: 'center',
-  },
   message: {
     fontWeight: 'bold',
     textAlign: 'center',
@@ -149,6 +137,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   optionsContainer: {
     marginTop: 48,
@@ -158,6 +147,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     textAlign: 'center',
+  },
+  phraseCard: {
+    width: '88%',
+    margin: 8,
+    borderRadius: 8,
+  },
+  pillsContainer: {
+    width: 200,
+    paddingVertical: 12,
+    justifyContent: 'center',
   },
   screen: {
     flex: 1,
@@ -186,16 +185,16 @@ const PhraseGallery = () => {
   } = store;
   const [newCatModalVisible, setNewCatModalVisible] = useState(false);
   const [phraseModalVisible, setPhraseModalVisible] = useState(false);
-  const [deleteCatModalVisible, setDeleteCatModalVisible] = useState(false);
+  // const [deleteCatModalVisible, setDeleteCatModalVisible] = useState(false);
   const navBarHeight = useBottomTabBarHeight();
 
   const [selectedPhrase, setSelectedPhrase] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const [catToDelete, setCatToDelete] = useState();
+  // const [catToDelete, setCatToDelete] = useState();
   const windowWidth = Number(Dimensions.get('window').width);
-  /** To get userId and token for axios calls at every render */
 
+  /** To get userId and token for axios calls at every render */
   useEffect(() => {
     const getData = async () => {
       try {
@@ -243,15 +242,22 @@ const PhraseGallery = () => {
   };
 
   /** call backend api to add current phrase into selected categories */
-  const deleteCategory = async (categoryId) => {
-    const userId = await AsyncStorage.getItem('@userId');
-    const token = await AsyncStorage.getItem('@sessionToken');
-    // create authorization header
-    const auth = { headers: { Authorization: `Bearer ${token}` } };
-    await axios
-      .post(`${REACT_APP_BACKEND}/phrase/deletecategory`, { userId, categoryId }, auth);
-    dispatch(removeCategoryAction(categoryId));
-  };
+  // const deleteCategory = async () => {
+  //   const userId = await AsyncStorage.getItem('@userId');
+  //   const token = await AsyncStorage.getItem('@sessionToken');
+  //   // create authorization header
+  //   const auth = { headers: { Authorization: `Bearer ${token}` } };
+  //   console.log('CATTODELETE: ', catToDelete);
+  //   console.log('USERID: ', userId);
+  //   await axios
+  //     .post(
+  //       `${REACT_APP_BACKEND}/phrase/deletecategory`,
+  //       { userId, categoryToDelete: catToDelete },
+
+  //       auth,
+  //     );
+  //   // dispatch(removeCategoryAction(catToDelete));
+  // };
 
   return (
 
@@ -329,7 +335,7 @@ const PhraseGallery = () => {
           </Card>
         </ModalComponent>
         )}
-        {deleteCatModalVisible && (
+        {/* {deleteCatModalVisible && (
         <ModalComponent
           modalVisible={deleteCatModalVisible}
           setModalVisible={setDeleteCatModalVisible}
@@ -340,13 +346,13 @@ const PhraseGallery = () => {
               style={styles.redButton}
               title="Delete"
               onPress={() => {
-                deleteCategory(catToDelete);
+                deleteCategory();
                 setNewCatModalVisible(false);
               }}
             />
           </Card>
         </ModalComponent>
-        )}
+        )} */}
         {phrases.length > 0 && (
         <Menu
           renderer={renderers.SlideInMenu}
@@ -364,31 +370,41 @@ const PhraseGallery = () => {
           }
           >
             {categories.map((oneCategory) => (
-              <Pressable
-                key={oneCategory._id}
-                onLongPress={() => {
-                  setCatToDelete(oneCategory._id);
-                  setDeleteCatModalVisible(true);
-                }}
-              >
-                <MenuOption
 
-                  style={{ ...styles.options, width: windowWidth }}
-                  onSelect={() => dispatch(selectCategoryAction(oneCategory.name))}
-                >
+              <MenuOption
+                key={oneCategory._id}
+                style={{ ...styles.options, width: windowWidth }}
+                onSelect={() => dispatch(selectCategoryAction(oneCategory.name))}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <View style={styles.circle} />
                   <Text style={[styles.text, styles.bold]}>{oneCategory.name}</Text>
-                </MenuOption>
-              </Pressable>
+                </View>
+                <Pressable
+                  // onPress={() => {
+                  //   setCatToDelete(oneCategory._id);
+                  //   setDeleteCatModalVisible(true);
+                  // }}
+                  style={{ flexDirection: 'row', alignItems: 'center' }}
+                >
+                  <XIcon
+                    size={16}
+                    // style={styles.iconBlack}
+                  />
+                </Pressable>
+              </MenuOption>
             ))}
             <MenuOption
               style={{ ...styles.options, width: windowWidth }}
               onSelect={() => setNewCatModalVisible(!newCatModalVisible)}
             >
-              <PlusCircleIcon style={styles.iconBlack} size={32} />
-              <Text style={[styles.text, styles.bold]}>
-                Create new category
-              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <PlusCircleIcon style={styles.iconBlack} size={32} />
+                <Text style={[styles.text, styles.bold]}>
+                  Create new category
+                </Text>
+              </View>
+              <XIcon size={16} />
             </MenuOption>
           </MenuOptions>
         </Menu>

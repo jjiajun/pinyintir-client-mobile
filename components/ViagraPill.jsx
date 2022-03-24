@@ -7,11 +7,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import Colors from '../utils/colors.js';
-import {
-  Context,
-  addCategoryToPhrase,
-  removeCategoryFromPhrase,
-} from '../Context.jsx';
+// import {
+//   Context,
+//   addCategoryToPhrase,
+//   removeCategoryFromPhrase,
+// } from '../Context.jsx';
 
 const styles = StyleSheet.create({
   pill: {
