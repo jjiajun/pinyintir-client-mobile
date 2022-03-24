@@ -47,17 +47,8 @@ const Pill = (props) => {
   const {
     title, selectedPhrase, setSelectedPhrase, selectedBool,
   } = props;
-  const { dispatch } = useContext(Context);
+  // const { dispatch } = useContext(Context);
   const [selected, setSelected] = useState(selectedBool);
-
-  // useEffect(() => {
-  //   const isCategoryInUse = selectedPhrase.category?.includes(title) ?? false;
-  //   // if (selectedPhrase.category) {
-  //   //   const isCategoryInUse = selectedPhrase.category.includes(title);
-  //   setSelected(isCategoryInUse);
-  //   // }
-  //   console.log('USEEFFECT RUNS', 'selected: ', selected);
-  // }, []);
 
   const toggleCategory = async () => {
     const userId = await AsyncStorage.getItem('@userId');
