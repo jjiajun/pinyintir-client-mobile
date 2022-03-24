@@ -10,6 +10,7 @@ import {
   FlatList,
   TouchableOpacity,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import { EmojiSadIcon } from 'react-native-heroicons/outline';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -77,6 +78,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
   },
+  spinner: {
+    position: 'absolute',
+    top: '50%',
+    left: '45%',
+  },
 });
 
 const ImageGallery = () => {
@@ -85,8 +91,10 @@ const ImageGallery = () => {
   let userId;
   let token;
   let auth;
-  const [oneImageData, setOneImageData] = useState('');
+  const [oneImageData, setOneImageData] = useState({});
   const [overlayVisible, setOverlayVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const windowWidth = Number(Dimensions.get('window').width);
   const heightOfImage = (windowWidth / 2) * 0.95;
 
@@ -94,14 +102,17 @@ const ImageGallery = () => {
   useEffect(() => {
     const getData = async () => {
       try {
+        setLoading(true);
         userId = await AsyncStorage.getItem('@userId');
         token = await AsyncStorage.getItem('@sessionToken');
         // create authorization header
         auth = { headers: { Authorization: `Bearer ${token}` } };
         const response = await axios.post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth);
         console.log('response: ', response);
+        setLoading(false);
         dispatch(setImagesAction([...response.data.userProfile.images]));
       } catch (err) {
+        setLoading(false);
         console.log(err);
       }
     };
@@ -126,6 +137,9 @@ const ImageGallery = () => {
         start={{ x: 0.9, y: 0.1 }}
         end={{ x: 0.1, y: 0.5 }}
       >
+        <View style={styles.spinner}>
+          <ActivityIndicator animating={loading} size="large" color="#00ff00" />
+        </View>
         {images.length > 0
           ? (
             <View style={styles.screen}>
@@ -155,13 +169,14 @@ const ImageGallery = () => {
               && <OverlayOneImage backToGallery={closeOverlay} data={oneImageData} />}
             </View>
           )
-          : (
+          : (!loading && (
             <View style={styles.messageContainer}>
               <EmojiSadIcon style={styles.iconWhite} size={60} />
               <Text style={styles.message}>No images!
                 You can save your favourite images after scanning an image.
               </Text>
             </View>
+          )
           )}
       </LinearGradient>
     </View>
