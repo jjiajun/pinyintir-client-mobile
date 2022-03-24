@@ -3,7 +3,7 @@ import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  View, Text, StyleSheet, ScrollView, Dimensions, Pressable, TouchableOpacity,
+  View, Text, StyleSheet, ScrollView, Dimensions, Pressable, TouchableOpacity, ActivityIndicator,
 } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -172,6 +172,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  spinner: {
+    position: 'absolute',
+    top: '50%',
+    left: '45%',
+  },
 });
 
 const PhraseGallery = () => {
@@ -185,23 +190,26 @@ const PhraseGallery = () => {
   const navBarHeight = useBottomTabBarHeight();
 
   const [selectedPhrase, setSelectedPhrase] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const [catToDelete, setCatToDelete] = useState();
-  const [categoriesInSelectedPhrase, setCategoriesInSelectedPhrase] = useState([]);
   const windowWidth = Number(Dimensions.get('window').width);
   /** To get userId and token for axios calls at every render */
 
   useEffect(() => {
     const getData = async () => {
       try {
+        setLoading(true);
         const userId = await AsyncStorage.getItem('@userId');
         const token = await AsyncStorage.getItem('@sessionToken');
         // create authorization header
         const auth = { headers: { Authorization: `Bearer ${token}` } };
         const response = await axios.post(`${REACT_APP_BACKEND}/user/getuserdatabyid`, { userId }, auth);
+        setLoading(false);
         dispatch(setPhrasesAction([...response.data.userProfile.phrases]));
         dispatch(setCategoriesAction([...response.data.userProfile.categories]));
       } catch (err) {
+        setLoading(false);
         console.log(err);
       }
     };
@@ -253,6 +261,9 @@ const PhraseGallery = () => {
         start={{ x: 0.9, y: 0.1 }}
         end={{ x: 0.1, y: 0.5 }}
       >
+        <View style={styles.spinner}>
+          <ActivityIndicator animating={loading} size="large" color="#00ff00" />
+        </View>
         {newCatModalVisible && (
         <ModalComponent
           modalVisible={newCatModalVisible}
@@ -334,6 +345,7 @@ const PhraseGallery = () => {
           </Card>
         </ModalComponent>
         )}
+        {phrases.length > 0 && (
         <Menu
           renderer={renderers.SlideInMenu}
         >
@@ -378,6 +390,7 @@ const PhraseGallery = () => {
             </MenuOption>
           </MenuOptions>
         </Menu>
+        )}
         <View style={styles.container}>
           {phrases.length > 0 ? (
             <ScrollView>
@@ -393,7 +406,6 @@ const PhraseGallery = () => {
                         onLongPress={() => {
                           setPhraseModalVisible(true);
                           setSelectedPhrase(onePhrase);
-                          setCategoriesInSelectedPhrase(onePhrase.category);
                         }}
                       >
                         <View style={styles.characters}>
@@ -420,13 +432,15 @@ const PhraseGallery = () => {
                   ))}
               </View>
             </ScrollView>
-          ) : (
+          ) : (!loading
+            && (
             <View style={styles.messageContainer}>
               <EmojiSadIcon style={styles.iconWhite} size={60} />
               <Text style={styles.message}>No phrases!
                 You can save your favourite phrases after scanning an image.
               </Text>
             </View>
+            )
           )}
         </View>
       </LinearGradient>
