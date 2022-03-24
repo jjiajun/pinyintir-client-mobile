@@ -216,7 +216,7 @@ const PhraseGallery = () => {
     const response = await axios
       .post(`${REACT_APP_BACKEND}/phrase/addnewcategory`, { userId, newCategory }, auth);
     dispatch(setCategoriesAction([...categories, {
-      id: response.data,
+      _id: response.data,
       name: newCategory,
     }]));
   };
