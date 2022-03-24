@@ -187,7 +187,6 @@ const PhraseGallery = () => {
   const [selectedPhrase, setSelectedPhrase] = useState({});
 
   const [catToDelete, setCatToDelete] = useState();
-  const [categoriesInSelectedPhrase, setCategoriesInSelectedPhrase] = useState([]);
   const windowWidth = Number(Dimensions.get('window').width);
   /** To get userId and token for axios calls at every render */
 
@@ -206,7 +205,7 @@ const PhraseGallery = () => {
       }
     };
     getData().then(() => console.log('getData successful!'));
-  }, [selectedPhrase, phrases]);
+  }, [selectedPhrase]);
 
   /** call backend api to create new category by userId */
   const createNewCategory = async (newCategory) => {
@@ -311,7 +310,7 @@ const PhraseGallery = () => {
               style={styles.redButton}
               title="Delete Phrase"
               onPress={() => {
-                deletePhrase(selectedPhrase);
+                deletePhrase(selectedPhrase._id);
               }}
             />
           </Card>
@@ -394,7 +393,6 @@ const PhraseGallery = () => {
                         onLongPress={() => {
                           setPhraseModalVisible(true);
                           setSelectedPhrase(onePhrase);
-                          setCategoriesInSelectedPhrase(onePhrase.category);
                         }}
                       >
                         <View style={styles.characters}>
