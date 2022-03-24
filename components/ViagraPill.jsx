@@ -60,7 +60,7 @@ const Pill = (props) => {
     const token = await AsyncStorage.getItem('@sessionToken');
     // create authorization header
     const auth = { headers: { Authorization: `Bearer ${token}` } };
-
+    setSelected(!selected);
     let onePhraseObj;
     if (selected) {
       onePhraseObj = await axios
@@ -80,10 +80,7 @@ const Pill = (props) => {
   // using spread operators below lets you add other styles from outside this component
     <TouchableOpacity
       style={[styles.pill, selected ? { backgroundColor: Colors.primary } : { backgroundColor: '#949494' }]}
-      onPress={() => {
-        // if !selected, call /addcategorytophrase : call /removecategoryfromphrase
-        toggleCategory();
-      }}
+      onPress={() => { toggleCategory(); }}
     >
       <Text style={styles.text}>{title}</Text>
       {selected

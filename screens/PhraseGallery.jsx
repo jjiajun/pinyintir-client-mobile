@@ -227,10 +227,10 @@ const PhraseGallery = () => {
     const token = await AsyncStorage.getItem('@sessionToken');
     // create authorization header
     const auth = { headers: { Authorization: `Bearer ${token}` } };
-    setPhraseModalVisible(false);
-    dispatch(removePhraseAction(phraseId));
     await axios
       .post(`${REACT_APP_BACKEND}/phrase/deletephrase`, { userId, phraseId }, auth);
+    dispatch(removePhraseAction(phraseId));
+    setPhraseModalVisible(false);
   };
 
   /** call backend api to add current phrase into selected categories */
