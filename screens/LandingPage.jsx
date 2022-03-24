@@ -24,11 +24,16 @@ const styles = StyleSheet.create({
   container: {
     width: 400,
     maxWidth: '90%',
-    height: 350,
+    height: 455,
     alignItems: 'center',
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     marginBottom: 10,
+    padding: 0,
+    // paddingHorizontal: 0,
+    // paddingTop: 0,
+    // paddingBottom: 40,
+
   },
   button: {
     backgroundColor: Colors.primary,
@@ -38,26 +43,44 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     // flex: 1,
+    height: 75,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    // borderWidth: 1,
     width: '100%',
-    // alignItems: 'flex-end',
+    justifyContent: 'center',
+    // paddingBottom: 20,
+    // width: '100%',
+    // alignItems: 'flex-end','
   },
   link: {
-    color: Colors.orangeyRed,
+    // color: Colors.orangeyRed,
+    width: 176,
+    flex: 1,
+    color: 'black',
+    fontWeight: 'bold',
     padding: 10,
+    marginBottom: 20,
+    // borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
   linkActive: {
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.orangeyRed,
+    // Colors.secondary,
     fontWeight: 'bold',
-    borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 10,
+    color: 'white',
+    // borderWidth: 1,
+    // borderColor: 'black',
+    // borderRadius: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   logo: {
     width: '80%',
     height: 100,
-    marginBottom: 20,
+    marginBottom: 40,
   },
 });
 
@@ -74,6 +97,19 @@ const LandingPage = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.screen}>
         <Card style={styles.container}>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={logInVisible ? null : toggleView}>
+              <Text style={logInVisible ? { ...styles.link, ...styles.linkActive } : styles.link}>
+                Log In
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={logInVisible ? toggleView : null}>
+              <Text style={logInVisible ? styles.link : { ...styles.link, ...styles.linkActive }}>
+                Sign Up
+              </Text>
+            </TouchableOpacity>
+          </View>
+
           <Image
             // eslint-disable-next-line global-require
             source={require('../assets/pinyintir.png')}
@@ -90,18 +126,6 @@ const LandingPage = ({ navigation }) => {
 
         {message !== '' && <Message message={message} />}
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={logInVisible ? null : toggleView}>
-            <Text style={logInVisible ? { ...styles.link, ...styles.linkActive } : styles.link}>
-              Log In
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={logInVisible ? toggleView : null}>
-            <Text style={logInVisible ? styles.link : { ...styles.link, ...styles.linkActive }}>
-              Sign Up
-            </Text>
-          </TouchableOpacity>
-        </View>
       </View>
     </TouchableWithoutFeedback>
   );

@@ -28,16 +28,19 @@ const styles = StyleSheet.create({
   container: {
     width: 300,
     maxWidth: '80%',
-    height: 150,
+    height: 200,
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'center',
   },
   button: {
     backgroundColor: Colors.primary,
+    height: 48,
   },
   input: {
     width: '100%',
+    height: 45,
+    marginBottom: 12,
   },
 });
 
