@@ -225,7 +225,7 @@ const PhraseGallery = () => {
     const response = await axios
       .post(`${REACT_APP_BACKEND}/phrase/addnewcategory`, { userId, newCategory }, auth);
     dispatch(setCategoriesAction([...categories, {
-      id: response.data,
+      _id: response.data,
       name: newCategory,
     }]));
   };
@@ -236,10 +236,10 @@ const PhraseGallery = () => {
     const token = await AsyncStorage.getItem('@sessionToken');
     // create authorization header
     const auth = { headers: { Authorization: `Bearer ${token}` } };
-    setPhraseModalVisible(false);
-    dispatch(removePhraseAction(phraseId));
     await axios
       .post(`${REACT_APP_BACKEND}/phrase/deletephrase`, { userId, phraseId }, auth);
+    dispatch(removePhraseAction(phraseId));
+    setPhraseModalVisible(false);
   };
 
   /** call backend api to add current phrase into selected categories */
@@ -309,6 +309,7 @@ const PhraseGallery = () => {
                     title={category.name} // particular category of the pill
                     selectedPhrase={selectedPhrase} // selectedphrase obj
                     setSelectedPhrase={setSelectedPhrase}
+                    selectedBool={selectedPhrase.category.includes(category.name)}
                   />
                 ))}
             </View>
@@ -405,8 +406,8 @@ const PhraseGallery = () => {
                     >
                       <Pressable
                         onLongPress={() => {
-                          setPhraseModalVisible(true);
                           setSelectedPhrase(onePhrase);
+                          setPhraseModalVisible(true);
                         }}
                       >
                         <View style={styles.characters}>
