@@ -44,39 +44,36 @@ const styles = StyleSheet.create({
 });
 
 const Pill = (props) => {
-  const { title, selectedPhrase, categories } = props;
+  const { title, selectedPhrase, setSelectedPhrase } = props;
   const { dispatch } = useContext(Context);
   const [selected, setSelected] = useState();
 
   useEffect(() => {
-    // const isCategoryInUse = categories.includes(title);
+    // console.log('SELECTED PHRASE!!!!', selectedPhrase);
+    const isCategoryInUse = selectedPhrase.category?.includes(title) ?? false;
     // console.log('USE EFFECT IS RUN', isCategoryInUse);
-    // setSelected(isCategoryInUse);
+    setSelected(isCategoryInUse);
   }, []);
 
-  /** call backend api to add category to this phrase */
-  const addCategory = async () => {
-    setSelected(!selected);
+  const toggleCategory = async () => {
     const userId = await AsyncStorage.getItem('@userId');
     const token = await AsyncStorage.getItem('@sessionToken');
     // create authorization header
     const auth = { headers: { Authorization: `Bearer ${token}` } };
-    await axios
-      .post(`${REACT_APP_BACKEND}/phrase/addcategorytophrase`, { userId, newCategory: title, phraseId: selectedPhrase }, auth);
-    dispatch(addCategoryToPhrase(title, selectedPhrase));
-  };
 
-  /** call backend api to remove category from this phrase */
-  const removeCategory = async () => {
-    console.log('remove category');
-    setSelected(!selected);
-    const userId = await AsyncStorage.getItem('@userId');
-    const token = await AsyncStorage.getItem('@sessionToken');
-    // create authorization header
-    const auth = { headers: { Authorization: `Bearer ${token}` } };
-    await axios
-      .post(`${REACT_APP_BACKEND}/phrase/removecategoryfromphrase`, { userId, category: title, phraseId: selectedPhrase }, auth);
-    dispatch(removeCategoryFromPhrase(title, selectedPhrase));
+    let onePhraseObj;
+    if (selected) {
+      onePhraseObj = await axios
+        .post(`${REACT_APP_BACKEND}/phrase/removecategoryfromphrase`, { userId, category: title, phraseId: selectedPhrase._id }, auth);
+      console.log('UPDATEDD OBJ (REMOVE): ', onePhraseObj.data);
+      dispatch(removeCategoryFromPhrase(title, selectedPhrase._id));
+    } else {
+      onePhraseObj = await axios
+        .post(`${REACT_APP_BACKEND}/phrase/addcategorytophrase`, { userId, newCategory: title, phraseId: selectedPhrase._id }, auth);
+      console.log('UPDATEDD OBJ (ADD): ', onePhraseObj.data);
+      dispatch(addCategoryToPhrase(title, selectedPhrase._id));
+    }
+    setSelectedPhrase(onePhraseObj.data);
   };
 
   return (
@@ -85,7 +82,7 @@ const Pill = (props) => {
       style={[styles.pill, selected ? { backgroundColor: Colors.primary } : { backgroundColor: '#949494' }]}
       onPress={() => {
         // if !selected, call /addcategorytophrase : call /removecategoryfromphrase
-        !selected ? addCategory() : removeCategory();
+        toggleCategory();
       }}
     >
       <Text style={styles.text}>{title}</Text>

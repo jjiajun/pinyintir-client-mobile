@@ -24,6 +24,7 @@ import {
   selectCategoryAction,
   setNewCategoryNameAction,
   removePhraseAction,
+  removeCategoryAction,
 } from '../Context.jsx';
 import Card from '../components/Card.jsx';
 import Colors from '../utils/colors.js';
@@ -180,8 +181,12 @@ const PhraseGallery = () => {
   } = store;
   const [newCatModalVisible, setNewCatModalVisible] = useState(false);
   const [phraseModalVisible, setPhraseModalVisible] = useState(false);
+  const [deleteCatModalVisible, setDeleteCatModalVisible] = useState(false);
   const navBarHeight = useBottomTabBarHeight();
-  const [selectedPhrase, setSelectedPhrase] = useState();
+
+  const [selectedPhrase, setSelectedPhrase] = useState({});
+
+  const [catToDelete, setCatToDelete] = useState();
   const [categoriesInSelectedPhrase, setCategoriesInSelectedPhrase] = useState([]);
   const windowWidth = Number(Dimensions.get('window').width);
   /** To get userId and token for axios calls at every render */
@@ -201,7 +206,7 @@ const PhraseGallery = () => {
       }
     };
     getData().then(() => console.log('getData successful!'));
-  }, []);
+  }, [selectedPhrase]);
 
   /** call backend api to create new category by userId */
   const createNewCategory = async (newCategory) => {
@@ -226,6 +231,17 @@ const PhraseGallery = () => {
     await axios
       .post(`${REACT_APP_BACKEND}/phrase/deletephrase`, { userId, phraseId }, auth);
     dispatch(removePhraseAction(phraseId));
+  };
+
+  /** call backend api to add current phrase into selected categories */
+  const deleteCategory = async (categoryId) => {
+    const userId = await AsyncStorage.getItem('@userId');
+    const token = await AsyncStorage.getItem('@sessionToken');
+    // create authorization header
+    const auth = { headers: { Authorization: `Bearer ${token}` } };
+    await axios
+      .post(`${REACT_APP_BACKEND}/phrase/deletecategory`, { userId, categoryId }, auth);
+    dispatch(removeCategoryAction(categoryId));
   };
 
   return (
@@ -266,7 +282,7 @@ const PhraseGallery = () => {
           setModalVisible={setPhraseModalVisible}
         >
           <Card style={styles.card}>
-            {console.log('ALL CATS', categoriesInSelectedPhrase)}
+            {console.log('SELECTED PHRASE', selectedPhrase)}
             <Text style={[styles.text, { fontSize: 16 }]}>Categories</Text>
             <Text style={styles.helperText}>
               Tap to toggle the categories{'\n'}
@@ -278,9 +294,9 @@ const PhraseGallery = () => {
                 .map((category) => (
                   <Pill
                     key={uuidv4()}
-                    title={category.name}
-                    categories={categoriesInSelectedPhrase}
-                    selectedPhrase={selectedPhrase}
+                    title={category.name} // particular category of the pill
+                    selectedPhrase={selectedPhrase} // selectedphrase obj
+                    setSelectedPhrase={setSelectedPhrase}
                   />
                 ))}
             </View>
@@ -295,6 +311,24 @@ const PhraseGallery = () => {
               title="Delete Phrase"
               onPress={() => {
                 deletePhrase(selectedPhrase).then(() => setPhraseModalVisible(false));
+              }}
+            />
+          </Card>
+        </ModalComponent>
+        )}
+        {deleteCatModalVisible && (
+        <ModalComponent
+          modalVisible={deleteCatModalVisible}
+          setModalVisible={setDeleteCatModalVisible}
+        >
+          <Card style={styles.card}>
+            <Text style={styles.modalTitle}>Are you sure you want to delete this category?</Text>
+            <CustomButton
+              style={styles.redButton}
+              title="Delete"
+              onPress={() => {
+                deleteCategory(catToDelete);
+                setNewCatModalVisible(false);
               }}
             />
           </Card>
@@ -316,14 +350,22 @@ const PhraseGallery = () => {
           }
           >
             {categories.map((oneCategory) => (
-              <MenuOption
+              <Pressable
                 key={oneCategory._id}
-                style={{ ...styles.options, width: windowWidth }}
-                onSelect={() => dispatch(selectCategoryAction(oneCategory.name))}
+                onLongPress={() => {
+                  setCatToDelete(oneCategory._id);
+                  setDeleteCatModalVisible(true);
+                }}
               >
-                <View style={styles.circle} />
-                <Text style={[styles.text, styles.bold]}>{oneCategory.name}</Text>
-              </MenuOption>
+                <MenuOption
+
+                  style={{ ...styles.options, width: windowWidth }}
+                  onSelect={() => dispatch(selectCategoryAction(oneCategory.name))}
+                >
+                  <View style={styles.circle} />
+                  <Text style={[styles.text, styles.bold]}>{oneCategory.name}</Text>
+                </MenuOption>
+              </Pressable>
             ))}
             <MenuOption
               style={{ ...styles.options, width: windowWidth }}
@@ -343,11 +385,14 @@ const PhraseGallery = () => {
                 {phrases
                   .filter((onePhrase) => onePhrase.category.includes(selectedCategory))
                   .map((onePhrase) => (
-                    <Card key={onePhrase._id} style={styles.phraseCard}>
+                    <Card
+                      key={onePhrase._id.toString()}
+                      style={styles.phraseCard}
+                    >
                       <Pressable
                         onLongPress={() => {
                           setPhraseModalVisible(true);
-                          setSelectedPhrase(onePhrase._id);
+                          setSelectedPhrase(onePhrase);
                           setCategoriesInSelectedPhrase(onePhrase.category);
                         }}
                       >

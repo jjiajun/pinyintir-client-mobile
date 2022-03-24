@@ -15,6 +15,7 @@ const SET_SPEECH_SPEED = 'SET_SPEECH_SPEED';
 const SET_SPEECH_PITCH = 'SET_SPEECH_PITCH';
 const SET_NEW_CATEGORY_NAME = 'SET_NEW_CATEGORY_NAME';
 const REMOVE_PHRASE = 'REMOVE_PHRASE';
+const REMOVE_CATEGORY = 'REMOVE_CATEGORY';
 const ADD_CATEGORY_TO_PHRASE = 'ADD_CATEGORY_TO_PHRASE';
 const REMOVE_CATEGORY_FROM_PHRASE = 'REMOVE_CATEGORY_FROM_PHRASE';
 
@@ -45,6 +46,12 @@ const pinyintirReducer = (state, action) => {
         ...state,
         phrases: [...state.phrases.filter((phrase) => phrase._id !== action.payload.phraseId)],
       };
+    case REMOVE_CATEGORY:
+      return {
+        ...state,
+        categories: [...state.categories
+          .filter((category) => category._id !== action.payload.categoryId)],
+      };
     case SET_IMAGES:
       return { ...state, images: action.payload.images };
     case SET_PHRASES:
@@ -64,16 +71,26 @@ const pinyintirReducer = (state, action) => {
     case SET_NEW_CATEGORY_NAME:
       return { ...state, newCategoryName: action.payload.newCategoryName };
     case ADD_CATEGORY_TO_PHRASE:
-      state.phrases.map((phrase) => {
+      // eslint-disable-next-line no-case-declarations
+      const newPhrasesAdd = state.phrases.map((phrase) => {
         if (phrase.id === action.payload.phraseId) {
-          phrase.category.push(action.payload.newCategory);
-        } });
-      return { ...state, phrases: [...state.phrases] };
+          const newCat = [...phrase.category, action.payload.newCategory];
+          return { ...phrase, category: newCat };
+        }
+        return phrase;
+      });
+      return { ...state, phrases: newPhrasesAdd };
+
     case REMOVE_CATEGORY_FROM_PHRASE:
-      state.phrases.map((phrase) => {
+      // eslint-disable-next-line no-case-declarations
+      const newPhrasesRemove = state.phrases.map((phrase) => {
         if (phrase.id === action.payload.phraseId) {
-          phrase.category.filter((cat) => cat !== action.payload.category); } });
-      return { ...state, phrases: [...state.phrases] };
+          const newCat = phrase.category.filter((cat) => cat !== action.payload.category);
+          return { ...phrase, category: newCat };
+        }
+        return phrase;
+      });
+      return { ...state, phrases: newPhrasesRemove };
     default:
       return state;
   }
@@ -93,6 +110,11 @@ export const addImageAction = (imgObj) => ({ type: ADD_IMAGE, payload: { imgObj 
 export const removePhraseAction = (phraseId) => ({
   type: REMOVE_PHRASE,
   payload: { phraseId },
+});
+
+export const removeCategoryAction = (categoryId) => ({
+  type: REMOVE_CATEGORY,
+  payload: { categoryId },
 });
 
 export const addPhraseAction = (phraseObj) => ({ type: ADD_PHRASE, payload: { phraseObj } });
