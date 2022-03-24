@@ -58,7 +58,11 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  message: {
+  messageSuccess: {
+    color: '#00ff00',
+    fontWeight: 'bold',
+  },
+  messageFailure: {
     color: 'red',
     fontWeight: 'bold',
   },

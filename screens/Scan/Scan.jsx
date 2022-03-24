@@ -154,7 +154,9 @@ const Scan = () => {
 
       {msg !== '' && (
         <View style={styles.messageContainer}>
-          <Text style={styles.message}>{msg}</Text>
+          <Text style={msg.includes('successful') ? styles.messageSuccess : styles.messageFailure}>
+            {msg}
+          </Text>
         </View>
       )}
 
