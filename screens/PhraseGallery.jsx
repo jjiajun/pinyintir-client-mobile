@@ -236,9 +236,10 @@ const PhraseGallery = () => {
     const token = await AsyncStorage.getItem('@sessionToken');
     // create authorization header
     const auth = { headers: { Authorization: `Bearer ${token}` } };
+    setPhraseModalVisible(false);
+    dispatch(removePhraseAction(phraseId));
     await axios
       .post(`${REACT_APP_BACKEND}/phrase/deletephrase`, { userId, phraseId }, auth);
-    dispatch(removePhraseAction(phraseId));
   };
 
   /** call backend api to add current phrase into selected categories */
@@ -321,7 +322,7 @@ const PhraseGallery = () => {
               style={styles.redButton}
               title="Delete Phrase"
               onPress={() => {
-                deletePhrase(selectedPhrase).then(() => setPhraseModalVisible(false));
+                deletePhrase(selectedPhrase._id);
               }}
             />
           </Card>
@@ -399,7 +400,7 @@ const PhraseGallery = () => {
                   .filter((onePhrase) => onePhrase.category.includes(selectedCategory))
                   .map((onePhrase) => (
                     <Card
-                      key={onePhrase._id.toString()}
+                      key={onePhrase._id}
                       style={styles.phraseCard}
                     >
                       <Pressable
