@@ -297,6 +297,7 @@ const PhraseGallery = () => {
                     title={category.name} // particular category of the pill
                     selectedPhrase={selectedPhrase} // selectedphrase obj
                     setSelectedPhrase={setSelectedPhrase}
+                    selectedBool={selectedPhrase.category.includes(category.name)}
                   />
                 ))}
             </View>
@@ -391,8 +392,8 @@ const PhraseGallery = () => {
                     >
                       <Pressable
                         onLongPress={() => {
-                          setPhraseModalVisible(true);
                           setSelectedPhrase(onePhrase);
+                          setPhraseModalVisible(true);
                         }}
                       >
                         <View style={styles.characters}>
