@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Context, setAuthAction } from '../Context.jsx';
 import Scan from '../screens/Scan/Scan.jsx';
 import ImageGallery from '../screens/ImageGallery.jsx';
-import PhraseGallery from '../screens/PhraseGallery.jsx';
+import PhraseGallery from '../screens/PhraseGallery/Phrase.jsx';
 import Settings from '../screens/Settings.jsx';
 import LandingPage from '../screens/LandingPage.jsx';
 

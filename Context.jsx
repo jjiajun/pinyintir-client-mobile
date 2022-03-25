@@ -16,8 +16,6 @@ const SET_SPEECH_PITCH = 'SET_SPEECH_PITCH';
 const SET_NEW_CATEGORY_NAME = 'SET_NEW_CATEGORY_NAME';
 const REMOVE_PHRASE = 'REMOVE_PHRASE';
 const REMOVE_CATEGORY = 'REMOVE_CATEGORY';
-const ADD_CATEGORY_TO_PHRASE = 'ADD_CATEGORY_TO_PHRASE';
-const REMOVE_CATEGORY_FROM_PHRASE = 'REMOVE_CATEGORY_FROM_PHRASE';
 
 const initialState = {
   auth: false,
@@ -70,27 +68,6 @@ const pinyintirReducer = (state, action) => {
       return { ...state, speechPitch: action.payload.pitch };
     case SET_NEW_CATEGORY_NAME:
       return { ...state, newCategoryName: action.payload.newCategoryName };
-    case ADD_CATEGORY_TO_PHRASE:
-      // eslint-disable-next-line no-case-declarations
-      const newPhrasesAdd = state.phrases.map((phrase) => {
-        if (phrase.id === action.payload.phraseId) {
-          const newCat = [...phrase.category, action.payload.newCategory];
-          return { ...phrase, category: newCat };
-        }
-        return phrase;
-      });
-      return { ...state, phrases: newPhrasesAdd };
-
-    case REMOVE_CATEGORY_FROM_PHRASE:
-      // eslint-disable-next-line no-case-declarations
-      const newPhrasesRemove = state.phrases.map((phrase) => {
-        if (phrase.id === action.payload.phraseId) {
-          const newCat = phrase.category.filter((cat) => cat !== action.payload.category);
-          return { ...phrase, category: newCat };
-        }
-        return phrase;
-      });
-      return { ...state, phrases: newPhrasesRemove };
     default:
       return state;
   }
@@ -139,14 +116,6 @@ export const setFileAction = (file) => ({ type: SET_FILE, payload: { file } });
 export const setSpeechSpeedAction = (speed) => ({ type: SET_SPEECH_SPEED, payload: { speed } });
 
 export const setSpeechPitchAction = (pitch) => ({ type: SET_SPEECH_PITCH, payload: { pitch } });
-
-export const addCategoryToPhrase = (newCategory, phraseId) => (
-  { type: ADD_CATEGORY_TO_PHRASE, payload: { newCategory, phraseId } }
-);
-
-export const removeCategoryFromPhrase = (category, phraseId) => (
-  { type: REMOVE_CATEGORY_FROM_PHRASE, payload: { category, phraseId } }
-);
 
 /** Initialize useContext */
 export const Context = React.createContext(null);

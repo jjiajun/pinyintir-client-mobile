@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 });
 
 const Overlay = ({
-  dimension, continueVideo, toggleOverlay, saveScreenshot, loading, setLoading, setMsg,
+  dimension, continueVideo, toggleOverlay, saveScreenshot, setLoading, setMsg,
 }) => {
   let heightRatio = 1;
   let widthRatio = 1;

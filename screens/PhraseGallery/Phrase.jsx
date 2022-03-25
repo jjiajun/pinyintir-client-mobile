@@ -3,7 +3,7 @@ import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  View, Text, StyleSheet, ScrollView, Dimensions, Pressable, TouchableOpacity, ActivityIndicator,
+  View, Text, ScrollView, Dimensions, Pressable, TouchableOpacity, ActivityIndicator,
 } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -25,158 +25,15 @@ import {
   setNewCategoryNameAction,
   removePhraseAction,
   removeCategoryAction,
-} from '../Context.jsx';
-import Card from '../components/Card.jsx';
-import Colors from '../utils/colors.js';
-import speakText from '../utils/textToSpeech.js';
-import ModalComponent from '../components/Modal.jsx';
-import Input from '../components/Input.jsx';
-import CustomButton from '../components/CustomButton.jsx';
-import Pill from '../components/ViagraPill.jsx';
-
-const styles = StyleSheet.create({
-  bold: {
-    fontWeight: 'bold',
-  },
-  button: {
-    backgroundColor: Colors.primary,
-    width: 220,
-    height: 38,
-  },
-  redButton: {
-    backgroundColor: Colors.orangeyRed,
-    width: 200,
-    margin: 10,
-    height: 38,
-  },
-  card: {
-    padding: 20,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  cardContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-  },
-  circle: {
-    height: 26,
-    width: 26,
-    marginHorizontal: 3,
-    borderRadius: 50,
-    backgroundColor: Colors.primary,
-    marginRight: 14,
-  },
-  container: {
-    flex: 4,
-  },
-  dropdownTrigger: {
-    borderRadius: 8,
-    paddingLeft: '7%',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    textAlign: 'center',
-    marginVertical: 20,
-  },
-  header: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  helperText: {
-    fontSize: 11,
-    marginVertical: 4,
-    color: 'grey',
-  },
-  modalTitle: {
-    fontSize: 16,
-    marginVertical: 10,
-    fontWeight: '900',
-    color: 'black',
-    textAlign: 'center',
-  },
-  iconWhite: {
-    color: 'white',
-    marginHorizontal: 5,
-    marginRight: 10,
-  },
-  iconBlack: {
-    color: 'black',
-    marginRight: 10,
-  },
-  input: {
-    height: 40,
-    width: 220,
-    marginVertical: 10,
-    paddingHorizontal: 15,
-    textAlign: 'center',
-  },
-  italics: {
-    fontStyle: 'italic',
-  },
-  linearGradient: {
-    flex: 1,
-  },
-  message: {
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: 'white',
-  },
-  messageContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  options: {
-    backgroundColor: 'white',
-    height: 50,
-    paddingHorizontal: 20,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  optionsContainer: {
-    marginTop: 48,
-    borderRadius: 20,
-    paddingTop: 20,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    textAlign: 'center',
-  },
-  phraseCard: {
-    width: '88%',
-    margin: 8,
-    borderRadius: 8,
-  },
-  pillsContainer: {
-    width: 200,
-    paddingVertical: 12,
-    justifyContent: 'center',
-  },
-  screen: {
-    flex: 1,
-  },
-  text: {
-    fontSize: 14,
-    marginVertical: 5,
-    color: 'black',
-    marginRight: 3,
-  },
-  characters: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  spinner: {
-    position: 'absolute',
-    top: '50%',
-    left: '45%',
-  },
-});
+} from '../../Context.jsx';
+import Card from '../../components/Card.jsx';
+import Colors from '../../utils/colors.js';
+import speakText from '../../utils/textToSpeech.js';
+import ModalComponent from '../../components/Modal.jsx';
+import Input from '../../components/Input.jsx';
+import CustomButton from '../../components/CustomButton.jsx';
+import Pill from '../../components/ViagraPill.jsx';
+import styles from './Phrase.styles.js';
 
 const PhraseGallery = () => {
   const { store, dispatch } = useContext(Context);

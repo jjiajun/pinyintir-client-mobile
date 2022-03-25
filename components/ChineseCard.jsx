@@ -10,10 +10,7 @@ import { Context } from '../Context.jsx';
 const styles = StyleSheet.create({
   listItem: {
     padding: 10,
-    // marginVertical: 10,
     backgroundColor: colors.primary,
-    // borderColor: 'black',
-    // borderWidth: 1,
     color: 'white',
   },
   characters: {

@@ -14,12 +14,6 @@ import Input from './Input.jsx';
 import CustomButton from './CustomButton.jsx';
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   title: {
     fontSize: 20,
     marginVertical: 10,
@@ -28,18 +22,18 @@ const styles = StyleSheet.create({
   container: {
     width: 280,
     maxWidth: '80%',
-    height: 200,
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'center',
+    // borderWidth: 1,
   },
   button: {
     backgroundColor: Colors.primary,
-    height: 48,
+    height: 45,
   },
   input: {
     width: '100%',
-    height: 40,
+    height: 45,
     marginBottom: 12,
   },
 });
