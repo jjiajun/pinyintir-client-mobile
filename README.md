@@ -43,7 +43,7 @@ Traditional means like dictionaries are not a viable option as they require one 
 
 Newer means like Google Translate provide some help in this regard but are lacking also, as the pinyin and pronounciation are not the main focus. Rather, the focus is on the translation and it is really only helpful if you want to know just the meaning of the words in another language. 
 
-We present _**PinYinTir**_. A mobile app that provides the pinyin translation, and pronounciation of any Chinese text scanned via the camera through the use of optical character recognition. These are overlaid on the original image for easy reference and users can save phrases and/or images for future reference. Look no further for your solution to learning Chinese easily!
+We present _**PinYinTir**_. A mobile app that provides the pinyin, translation, and pronounciation of any Chinese text scanned via the camera through the use of optical character recognition. These are overlaid on the original image for easy reference and users can save phrases and/or images for future reference. Look no further for your solution to learning Chinese easily!
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
