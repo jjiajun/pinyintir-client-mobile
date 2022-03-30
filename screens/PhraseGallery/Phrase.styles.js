@@ -124,7 +124,12 @@ export default StyleSheet.create({
     width: 200,
     margin: 10,
     height: 38,
-    marginTop: 16,
+    marginTop: 14,
+  },
+  activityIndicator: {
+    margin: 10,
+    marginTop: 14,
+    width: 200,
   },
   screen: {
     flex: 1,

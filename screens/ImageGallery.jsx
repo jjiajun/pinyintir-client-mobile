@@ -140,25 +140,7 @@ const ImageGallery = () => {
         <View style={styles.spinner}>
           <ActivityIndicator animating={loading} size="large" color="#ffff" />
         </View>
-        {/* {deleteImageModalVisible && (
-        <ModalComponent
-          modalVisible={deleteImageModalVisible}
-          setModalVisible={setDeleteImageModalVisible}
-        >
-          <Card style={styles.card}>
-            <Text style={styles.modalTitle}>Are you sure you want to</Text>
-            <Text style={styles.modalTitle}>delete this image?</Text>
-            <CustomButton
-              style={styles.redButton}
-              title="Delete"
-              onPress={() => {
-                deleteCategory();
-                setDeleteImageModalVisible(false);
-              }}
-            />
-          </Card>
-        </ModalComponent>
-        )} */}
+
         {images.length > 0
           ? (
             <View style={styles.screen}>

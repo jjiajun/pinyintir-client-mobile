@@ -104,8 +104,7 @@ const PhraseGallery = () => {
     const token = await AsyncStorage.getItem('@sessionToken');
     // create authorization header
     const auth = { headers: { Authorization: `Bearer ${token}` } };
-    console.log('CATTODELETE: ', catToDelete);
-    console.log('USERID: ', userId);
+    setLoading(true);
     await axios
       .post(
         `${REACT_APP_BACKEND}/phrase/deletecategory`,
@@ -113,6 +112,8 @@ const PhraseGallery = () => {
         auth,
       );
     dispatch(removeCategoryAction(catToDelete));
+    setLoading(false);
+    setDeleteCatModalVisible(false);
   };
 
   return (
@@ -199,14 +200,19 @@ const PhraseGallery = () => {
           <Card style={styles.card}>
             <Text style={styles.modalTitle}>Are you sure you want to</Text>
             <Text style={styles.modalTitle}>delete this category?</Text>
-            <CustomButton
-              style={styles.redButton}
-              title="Delete"
-              onPress={() => {
-                deleteCategory();
-                setNewCatModalVisible(false);
-              }}
-            />
+            {loading
+              ? (<ActivityIndicator animating={loading} size="large" color="#FF9B53" style={styles.activityIndicator} />)
+              : (
+                <CustomButton
+                  style={styles.redButton}
+                  title="Delete"
+                  onPress={() => {
+                    deleteCategory();
+                    setNewCatModalVisible(false);
+                  }}
+                />
+              )}
+
           </Card>
         </ModalComponent>
         )}

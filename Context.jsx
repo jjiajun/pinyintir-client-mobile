@@ -16,6 +16,7 @@ const SET_SPEECH_PITCH = 'SET_SPEECH_PITCH';
 const SET_NEW_CATEGORY_NAME = 'SET_NEW_CATEGORY_NAME';
 const REMOVE_PHRASE = 'REMOVE_PHRASE';
 const REMOVE_CATEGORY = 'REMOVE_CATEGORY';
+const REMOVE_IMAGE = 'REMOVE_IMAGE';
 
 const initialState = {
   auth: false,
@@ -49,6 +50,12 @@ const pinyintirReducer = (state, action) => {
         ...state,
         categories: [...state.categories
           .filter((category) => category._id !== action.payload.categoryId)],
+      };
+    case REMOVE_IMAGE:
+      return {
+        ...state,
+        images: [...state.images
+          .filter((image) => image.imagePath !== action.payload.imagePath)],
       };
     case SET_IMAGES:
       return { ...state, images: action.payload.images };
@@ -92,6 +99,11 @@ export const removePhraseAction = (phraseId) => ({
 export const removeCategoryAction = (categoryId) => ({
   type: REMOVE_CATEGORY,
   payload: { categoryId },
+});
+
+export const removeImageAction = (imagePath) => ({
+  type: REMOVE_IMAGE,
+  payload: { imagePath },
 });
 
 export const addPhraseAction = (phraseObj) => ({ type: ADD_PHRASE, payload: { phraseObj } });
