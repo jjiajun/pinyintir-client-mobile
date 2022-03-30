@@ -129,7 +129,7 @@ const LogInBox = ({ navigation, setMessage }) => {
         value={password}
       />
       {loading
-        ? (<ActivityIndicator animating={loading} size="large" color="#00ff00" />)
+        ? (<ActivityIndicator animating={loading} size="large" color="#FF9B53" />)
         : (
           <CustomButton
             style={styles.button}

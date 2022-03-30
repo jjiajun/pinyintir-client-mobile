@@ -8,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../utils/colors.js';
 import Card from '../components/Card.jsx';
 import LogInBox from '../components/LogInBox.jsx';
@@ -44,6 +45,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     // borderWidth: 1,
   },
+
+  linearGradient: {
+    flex: 1,
+  },
   link: {
     width: 176,
     flex: 1,
@@ -59,10 +64,10 @@ const styles = StyleSheet.create({
 
   },
   linkActive: {
-    backgroundColor: Colors.orangeyRed,
+    backgroundColor: '#1b1b1b',
     fontWeight: 'bold',
     color: 'white',
-    borderColor: Colors.orangeyRed,
+    borderColor: '#1b1b1b',
   },
   left: {
     borderTopLeftRadius: 10,
@@ -89,44 +94,52 @@ const LandingPage = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.screen}>
-        <Card style={styles.container}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={logInVisible ? null : toggleView}>
-              <Text style={logInVisible
-                ? { ...styles.link, ...styles.linkActive, ...styles.left }
-                : styles.link}
-              >
-                Log In
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={logInVisible ? toggleView : null}>
-              <Text style={logInVisible
-                ? { ...styles.link, ...styles.right }
-                : { ...styles.link, ...styles.linkActive, ...styles.right }}
-              >
-                Sign Up
-              </Text>
-            </TouchableOpacity>
-          </View>
 
-          <Image
+      <LinearGradient
+        colors={[Colors.primary, Colors.orangeyRed]}
+        style={styles.linearGradient}
+        start={{ x: 0.9, y: 0.1 }}
+        end={{ x: 0.1, y: 0.5 }}
+      >
+        <View style={styles.screen}>
+          <Card style={styles.container}>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity onPress={logInVisible ? null : toggleView}>
+                <Text style={logInVisible
+                  ? { ...styles.link, ...styles.linkActive, ...styles.left }
+                  : styles.link}
+                >
+                  Log In
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={logInVisible ? toggleView : null}>
+                <Text style={logInVisible
+                  ? { ...styles.link, ...styles.right }
+                  : { ...styles.link, ...styles.linkActive, ...styles.right }}
+                >
+                  Sign Up
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <Image
             // eslint-disable-next-line global-require
-            source={require('../assets/pinyintir.png')}
-            style={styles.logo}
-          />
+              source={require('../assets/pinyintir.png')}
+              style={styles.logo}
+            />
 
-          {logInVisible
-            ? (
-              <LogInBox navigation={navigation} setMessage={setMessage} />
-            ) : (
-              <SignUpBox navigation={navigation} setMessage={setMessage} />
-            )}
-        </Card>
+            {logInVisible
+              ? (
+                <LogInBox navigation={navigation} setMessage={setMessage} />
+              ) : (
+                <SignUpBox navigation={navigation} setMessage={setMessage} />
+              )}
+          </Card>
 
-        {message !== '' && <Message message={message} />}
+          {message !== '' && <Message message={message} />}
 
-      </View>
+        </View>
+      </LinearGradient>
     </TouchableWithoutFeedback>
   );
 };

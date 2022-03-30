@@ -126,7 +126,7 @@ const PhraseGallery = () => {
         end={{ x: 0.1, y: 0.5 }}
       >
         <View style={styles.spinner}>
-          <ActivityIndicator animating={loading} size="large" color="#00ff00" />
+          <ActivityIndicator animating={loading} size="large" color="#ffff" />
         </View>
         {newCatModalVisible && (
         <ModalComponent

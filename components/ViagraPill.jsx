@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet, TouchableOpacity, Text,
 } from 'react-native';
@@ -7,11 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { REACT_APP_BACKEND } from 'react-native-dotenv';
 import Colors from '../utils/colors.js';
-// import {
-//   Context,
-//   addCategoryToPhrase,
-//   removeCategoryFromPhrase,
-// } from '../Context.jsx';
 
 const styles = StyleSheet.create({
   pill: {
@@ -34,12 +29,10 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
-    // backgroundColor: 'transparent',
   },
   iconWhite: {
     color: 'white',
     marginLeft: 5,
-    // backgroundColor: 'transparent',
   },
 });
 
@@ -47,7 +40,6 @@ const Pill = (props) => {
   const {
     title, selectedPhrase, setSelectedPhrase, selectedBool,
   } = props;
-  // const { dispatch } = useContext(Context);
   const [selected, setSelected] = useState(selectedBool);
 
   const toggleCategory = async () => {
@@ -55,14 +47,11 @@ const Pill = (props) => {
     const token = await AsyncStorage.getItem('@sessionToken');
     // create authorization header
     const auth = { headers: { Authorization: `Bearer ${token}` } };
-    // setSelected(!selected);
     let onePhraseObj;
     if (selected) {
-      // dispatch(removeCategoryFromPhrase(title, selectedPhrase._id));
       onePhraseObj = await axios
         .post(`${REACT_APP_BACKEND}/phrase/removecategoryfromphrase`, { userId, category: title, phraseId: selectedPhrase._id }, auth);
     } else {
-      // dispatch(addCategoryToPhrase(title, selectedPhrase._id));
       onePhraseObj = await axios
         .post(`${REACT_APP_BACKEND}/phrase/addcategorytophrase`, { userId, newCategory: title, phraseId: selectedPhrase._id }, auth);
     }
