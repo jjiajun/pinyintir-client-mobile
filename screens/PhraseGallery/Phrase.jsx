@@ -42,13 +42,13 @@ const PhraseGallery = () => {
   } = store;
   const [newCatModalVisible, setNewCatModalVisible] = useState(false);
   const [phraseModalVisible, setPhraseModalVisible] = useState(false);
-  // const [deleteCatModalVisible, setDeleteCatModalVisible] = useState(false);
+  const [deleteCatModalVisible, setDeleteCatModalVisible] = useState(false);
   const navBarHeight = useBottomTabBarHeight();
 
   const [selectedPhrase, setSelectedPhrase] = useState({});
   const [loading, setLoading] = useState(false);
 
-  // const [catToDelete, setCatToDelete] = useState();
+  const [catToDelete, setCatToDelete] = useState();
   const windowWidth = Number(Dimensions.get('window').width);
 
   /** To get userId and token for axios calls at every render */
@@ -99,22 +99,21 @@ const PhraseGallery = () => {
   };
 
   /** call backend api to add current phrase into selected categories */
-  // const deleteCategory = async () => {
-  //   const userId = await AsyncStorage.getItem('@userId');
-  //   const token = await AsyncStorage.getItem('@sessionToken');
-  //   // create authorization header
-  //   const auth = { headers: { Authorization: `Bearer ${token}` } };
-  //   console.log('CATTODELETE: ', catToDelete);
-  //   console.log('USERID: ', userId);
-  //   await axios
-  //     .post(
-  //       `${REACT_APP_BACKEND}/phrase/deletecategory`,
-  //       { userId, categoryToDelete: catToDelete },
-
-  //       auth,
-  //     );
-  //   // dispatch(removeCategoryAction(catToDelete));
-  // };
+  const deleteCategory = async () => {
+    const userId = await AsyncStorage.getItem('@userId');
+    const token = await AsyncStorage.getItem('@sessionToken');
+    // create authorization header
+    const auth = { headers: { Authorization: `Bearer ${token}` } };
+    console.log('CATTODELETE: ', catToDelete);
+    console.log('USERID: ', userId);
+    await axios
+      .post(
+        `${REACT_APP_BACKEND}/phrase/deletecategory`,
+        { userId, categoryToDelete: catToDelete },
+        auth,
+      );
+    dispatch(removeCategoryAction(catToDelete));
+  };
 
   return (
 
@@ -192,13 +191,14 @@ const PhraseGallery = () => {
           </Card>
         </ModalComponent>
         )}
-        {/* {deleteCatModalVisible && (
+        {deleteCatModalVisible && (
         <ModalComponent
           modalVisible={deleteCatModalVisible}
           setModalVisible={setDeleteCatModalVisible}
         >
           <Card style={styles.card}>
-            <Text style={styles.modalTitle}>Are you sure you want to delete this category?</Text>
+            <Text style={styles.modalTitle}>Are you sure you want to</Text>
+            <Text style={styles.modalTitle}>delete this category?</Text>
             <CustomButton
               style={styles.redButton}
               title="Delete"
@@ -209,7 +209,7 @@ const PhraseGallery = () => {
             />
           </Card>
         </ModalComponent>
-        )} */}
+        )}
         {phrases.length > 0 && (
         <Menu
           renderer={renderers.SlideInMenu}
@@ -238,16 +238,19 @@ const PhraseGallery = () => {
                   <Text style={[styles.text, styles.bold]}>{oneCategory.name}</Text>
                 </View>
                 <Pressable
-                  // onPress={() => {
-                  //   setCatToDelete(oneCategory._id);
-                  //   setDeleteCatModalVisible(true);
-                  // }}
+                  onPress={() => {
+                    setCatToDelete(oneCategory._id);
+                    setDeleteCatModalVisible(true);
+                  }}
                   style={{ flexDirection: 'row', alignItems: 'center' }}
                 >
+                  {oneCategory.name !== 'All Phrases'
+                  && (
                   <XIcon
                     size={16}
-                    // style={styles.iconBlack}
+                    style={styles.iconBlack}
                   />
+                  )}
                 </Pressable>
               </MenuOption>
             ))}

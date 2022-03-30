@@ -10,12 +10,6 @@ export default StyleSheet.create({
     width: 220,
     height: 38,
   },
-  redButton: {
-    backgroundColor: Colors.orangeyRed,
-    width: 200,
-    margin: 10,
-    height: 38,
-  },
   card: {
     padding: 20,
     justifyContent: 'space-around',
@@ -58,13 +52,6 @@ export default StyleSheet.create({
     marginVertical: 4,
     color: 'grey',
   },
-  modalTitle: {
-    fontSize: 16,
-    marginVertical: 10,
-    fontWeight: '900',
-    color: 'black',
-    textAlign: 'center',
-  },
   iconWhite: {
     color: 'white',
     marginHorizontal: 5,
@@ -98,6 +85,13 @@ export default StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  modalTitle: {
+    fontSize: 16,
+    marginVertical: 1,
+    fontWeight: '900',
+    color: 'black',
+    textAlign: 'center',
+  },
   options: {
     backgroundColor: 'white',
     height: 50,
@@ -124,6 +118,13 @@ export default StyleSheet.create({
     width: 200,
     paddingVertical: 12,
     justifyContent: 'center',
+  },
+  redButton: {
+    backgroundColor: Colors.orangeyRed,
+    width: 200,
+    margin: 10,
+    height: 38,
+    marginTop: 16,
   },
   screen: {
     flex: 1,
