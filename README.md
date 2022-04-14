@@ -58,6 +58,13 @@ We present _**PinYinTir**_. A mobile app that provides the pinyin, translation, 
   <img src="https://user-images.githubusercontent.com/90031266/163386842-1e7c3fe3-de1c-454b-bf4c-69710b47748d.gif" />
 </div>
 
+<br/>
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/90031266/163414200-377e6320-aaaf-477e-9c9a-3d986a00d5de.gif" />
+</div>
+
+
 </div>
 
 <!-- <div align="center"><img src="https://user-images.githubusercontent.com/40411953/158035913-071aa70f-b4a7-4b51-9b43-aaba9aa6cb2b.png" /></div> -->
@@ -83,6 +90,8 @@ We present _**PinYinTir**_. A mobile app that provides the pinyin, translation, 
 <div align="center">
   <img src="https://user-images.githubusercontent.com/90031266/163386928-3094a7e9-af7f-49ad-913c-ede91cb6557e.gif" />
 </div>
+
+</br>
 
 <div align="center">
   <img src="https://user-images.githubusercontent.com/90031266/163387004-62ff436c-0a6b-4c1b-9af4-b3eee938c843.gif" />
