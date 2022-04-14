@@ -3,7 +3,7 @@
 ## PinYinTir
 Learning Chinese has never been easier. With **PinYinTir**, you can scan an image of Chinese text and understand it immediately!
 
-This is the frontend repo. Backend repo can be found [here](https://github.com/jjiajun/Chinese-AR-App-Backend).
+This is the frontend repo. Backend repo can be found [here](https://github.com/jjiajun/Pinyintir-Backend).
 
 
 <!-- TABLE OF CONTENTS -->
