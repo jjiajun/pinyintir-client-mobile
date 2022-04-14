@@ -70,6 +70,10 @@ We present _**PinYinTir**_. A mobile app that provides the pinyin, translation, 
 
 <br />3. Upon log in, you will be brought back to the Scan page. This time, the nav bar should be updated with additional pages - Images, Phrases, and Settings.<br /><br />
 
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/90031266/163385072-8cb2dfda-a131-476c-b8f3-c2c66d5b2412.gif" />
+</div>
+
 <!-- <div align="center"><img src="https://user-images.githubusercontent.com/40411953/158036032-78fd3a16-3461-4937-81a2-e432f4de9e55.png" /></div> -->
 
 <br />4. Now, when any image is scanned and the results shown, there is an option to save this image. Also, when viewing individual phrases, there is also an option to save just this phrase alone.<br /><br />
