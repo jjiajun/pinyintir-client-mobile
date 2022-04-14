@@ -54,9 +54,14 @@ We present _**PinYinTir**_. A mobile app that provides the pinyin, translation, 
 
 <br />1. Once the app loads, you should be brought to the Scan page and be greeted with a camera view. Scan an image that includes Chinese text. The pinyin of any detected Chinese text will be shown as an overlay on the image. You can tap on each individual phrase to see the English translation and text-to-speech functionality.<br /><br />
 
+![scan0](https://user-images.githubusercontent.com/90031266/163384241-9d4fca44-a197-46d7-8bf5-01c376338371.gif)
+
 <!-- <div align="center"><img src="https://user-images.githubusercontent.com/40411953/158035913-071aa70f-b4a7-4b51-9b43-aaba9aa6cb2b.png" /></div> -->
 
 <br />2. Although this application can be used without any sign up needed, signing up for an account will unlock the other features - mainly to save phrases and images. Click on Log In on the nav bar to log in or sign up.<br /><br />
+
+![scan1](https://user-images.githubusercontent.com/90031266/163384165-9bb93d95-9371-4374-b491-9e9567091300.gif)
+
 
 <!-- <div align="center"><img src="https://user-images.githubusercontent.com/40411953/158035981-89829d69-e8db-43a6-903a-c9855962714d.png" /></div> -->
 
