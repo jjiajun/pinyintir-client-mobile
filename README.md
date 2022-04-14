@@ -93,7 +93,7 @@ We present _**PinYinTir**_. A mobile app that provides the pinyin, translation, 
 <br />5. Go to the Images page to view all your past saved images.<br /><br />
 
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/90031266/163387130-295a70cb-e977-493b-8bb6-ee1ef7cea99f.jpg" />
+  <img src="https://user-images.githubusercontent.com/90031266/163387130-295a70cb-e977-493b-8bb6-ee1ef7cea99f.jpg" width="320px"/>
 </div>
 
 <br />6. Go to the Phrases page to view all your past saved phrases. Here, you can create categories for these phrases and sort them accordingly. <br /><br />
