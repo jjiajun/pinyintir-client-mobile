@@ -55,7 +55,9 @@ We present _**PinYinTir**_. A mobile app that provides the pinyin, translation, 
 <br />1. Once the app loads, you should be brought to the Scan page and be greeted with a camera view. Scan an image that includes Chinese text. The pinyin of any detected Chinese text will be shown as an overlay on the image. You can tap on each individual phrase to see the English translation and text-to-speech functionality.<br /><br />
 
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/90031266/163384241-9d4fca44-a197-46d7-8bf5-01c376338371.gif" />
+  <img src="https://user-images.githubusercontent.com/90031266/163386842-1e7c3fe3-de1c-454b-bf4c-69710b47748d.gif" />
+</div>
+
 </div>
 
 <!-- <div align="center"><img src="https://user-images.githubusercontent.com/40411953/158035913-071aa70f-b4a7-4b51-9b43-aaba9aa6cb2b.png" /></div> -->
@@ -63,7 +65,7 @@ We present _**PinYinTir**_. A mobile app that provides the pinyin, translation, 
 <br />2. Although this application can be used without any sign up needed, signing up for an account will unlock the other features - mainly to save phrases and images. Click on Log In on the nav bar to log in or sign up.<br /><br />
 
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/90031266/163384165-9bb93d95-9371-4374-b491-9e9567091300.gif" />
+  <img src="https://user-images.githubusercontent.com/90031266/163386890-f919ca9d-6778-482a-9fcc-9a66c18711d3.gif" />
 </div>
 
 <!-- <div align="center"><img src="https://user-images.githubusercontent.com/40411953/158035981-89829d69-e8db-43a6-903a-c9855962714d.png" /></div> -->
@@ -71,20 +73,40 @@ We present _**PinYinTir**_. A mobile app that provides the pinyin, translation, 
 <br />3. Upon log in, you will be brought back to the Scan page. This time, the nav bar should be updated with additional pages - Images, Phrases, and Settings.<br /><br />
 
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/90031266/163385072-8cb2dfda-a131-476c-b8f3-c2c66d5b2412.gif" />
+  <img src="https://user-images.githubusercontent.com/90031266/163386900-09572407-7b3b-4087-8304-cdbdca264f64.gif" />
 </div>
 
 <!-- <div align="center"><img src="https://user-images.githubusercontent.com/40411953/158036032-78fd3a16-3461-4937-81a2-e432f4de9e55.png" /></div> -->
 
 <br />4. Now, when any image is scanned and the results shown, there is an option to save this image. Also, when viewing individual phrases, there is also an option to save just this phrase alone.<br /><br />
 
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/90031266/163386928-3094a7e9-af7f-49ad-913c-ede91cb6557e.gif" />
+</div>
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/90031266/163387004-62ff436c-0a6b-4c1b-9af4-b3eee938c843.gif" />
+</div>
+
 <!-- <div align="center"><img src="https://user-images.githubusercontent.com/40411953/158036333-dfe02ea2-7aae-4b55-8720-4fd163a0ffdc.png" /></div> -->
 
 <br />5. Go to the Images page to view all your past saved images.<br /><br />
 
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/90031266/163387130-295a70cb-e977-493b-8bb6-ee1ef7cea99f.jpg" />
+</div>
+
 <br />6. Go to the Phrases page to view all your past saved phrases. Here, you can create categories for these phrases and sort them accordingly. <br /><br />
 
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/90031266/163387028-f0ff72bc-7e18-4fe0-b387-51661601ffa3.gif" />
+</div>
+
 <br />7. Go to the Settings page to adjust the pitch and speed of the text-to-speech voice. You can also log out here.<br /><br />
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/90031266/163387074-ac04a570-1455-4e13-85c6-10cb2146a733.gif" />
+</div>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
